@@ -19,7 +19,6 @@ format:
     theme: simplex
 ---
 
-
 ## Data
 
 ## Related
@@ -68,5 +67,4 @@ options(dplyr.summarise.inform = FALSE)
 ## 
 
 ```         
-
 ```

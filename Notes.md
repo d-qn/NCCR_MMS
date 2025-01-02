@@ -1,7 +1,14 @@
+
+
 ## To Do
 
 -   Quote for 50 dataviz ?!
 
--   Ask for raw data
-
 -   Suggest workflow data –\>
+
+
+## Styleguide
+
+* Google fonts if possible
+* colours for countries, genders
+
