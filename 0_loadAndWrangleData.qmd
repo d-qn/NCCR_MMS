@@ -1,0 +1,106 @@
+---
+title: "NCCR MMS"
+author: "Duc-Quang Nguyen "
+date: last-modified
+editor: visual
+execute: 
+  cache: true
+highlight-style: pygments
+format:
+  html: 
+    code-fold: true
+    echo: TRUE
+    warning: FALSE
+    message: FALSE
+    html-math-method: katex
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    theme: simplex
+---
+
+## Data
+
+## Related
+
+```{r}
+#| label: setup
+#| include: false
+  
+library(here)
+library(tidyverse)
+library(magrittr)
+library(stringr)
+library(knitr)
+library(dqnTheme)
+library(skimr)
+
+
+Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
+dqnTheme::update_geom_font_defaults()
+options(scipen=999)
+options(dplyr.summarise.inform = FALSE)
+
+```
+
+## 
+
+```{r}
+#| label: load and merge data files
+
+data_file_path <- list.files(
+  here("Data"), 
+  pattern = ".csv", 
+  full.names = T)
+
+# read csv files
+data_read <- data_file_path %>% 
+  map_df(function(ff) {
+    rr <- read_csv2(ff)
+    year <- colnames(rr)[ncol(rr)] %>% 
+      str_extract( "\\d+") %>% as.numeric()
+    
+    codes <- colnames(rr)[-ncol(rr)] %>% str_sub_all(4) %>% 
+      unlist()
+    
+    colnames(rr) <- c(codes, "weight")
+    rr %>% 
+      mutate(year = year)
+  }) 
+
+  
+data_read %<>% 
+  select(
+    A1, A6, B1, B9, D1, E38, year, weight, everything()
+  ) %>% 
+  write_csv(here("Output", "data", "merged_data_files.csv"))
+
+
+```
+
+
+```{r}
+#| label: join code txt to data
+
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
+c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes E38.csv"))
+
+
+data_all <- data_read %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  left_join(c2t_D1) %>% 
+  left_join(c2t_E38)
+
+
+data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique()
+
+data_all %>% 
+  group_by(year, groupe_edu)
+
+```
+
+
+
