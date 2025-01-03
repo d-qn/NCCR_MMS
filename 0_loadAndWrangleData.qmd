@@ -98,7 +98,38 @@ data_all <- data_read %>%
 data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique()
 
 data_all %>% 
-  group_by(year, groupe_edu)
+  group_by(year, groupe_edu) %>% 
+  summarise(
+    tot = sum(weight, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year) %>% 
+  mutate(
+    toty = sum(tot)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share = tot/toty
+  )
+  
+
+data_all %>% 
+  group_by(year, groupe_edu) %>% 
+  summarise(
+    n = n(),
+    weight_sum = sum(weight)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year) %>% 
+  mutate(
+    toty = sum(n),
+    tot_weight = sum(weight_sum)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share = (n/toty) * 100,
+    share_w = (weight_sum /tot_weight) * 100
+  )
 
 ```
 
