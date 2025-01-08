@@ -30,17 +30,27 @@ library(magrittr)
 library(stringr)
 library(knitr)
 library(dqnTheme)
+library(hrbrthemes)
 library(skimr)
-
 
 Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
 dqnTheme::update_geom_font_defaults()
 options(scipen=999)
 options(dplyr.summarise.inform = FALSE)
 
+library(paletteer)
+library(stevethemes)
+
+### Interactive
+library(patchwork)
+library(ggtext)
+library(ggforce)
+library(directlabels)
+library(geomtextpath)
+
 ```
 
-## 1. Load and merge data files
+## 1a. Load and merge data files
 
 ```{r}
 #| label: load and merge data files
@@ -75,7 +85,7 @@ data_read %<>%
 
 ```
 
-
+## 1b. Enrich & wrangle
 
 ```{r}
 #| label: join code txt to data
@@ -111,7 +121,24 @@ data_all %>%
   )
   
 
-summary_tb <- data_all %>% 
+
+# summary_tb %>%
+#   select(-weight_sum) %>%
+#   mutate(share = round(share, 1)) %>% 
+#   mutate(share_w = round(share_w, 1)) %>% 
+#   select(-tot_weight) %>% 
+#   rename( N_year = toty, perc = share, perc_weighted = share_w) %>% 
+#   write_csv("~/Desktop/summaryQ_NCCR_MMS.csv")
+
+
+```
+
+## VIZ 
+
+### Education history and current situation
+
+```{r}
+edu_main <- data_all %>% 
   group_by(year, groupe_edu) %>% 
   summarise(
     n = n(),
@@ -125,21 +152,96 @@ summary_tb <- data_all %>%
   ) %>% 
   ungroup %>% 
   mutate(
-    share = (n/toty) * 100,
     share_w = (weight_sum /tot_weight) * 100
   ) 
 
+edu_genre <- data_all %>% 
+  group_by(year, groupe_edu, sexe) %>% 
+  summarise(
+    n = n(),
+    weight_sum = sum(weight)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year, sexe) %>% 
+  mutate(
+    toty = sum(n),
+    tot_weight = sum(weight_sum)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share_w = (weight_sum /tot_weight) * 100
+  ) 
+
+edu3_pays <- data_all %>% 
+  group_by(year, groupe_edu, pays) %>% 
+  summarise(
+    n = n(),
+    weight_sum = sum(weight)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year, pays) %>% 
+  mutate(
+    toty = sum(n),
+    tot_weight = sum(weight_sum)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share_w = (weight_sum /tot_weight) * 100
+  ) %>% 
+  filter(groupe_edu == "Tertiaire")
 
 
 
 
-summary_tb %>%
-  select(-weight_sum) %>%
-  mutate(share = round(share, 1)) %>% 
-  mutate(share_w = round(share_w, 1)) %>% 
-  select(-tot_weight) %>% 
-  rename( N_year = toty, perc = share, perc_weighted = share_w) %>% 
-  write_csv("~/Desktop/summaryQ_NCCR_MMS.csv")
+edu_chart1 <- edu_main %>% 
+  ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
+  geom_area(aes(fill = groupe_edu), alpha = 0.9) + 
+  theme_ipsum_rc(grid="XY", axis="xy", grid_col = "darkgrey") + 
+  theme(panel.ontop = TRUE, legend.position = "none") +
+  # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%"))+
+  scale_color_ipsum() +
+  scale_fill_ipsum() +
+  labs(
+       title="La migration est de plus en plus hautement qualifiée",
+       subtitle="Part en % des personnes hautement qualifiées (niveau de formation tertiaire) parmi les répondant-e-s à l’enquête
+")
+
+annot_df <- tibble(
+  year = rep(2021.5, 3),
+  share_w = c(27, 72, 95),
+  txt = c("Tertiaire", "Secondaire II", "Secondaire I")
+)
+
+edu_chart1_a <- flush_ticks(edu_chart1)  +
+  geom_richtext(data = annot_df, aes(x = year, y = share_w, label = txt, group = 1),
+                fill = NA, label.color = NA,# remove background and outline,
+                color = "white", size = 7,
+                hjust = 1, family = font_rc
+                )
+  
+
+edu_chart1_a
+
+
+
+bind_rows(
+  edu_main %>% 
+    select(year, groupe_edu, share_w, n) %>% 
+    mutate(type = "all"),
+  edu_genre %>% 
+    select(year, sexe, groupe_edu, share_w, n) %>% 
+    rename(type = sexe)
+)  %>% 
+  filter(groupe_edu == "Tertiaire") %>% 
+   ggplot(aes(x = year, y = share_w, group = type)) +
+  geom_line(aes(color = type)) +
+    theme_ipsum_rc(axis="xy", grid = FALSE) + 
+  theme(panel.ontop = TRUE, legend.position = "none") 
+
 
 
 ```
