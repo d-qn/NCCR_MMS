@@ -19,9 +19,6 @@ format:
     theme: simplex
 ---
 
-## Data
-
-## Related
 
 ```{r}
 #| label: setup
@@ -43,11 +40,12 @@ options(dplyr.summarise.inform = FALSE)
 
 ```
 
-## 
+## 1. Load and merge data files
 
 ```{r}
 #| label: load and merge data files
-
+#| include: false
+#| 
 data_file_path <- list.files(
   here("Data"), 
   pattern = ".csv", 
@@ -56,7 +54,7 @@ data_file_path <- list.files(
 # read csv files
 data_read <- data_file_path %>% 
   map_df(function(ff) {
-    rr <- read_csv2(ff)
+    rr <- read_delim(ff, delim  = ";")
     year <- colnames(rr)[ncol(rr)] %>% 
       str_extract( "\\d+") %>% as.numeric()
     
@@ -75,8 +73,8 @@ data_read %<>%
   ) %>% 
   write_csv(here("Output", "data", "merged_data_files.csv"))
 
-
 ```
+
 
 
 ```{r}
@@ -95,7 +93,7 @@ data_all <- data_read %>%
   left_join(c2t_E38)
 
 
-data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique()
+data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique() %>% sort()
 
 data_all %>% 
   group_by(year, groupe_edu) %>% 
@@ -113,7 +111,7 @@ data_all %>%
   )
   
 
-data_all %>% 
+summary_tb <- data_all %>% 
   group_by(year, groupe_edu) %>% 
   summarise(
     n = n(),
@@ -129,9 +127,19 @@ data_all %>%
   mutate(
     share = (n/toty) * 100,
     share_w = (weight_sum /tot_weight) * 100
-  )
+  ) 
+
+
+
+
+
+summary_tb %>%
+  select(-weight_sum) %>%
+  mutate(share = round(share, 1)) %>% 
+  mutate(share_w = round(share_w, 1)) %>% 
+  select(-tot_weight) %>% 
+  rename( N_year = toty, perc = share, perc_weighted = share_w) %>% 
+  write_csv("~/Desktop/summaryQ_NCCR_MMS.csv")
+
 
 ```
-
-
-
