@@ -208,8 +208,7 @@ edu_chart1 <- edu_main %>%
   scale_fill_ipsum() +
   labs(
        title="La migration est de plus en plus hautement qualifiée",
-       subtitle="Part en % des personnes hautement qualifiées (niveau de formation tertiaire) parmi les répondant-e-s à l’enquête
-")
+       subtitle="Le plus niveau de formation atteint parmi les répondant-e-s à l’enquête, en %")
 
 annot_df <- tibble(
   year = rep(2021.5, 3),
@@ -255,13 +254,24 @@ edu_genre_rib_df <- edu_all_genre %>%
   pivot_wider(names_from = type, values_from = share_w)
 
 edu_chart2 <- edu_all_genre %>% 
+  mutate(
+    type = case_when(
+      type == "all" ~ "TOTAL",
+      type == "male" ~ "Hommes",
+      type == "female" ~ "Femmes",
+      T ~ type
+    )
+  ) %>% 
   ggplot(aes(x= year)) +
-    geom_ribbon(
+  geom_ribbon(
     data = edu_genre_rib_df,
     aes(ymin = male, ymax = female, group = 1),
-     fill = "grey70", alpha = 0.2) +
+    fill = "grey70", alpha = 0.2) +
+  geom_point(aes(x = year, y = share_w, group = type,
+                 color = type), size = 2,
+             alpha = 0.6) +
   geom_line(aes(x = year, y = share_w, group = type,
-    color = type, size = n), lineend="round") +
+    color = type, size = n), lineend="round", alpha= 0.8) +
   theme_ipsum_rc(axis="xy", grid = FALSE) + 
 
   theme(panel.ontop = TRUE, legend.position = "none") +
@@ -269,18 +279,23 @@ edu_chart2 <- edu_all_genre %>%
    scale_x_continuous(
      breaks = 2016:2024,
     # limits = c(2016,2024),
-     expand = c(0,0), name = "") +
+     expand = c(0.01,0), name = "") +
   # have y scale not start at 0, add unit % 
-  scale_y_continuous(expand = c(0,0), name = "", 
+  scale_y_continuous(expand = c(0.005,0.01), name = "", 
                      labels = function(x) paste0(x, "%")) +
-  scale_colour_manual(values=c("#262626", "#7725eb", "#469b88")) +
+  scale_colour_manual(
+    values=c("#7725eb", "#469b88", "#262626")) +
   geom_text(data=. %>% 
               arrange(desc(year)) %>% 
               group_by(type) %>% 
               slice(1), 
-            aes(label=type, y = share_w), 
-            position=position_nudge(0.1), hjust=0, show.legend=FALSE) +
+            aes(label=type, y = share_w,
+                colour = type), 
+            family = font_rc,
+            position=position_nudge(0.07), hjust=0, show.legend=FALSE, size = 5) +
   coord_cartesian(xlim = c(2016, 2022.9)) 
+
+edu_chart2
 
 edu_chart1_a + edu_chart2
 
