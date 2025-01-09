@@ -34,6 +34,7 @@ library(hrbrthemes)
 library(skimr)
 
 Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
+options(OutDec = ",")
 dqnTheme::update_geom_font_defaults()
 options(scipen=999)
 options(dplyr.summarise.inform = FALSE)
@@ -120,6 +121,22 @@ data_all %>%
     share = tot/toty
   )
   
+# https://projects.susielu.com/viz-palette?colors=%5B%22#66b8d4%22,%22%23f7d777%22,%22%23d1ab75%22,%22%23d97053%22,%22%238fd176%22,%22%23198f58%22,%22%236a7aaa%22,%22%230050b5%22,%22%236d5288%22,%22%23d17393%22,%22%23eca53a%22,%22%2354aa9f%22,%22%23b1b1b1%22%5D&backgroundColor=%22white%22&fontColor=%22black%22&mode=%22normal%22
+pays2col <- tibble(
+  pays = c("France", "Allemagne", "Espagne", "Autriche", "Italie", "Portugal",
+    "Autre UE/AELE",
+    "Autre Europe",
+    "Autre OCDE",
+    "Asie",
+    "Amerique latine",
+    "Afrique",
+    "Autres pays"),
+
+  color = c("#66b8d4","#f7d777","#d1ab75","#d97053",
+"#8fd176","#198f58","#6a7aaa","#0050b5",
+"#6d5288","#d17393","#eca53a","#54aa9f",
+"#b1b1b1")
+)
 
 
 # summary_tb %>%
@@ -132,6 +149,9 @@ data_all %>%
 
 
 ```
+
+
+
 
 ## VIZ 
 
@@ -197,8 +217,21 @@ edu3_pays <- data_all %>%
 edu_chart1 <- edu_main %>% 
   ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
   geom_area(aes(fill = groupe_edu), alpha = 0.9) + 
-  theme_ipsum_rc(grid="XY", axis="xy", grid_col = "darkgrey") + 
-  theme(panel.ontop = TRUE, legend.position = "none") +
+  theme_ipsum_rc(grid="XY", axis="xy", 
+                 grid_col = "black",
+                   base_size = 14,
+                  plot_title_size = 21) + 
+  theme(legend.position = "none",
+        plot.title.position = "plot",
+        plot.title = element_textbox_simple(
+          lineheight = 1.3,
+          padding = margin(0, 1, 2, 0), 
+          margin = margin(0, 0, 3, 0)),
+        plot.subtitle = element_textbox_simple(
+          lineheight = 1.2,
+          margin = margin(0, 0, 5, 0)
+          )
+  ) +
   # remove any scale expansion
   scale_x_continuous(expand = c(0,0), name = "") +
   # have y scale not start at 0, add unit % 
@@ -208,7 +241,7 @@ edu_chart1 <- edu_main %>%
   scale_fill_ipsum() +
   labs(
        title="La migration est de plus en plus hautement qualifiée",
-       subtitle="Le plus niveau de formation atteint parmi les répondant-e-s à l’enquête, en %")
+       subtitle="Niveau de formation le plus élevé parmi les répondant-e-s à l’enquête, en %")
 
 annot_df <- tibble(
   year = rep(2021.5, 3),
@@ -266,7 +299,7 @@ edu_chart2 <- edu_all_genre %>%
   geom_ribbon(
     data = edu_genre_rib_df,
     aes(ymin = male, ymax = female, group = 1),
-    fill = "grey70", alpha = 0.2) +
+    fill = "#968aa8", alpha = 0.2) +
   geom_point(aes(x = year, y = share_w, group = type,
                  color = type), size = 2,
              alpha = 0.6) +
@@ -281,7 +314,7 @@ edu_chart2 <- edu_all_genre %>%
     # limits = c(2016,2024),
      expand = c(0.01,0), name = "") +
   # have y scale not start at 0, add unit % 
-  scale_y_continuous(expand = c(0.005,0.01), name = "", 
+  scale_y_continuous(expand = c(0.007,0.012), name = "", 
                      labels = function(x) paste0(x, "%")) +
   scale_colour_manual(
     values=c("#7725eb", "#469b88", "#262626")) +
@@ -292,12 +325,18 @@ edu_chart2 <- edu_all_genre %>%
             aes(label=type, y = share_w,
                 colour = type), 
             family = font_rc,
-            position=position_nudge(0.07), hjust=0, show.legend=FALSE, size = 5) +
+            fontface = "bold",
+            position=position_nudge(0.1), hjust=0, 
+            show.legend=FALSE, size = 4) +
   coord_cartesian(xlim = c(2016, 2022.9)) 
 
 edu_chart2
 
-edu_chart1_a + edu_chart2
+#edu_chart1_a + edu_chart2
+
+share_tot_3 <- edu_all_genre %>% 
+  filter(year == max(year) & type == "all") %>% 
+  .$share_w
 
 
 edu3_pays_df <- edu3_pays %>%
@@ -306,5 +345,47 @@ edu3_pays_df <- edu3_pays %>%
   filter(year == 2022) %>% 
   arrange(desc(share_w)) %>% 
   select(type, share_w, n)
+
+edu3_pays_df_sub <- edu3_pays_df %>% 
+  filter(
+    type %in% c("France", "Autre OCDE", "Asie", "Autre UE/AELE", 
+                "Autre Europe",  "Amerique latine", "Afrique", "Portugal")
+  ) %>% 
+  left_join(
+    pays2col,
+    by = c("type" = "pays")
+  ) %>% 
+  mutate(
+    type = fct_reorder(type, share_w, .desc = T)
+  ) 
+
+
+edu3_pays_df_sub %>% 
+  arrange(desc(share_w)) %>% 
+  ggplot(aes(x=type, y=share_w)) +
+  geom_point(aes(color = color), size = 5) + 
+  geom_segment(
+    aes(x=type, xend=type, y=share_tot_3, yend=share_w,
+        color = color)) +
+   theme_ipsum_rc(grid="Y", axis="xy", 
+                   base_size = 14,
+                  plot_title_size = 21) + 
+  theme(legend.position = "none",
+        plot.title.position = "plot",
+        plot.title = element_textbox_simple(
+          lineheight = 1.3,
+          padding = margin(0, 1, 2, 0), 
+          margin = margin(0, 0, 3, 0)),
+        plot.subtitle = element_textbox_simple(
+          lineheight = 1.2,
+          margin = margin(0, 0, 5, 0)
+          )
+  ) +
+  scale_color_identity() +
+  geom_hline(yintercept = share_tot_3,
+             linewidth = 1) +
+  geom_text(aes(x = 4.5, y = share_tot_3, 
+                label = "TOTAL"))
+  
 
 ```

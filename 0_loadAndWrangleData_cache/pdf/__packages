@@ -12,8 +12,8 @@ lubridate
 magrittr
 knitr
 dqnTheme
-skimr
 hrbrthemes
+skimr
 paletteer
 stevethemes
 patchwork
