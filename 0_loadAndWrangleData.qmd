@@ -134,7 +134,7 @@ pays2col <- tibble(
 
   color = c("#66b8d4","#f7d777","#d1ab75","#d97053",
 "#8fd176","#198f58","#6a7aaa","#0050b5",
-"#6d5288","#d17393","#eca53a","#54aa9f",
+"#6d5288","#d17393","#eca53a","#855541",
 "#b1b1b1")
 )
 
@@ -229,7 +229,7 @@ edu_chart1 <- edu_main %>%
           margin = margin(0, 0, 3, 0)),
         plot.subtitle = element_textbox_simple(
           lineheight = 1.2,
-          margin = margin(0, 0, 5, 0)
+          margin = margin(2, 0, 7, 0)
           )
   ) +
   # remove any scale expansion
@@ -241,7 +241,7 @@ edu_chart1 <- edu_main %>%
   scale_fill_ipsum() +
   labs(
        title="La migration est de plus en plus hautement qualifiée",
-       subtitle="Niveau de formation le plus élevé parmi les répondant-e-s à l’enquête, en %")
+       subtitle="Niveau de formation atteint le plus élevé parmi les répondant-e-s à l’enquête, en %")
 
 annot_df <- tibble(
   year = rep(2021.5, 3),
@@ -330,9 +330,10 @@ edu_chart2 <- edu_all_genre %>%
             show.legend=FALSE, size = 4) +
   coord_cartesian(xlim = c(2016, 2022.9)) 
 
-edu_chart2
-
-#edu_chart1_a + edu_chart2
+edu_chart2_a <- edu_chart2 +
+  labs(subtitle = "Part avec formation tertiaire selon le genre")
+  
+#edu_chart1_a / edu_chart2_a
 
 share_tot_3 <- edu_all_genre %>% 
   filter(year == max(year) & type == "all") %>% 
@@ -346,6 +347,7 @@ edu3_pays_df <- edu3_pays %>%
   arrange(desc(share_w)) %>% 
   select(type, share_w, n)
 
+pc_shift_txt <- 2
 edu3_pays_df_sub <- edu3_pays_df %>% 
   filter(
     type %in% c("France", "Autre OCDE", "Asie", "Autre UE/AELE", 
@@ -357,17 +359,35 @@ edu3_pays_df_sub <- edu3_pays_df %>%
   ) %>% 
   mutate(
     type = fct_reorder(type, share_w, .desc = T)
-  ) 
-
-
-edu3_pays_df_sub %>% 
+  ) %>% 
   arrange(desc(share_w)) %>% 
+  mutate(
+    y = share_w - pc_shift_txt,
+    angle = ifelse(share_w > share_tot_3,
+                   90, -90),
+  )
+
+nudge_y_txt <- ifelse(
+ edu3_pays_df_sub$share_w > share_tot_3, 0, pc_shift_txt * 1.5
+)
+
+arrow_txt <- 
+  tibble(
+    x1 = 0.5,
+    x2 = 1,
+    y1 = share_tot_3 -4,
+    y2 = share_tot_3
+  )
+
+
+
+edu_chart3 <- edu3_pays_df_sub %>% 
   ggplot(aes(x=type, y=share_w)) +
   geom_point(aes(color = color), size = 5) + 
   geom_segment(
     aes(x=type, xend=type, y=share_tot_3, yend=share_w,
-        color = color)) +
-   theme_ipsum_rc(grid="Y", axis="xy", 
+        color = color), size = 1, alpha = 0.8) +
+   theme_ipsum_rc(grid="Y", axis="y", 
                    base_size = 14,
                   plot_title_size = 21) + 
   theme(legend.position = "none",
@@ -381,11 +401,33 @@ edu3_pays_df_sub %>%
           margin = margin(0, 0, 5, 0)
           )
   ) +
-  scale_color_identity() +
   geom_hline(yintercept = share_tot_3,
-             linewidth = 1) +
-  geom_text(aes(x = 4.5, y = share_tot_3, 
-                label = "TOTAL"))
+             linewidth = 2, color = "#262626") +
+
+  scale_x_discrete(name = "", labels = NULL) +
+  scale_y_continuous(name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  geom_richtext(
+    aes(label = type, x = type, y = y,
+        angle = angle, color = color),
+      fill = NA, label.color = NA,# remove background and outline,
+    size = 5,
+    hjust = 1, family = font_rc,
+    vjust = 0,
+    nudge_y = nudge_y_txt
+  ) +
+    scale_color_identity() +
+  geom_curve(
+    data = arrow_txt, 
+    aes(x = x1, y = y1, xend = x2, yend = y2),
+   # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
+    color = "gray20", curvature = -0.3, size = .3) +
+    annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
+             color = "#262626", size = 4,
+             hjust = 0,
+                label = "Part du total avec une formation tertaire en 2022") 
   
+
+(edu_chart1_a + edu_chart2_a) / edu_chart3
 
 ```
