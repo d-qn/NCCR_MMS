@@ -190,6 +190,7 @@ edu3_pays <- data_all %>%
   ) %>% 
   filter(groupe_edu == "Tertiaire")
 
+# du3_pays %>% filter(year == 2022) %>% arrange(desc(share_w))
 
 
 
@@ -224,24 +225,71 @@ edu_chart1_a <- flush_ticks(edu_chart1)  +
                 )
   
 
-edu_chart1_a
+edu_chart1_a 
+
+# edu_chart1_a + 
+#   facet_zoom(y = group_edu == "Tertiaire", split = T)
+
+# edu_chart1_a +
+#   facet_zoom(ylim = c(50, 60),
+#              split = T,
+#              zoom.size=1,
+#              show.area = TRUE,
+#              horizontal = TRUE)
 
 
-
-bind_rows(
+edu_all_genre <- bind_rows(
   edu_main %>% 
     select(year, groupe_edu, share_w, n) %>% 
     mutate(type = "all"),
   edu_genre %>% 
     select(year, sexe, groupe_edu, share_w, n) %>% 
     rename(type = sexe)
-)  %>% 
-  filter(groupe_edu == "Tertiaire") %>% 
-   ggplot(aes(x = year, y = share_w, group = type)) +
-  geom_line(aes(color = type)) +
-    theme_ipsum_rc(axis="xy", grid = FALSE) + 
-  theme(panel.ontop = TRUE, legend.position = "none") 
+) %>%  
+  filter(groupe_edu == "Tertiaire")
+
+edu_genre_rib_df <- edu_all_genre %>% 
+  filter(type %in% c("male", "female") & 
+           groupe_edu == "Tertiaire") %>% 
+  select(year, share_w, type) %>% 
+  pivot_wider(names_from = type, values_from = share_w)
+
+edu_chart2 <- edu_all_genre %>% 
+  ggplot(aes(x= year)) +
+    geom_ribbon(
+    data = edu_genre_rib_df,
+    aes(ymin = male, ymax = female, group = 1),
+     fill = "grey70", alpha = 0.2) +
+  geom_line(aes(x = year, y = share_w, group = type,
+    color = type, size = n), lineend="round") +
+  theme_ipsum_rc(axis="xy", grid = FALSE) + 
+
+  theme(panel.ontop = TRUE, legend.position = "none") +
+  scale_size(range = c(0.1, 2)) +
+   scale_x_continuous(
+     breaks = 2016:2024,
+    # limits = c(2016,2024),
+     expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  scale_colour_manual(values=c("#262626", "#7725eb", "#469b88")) +
+  geom_text(data=. %>% 
+              arrange(desc(year)) %>% 
+              group_by(type) %>% 
+              slice(1), 
+            aes(label=type, y = share_w), 
+            position=position_nudge(0.1), hjust=0, show.legend=FALSE) +
+  coord_cartesian(xlim = c(2016, 2022.9)) 
+
+edu_chart1_a + edu_chart2
 
 
+edu3_pays_df <- edu3_pays %>%
+  select(year, pays, groupe_edu, share_w, n) %>%
+  rename(type = pays) %>% 
+  filter(year == 2022) %>% 
+  arrange(desc(share_w)) %>% 
+  select(type, share_w, n)
 
 ```
