@@ -219,8 +219,10 @@ edu_chart1 <- edu_main %>%
   geom_area(aes(fill = groupe_edu), alpha = 0.9) + 
   theme_ipsum_rc(grid="XY", axis="xy", 
                  grid_col = "black",
-                   base_size = 14,
-                  plot_title_size = 21) + 
+                 base_size = 14,
+                 plot_title_size = 21,
+                 plot_margin = margin(10, 10, 10, 0),
+  ) + 
   theme(legend.position = "none",
         plot.title.position = "plot",
         plot.title = element_textbox_simple(
@@ -230,7 +232,7 @@ edu_chart1 <- edu_main %>%
         plot.subtitle = element_textbox_simple(
           lineheight = 1.2,
           margin = margin(2, 0, 7, 0)
-          )
+        )
   ) +
   # remove any scale expansion
   scale_x_continuous(expand = c(0,0), name = "") +
@@ -240,8 +242,8 @@ edu_chart1 <- edu_main %>%
   scale_color_ipsum() +
   scale_fill_ipsum() +
   labs(
-       title="La migration est de plus en plus hautement qualifiée",
-       subtitle="Niveau de formation atteint le plus élevé parmi les répondant-e-s à l’enquête, en %")
+    # title="La migration est de plus en plus hautement qualifiée",
+    subtitle="Niveau de formation atteint le plus élevé parmi les répondant-e-s à l’enquête, en %")
 
 annot_df <- tibble(
   year = rep(2021.5, 3),
@@ -254,8 +256,8 @@ edu_chart1_a <- flush_ticks(edu_chart1)  +
                 fill = NA, label.color = NA,# remove background and outline,
                 color = "white", size = 7,
                 hjust = 1, family = font_rc
-                )
-  
+  )
+
 
 edu_chart1_a 
 
@@ -304,15 +306,18 @@ edu_chart2 <- edu_all_genre %>%
                  color = type), size = 2,
              alpha = 0.6) +
   geom_line(aes(x = year, y = share_w, group = type,
-    color = type, size = n), lineend="round", alpha= 0.8) +
-  theme_ipsum_rc(axis="xy", grid = FALSE) + 
-
+                color = type, size = n), lineend="round", alpha= 0.8) +
+  theme_ipsum_rc(axis="xy", grid = "Y",
+                 base_size = 14,
+                 #plot_title_size = 21,
+                 plot_margin = margin(10, 10, 10, 0)
+  ) + 
   theme(panel.ontop = TRUE, legend.position = "none") +
-  scale_size(range = c(0.1, 2)) +
-   scale_x_continuous(
-     breaks = 2016:2024,
+  scale_size(range = c(0.1, 1.5)) +
+  scale_x_continuous(
+    breaks = 2016:2024,
     # limits = c(2016,2024),
-     expand = c(0.01,0), name = "") +
+    expand = c(0.01,0), name = "") +
   # have y scale not start at 0, add unit % 
   scale_y_continuous(expand = c(0.007,0.012), name = "", 
                      labels = function(x) paste0(x, "%")) +
@@ -332,7 +337,8 @@ edu_chart2 <- edu_all_genre %>%
 
 edu_chart2_a <- edu_chart2 +
   labs(subtitle = "Part avec formation tertiaire selon le genre")
-  
+
+edu_chart2_a
 #edu_chart1_a / edu_chart2_a
 
 share_tot_3 <- edu_all_genre %>% 
@@ -383,13 +389,15 @@ arrow_txt <-
 
 edu_chart3 <- edu3_pays_df_sub %>% 
   ggplot(aes(x=type, y=share_w)) +
-  geom_point(aes(color = color), size = 5) + 
+  geom_point(aes(color = color), size = 4) + 
   geom_segment(
     aes(x=type, xend=type, y=share_tot_3, yend=share_w,
         color = color), size = 1, alpha = 0.8) +
-   theme_ipsum_rc(grid="Y", axis="y", 
-                   base_size = 14,
-                  plot_title_size = 21) + 
+  theme_ipsum_rc(grid="Y", axis="y", 
+                 base_size = 14,
+                 #plot_title_size = 21,
+                 plot_margin = margin(10, 10, 10, 0)
+  ) + 
   theme(legend.position = "none",
         plot.title.position = "plot",
         plot.title = element_textbox_simple(
@@ -399,35 +407,44 @@ edu_chart3 <- edu3_pays_df_sub %>%
         plot.subtitle = element_textbox_simple(
           lineheight = 1.2,
           margin = margin(0, 0, 5, 0)
-          )
+        )
   ) +
   geom_hline(yintercept = share_tot_3,
              linewidth = 2, color = "#262626") +
-
+  
   scale_x_discrete(name = "", labels = NULL) +
   scale_y_continuous(name = "", 
                      labels = function(x) paste0(x, "%")) +
   geom_richtext(
     aes(label = type, x = type, y = y,
         angle = angle, color = color),
-      fill = NA, label.color = NA,# remove background and outline,
-    size = 5,
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 4,
     hjust = 1, family = font_rc,
     vjust = 0,
     nudge_y = nudge_y_txt
   ) +
-    scale_color_identity() +
+  scale_color_identity() +
   geom_curve(
     data = arrow_txt, 
     aes(x = x1, y = y1, xend = x2, yend = y2),
-   # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
+    # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
     color = "gray20", curvature = -0.3, size = .3) +
-    annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
-             color = "#262626", size = 4,
-             hjust = 0,
-                label = "Part du total avec une formation tertaire en 2022") 
+  annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
+           color = "#262626", size = 4,
+           hjust = 0,
+           label = "Part du total avec une formation tertaire en 2022") 
   
 
-(edu_chart1_a + edu_chart2_a) / edu_chart3
+#(edu_chart1_a + edu_chart2_a) / edu_chart3
+
+patchwork <- (edu_chart1_a + edu_chart2_a) / edu_chart3
+patchwork
+
+patchwork + 
+  plot_annotation(title="La migration est de plus en plus hautement qualifiée",
+                  theme = theme_ipsum_rc(plot_title_size = 25)) 
+
+  
 
 ```
