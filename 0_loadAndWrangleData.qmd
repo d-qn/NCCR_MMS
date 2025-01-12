@@ -89,6 +89,7 @@ data_read %<>%
 
 ## 1b. Enrich & wrangle
 
+
 ```{r}
 #| label: join code txt to data
 
@@ -159,7 +160,7 @@ pays2col <- tibble(
 
 ## VIZ 
 
-
+### Font embedding for svg
 
 ```{r}
 #| label: font embedding for svg
@@ -177,12 +178,17 @@ font_add(font_ps,
          regular =  "/Users/duc-q.nguyen/Library/Fonts/IBMPlexSans-Regular.ttf",
          bold =  "/Users/duc-q.nguyen/Library/Fonts/IBMPlexSans-Bold.ttf")
 
+
+font_add("Merriweather", 
+         regular = systemfonts::match_font("Merriweather"),
+         bold = "/Users/duc-q.nguyen/Library/Fonts/Merriweather-Bold.ttf"
+         )
+
 font_add("Ratio", regular = systemfonts::match_font("Ratio")$path)
 font_add("Ratio-Medium", regular = systemfonts::match_font("Ratio-Medium")$path)
 
 
 showtext_auto()
-
 
 # #systemfonts::match_font(font_rc)
 # 
@@ -195,13 +201,13 @@ showtext_auto()
 # # Automatically use showtext for rendering
 # 
 # showtext_auto()
-
-
 ```
 
 ### Education history and current situation
 
 ```{r}
+#| label: La migration est de plus en plus hautement qualifiée
+
 edu_main <- data_all %>% 
   group_by(year, groupe_edu) %>% 
   summarise(
@@ -261,11 +267,14 @@ rc_plot_title_size <- 12
 rc_subtitle_size <- 12
 
 rc_txtbox_plot.title <- element_textbox_simple(
+  color = "#595062", 
   lineheight = 1.3,
   padding = margin(0, 1, 2, 0), 
-  margin = margin(0, 0, 3, 0))
+  margin = margin(0, 0, 3, 0)
+  )
 
 rc_txtbox_plot.subtitle <- element_textbox_simple(
+  color = "#403d43",
   lineheight = 1.2,
   margin = margin(0, 0, 5, 0)
 )          
@@ -307,7 +316,7 @@ annot_df <- tibble(
 edu_chart1_a <- flush_ticks(edu_chart1)  +
   geom_richtext(data = annot_df, aes(x = year, y = share_w, label = txt, group = 1),
                 fill = NA, label.color = NA,# remove background and outline,
-                color = "white", size = 6,
+                color = "white", size = 5,
                 hjust = 0.5, family = font_rc_light
   )
 
@@ -383,7 +392,7 @@ edu_chart2 <- edu_all_genre %>%
     # limits = c(2016,2024),
     expand = c(0.01,0), name = "") +
   # have y scale not start at 0, add unit % 
-  scale_y_continuous(expand = c(0.009,0.013), name = "", 
+  scale_y_continuous(expand = c(0.015,0.015), name = "", 
                      labels = function(x) paste0(x, "%")) +
   scale_colour_manual(
     values=c("#7725eb", "#469b88", "#262626")) +
@@ -471,7 +480,7 @@ edu_chart3 <- edu3_pays_df_sub %>%
         plot.subtitle = rc_txtbox_plot.subtitle
   ) +
   geom_hline(yintercept = share_tot_3,
-             linewidth = 2, color = "#262626") +
+             linewidth = 1.5, color = "#262626") +
   
   scale_x_discrete(name = "", labels = NULL) +
   scale_y_continuous(name = "", 
@@ -480,7 +489,7 @@ edu_chart3 <- edu3_pays_df_sub %>%
     aes(label = type, x = type, y = y,
         angle = angle, color = color),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 3.7,
+    size = 3.4,
     hjust = 1, family = font_rc,
     vjust = 0,
     nudge_y = nudge_y_txt
@@ -490,10 +499,10 @@ edu_chart3 <- edu3_pays_df_sub %>%
     data = arrow_txt, 
     aes(x = x1, y = y1, xend = x2, yend = y2),
     # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
-    color = "gray20", curvature = -0.3, size = .3) +
+    color = "#8c8c8c", curvature = -0.3, size = .3) +
   annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
            family = font_rc,
-           color = "#262626", size = 4,
+           color = "#8c8c8c", size = 4,
            hjust = 0,
            label = "Part du total avec une formation tertaire en 2022") +
   labs(
@@ -511,7 +520,7 @@ patchwork <- (edu_chart1_a + edu_chart2_a) / edu_chart3
 
 
 svglite::svglite(
-  filename = here("Output", "charts", "education_svglite.svg"),
+  filename = here("Output", "charts", "education.svg"),
   height = 12,
   width = 9,
   fix_text_size = T,
@@ -522,25 +531,70 @@ patchwork +
   plot_annotation(
     title="La migration est de plus en plus hautement qualifiée",
     theme = theme(
-      plot.title = element_text(size = 28, colour = "red"))) 
+      plot.title = element_textbox_simple(
+        size = 23, 
+        hjust = 0.5,
+        colour = "#3f2d54",
+        face = "bold",
+        family = "Merriweather",
+        lineheight = 1.3,
+        padding = margin(15, 5, 10, 5), 
+        margin = margin(10, 3, 20, 3)
+      )))
+  
 
 dev.off()
 
 
 
+```
 
-# ggsave(
-#   filename = here("Output", "charts", "education.png"),
-#   dpi = "retina",
-#   width = 4000,
-#   height = 5000,
-#   units = "px",
-#   bg = "#F7F7F7"
-# )
-# 
-# ggsave(
-#   filename = here("Output", "charts", "education.svg"),
-#   device = svg, width = 12, height = 20)
+### Les partenaires s’intègrent plus difficilement sur le marché du travail
+
+```{r}
+#| label: Les partenaires s’intègrent plus difficilement sur le marché du travail
+
+
+
+```
+
+
+### La migration concerne de plus en plus des personnes en couple
+
+
+```{r}
+#| label: La migration concerne de plus en plus des personnes en couple
+
+# 2022 to 
+data_all %>% count(A6)
+
+mig_brks <- c(-Inf, 2010, 2015, 2019, Inf)
+
+migm <- data_all %>% 
+  mutate(
+    mig = year - ifelse(A6 < 0, NA, A6),
+    mar = ifelse(B9 == 1, T, F),
+    mig_g = cut(mig, breaks = mig_brks)
+  ) %>% 
+  group_by(mig_g) %>% 
+  mutate(
+    n = n(),
+    tot_weight = sum(weight)
+  ) %>% 
+  ungroup %>% 
+  group_by(mig_g, mar) %>% 
+    summarise(
+    n = n(),
+    mar = sum(weight) / tot_weight
+  ) %>% 
+  ungroup()
+  
+  
+  summarise(
+    n = n(),
+    share_mar = sum(mar, na.rm = T) / n()
+  ) %>% 
+  ungroup()
 
 
 
