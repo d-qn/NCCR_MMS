@@ -577,17 +577,14 @@ migm <- data_all %>%
     mig_g = cut(mig, breaks = mig_brks)
   ) %>% 
   group_by(mig_g) %>% 
-  mutate(
+  summarise(
     n = n(),
-    tot_weight = sum(weight)
+    tot_weight = sum(weight, na.rm = T),
+    mar = sum(weight[which(mar)], na.rm = T),
+    mar_share = (mar / tot_weight) * 100
   ) %>% 
-  ungroup %>% 
-  group_by(mig_g, mar) %>% 
-    summarise(
-    n = n(),
-    mar = sum(weight) / tot_weight
-  ) %>% 
-  ungroup()
+  ungroup 
+ 
   
   
   summarise(
