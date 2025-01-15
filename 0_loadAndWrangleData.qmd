@@ -549,50 +549,118 @@ dev.off()
 
 ```
 
-### Les partenaires s’intègrent plus difficilement sur le marché du travail
+
+### La migration concerne de plus en plus des personnes en couple
+
+Concernant la variable a6 (année d'arrivée), la codification de celle-ci dépend de l'année de l'enquête dans le sens où dans la première enquête nous sommes parti du plus récent (1 = 2016) au plus ancien (11 = 2006). Tous les deux ans, on a dû adapter les modalités et l'institut de sondage a choisi de continuer de la même manière (du plus récent au plus ancien) mais en commençant successivement en 2018, 2020, 2022.
+
+Voici les formats que j'utilise pour les analyses
+
+value arr22a 1-3 = "2020-2022" 4-8 ="2015-2019" 9-13 ="2010-2014" 14-17 ="2006-2009";
+value arr20a 1 = "2020-2022" 2-6 ="2015-2019" 7-11 ="2010-2014" 12-15 ="2006-2009";
+value arr18a 1-4 ="2015-2018" 5-9 ="2010-2014" 10-13 ="2006-2009";
+value arr16a 1-2 ="2015-2016" 3-7 ="2010-2014" 8-11 ="2006-2009";
 
 ```{r}
-#| label: Les partenaires s’intègrent plus difficilement sur le marché du travail
+#| label: La migration concerne de plus en plus des personnes en couple
+
+# 2022 to 
+#data_all %>% count(A6)
+
+
+# odd number of migration years, last interval is 3 years!!! 
+migy2gr <- tibble(
+  migy = 2006:2022,
+  migg = c(rep(seq(2006, 2020, 2), each = 2), 2020)
+) %>% 
+  mutate(
+    migg = ifelse(migg >= 2020, "2020-2022", str_c(migg,"-", migg+1)) %>% as.factor()
+  )
+
+migm <- data_all %>% 
+  mutate(
+    migy = year - (ifelse(A6 < 0, NA, A6) -1),
+    mar = case_when(
+      B9 == 1 ~ T,
+      B9 == 2 ~ F,
+      T ~ NA
+    )
+  ) %>% 
+  left_join(
+    migy2gr
+  ) %>% 
+  group_by(migg, mar, B9) %>% 
+  reframe(
+    n = n(),
+    tot_weight = sum(weight, na.rm = T),
+  ) %>% 
+  filter(!is.na(migg)) %>% 
+  filter(!is.na(mar))
+
+
+migm_df <- migm %>% 
+  group_by(migg) %>% 
+  reframe(
+    tot = sum(n),
+    mar_share = (tot_weight[which(mar)] / (sum(tot_weight, na.rm = T))) * 100
+  ) %>% 
+  mutate(
+    non_mar_share = 100 - mar_share
+  ) %>% 
+  pivot_longer(
+    mar_share:non_mar_share, names_to = "group"
+  ) %>% 
+  mutate(
+    group = factor(ifelse(group == "mar_share", "Marié", "Non-marié")) %>% 
+      fct_reorder(value)
+  )
+
+migm_df %>% 
+  ggplot(aes(x = migg, y = value, group = group)) +
+  geom_area(aes(fill = group), alpha = 0.9, show.legend = FALSE) + 
+  geom_line(data = migm_df %>% filter(group == "Marié"),
+            aes(x = migg, y = value, group = group, size = tot),
+            lineend = "round", color = "white", alpha = 0.6
+            ) +
+  theme_ipsum_rc(grid="XY", axis="xy", 
+                 grid_col = "black",
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = margin(10, 5, 10, 0)
+  ) + 
+  theme(legend.position = c(0.8, 0.2),
+        #plot.title.position = "plot",
+        plot.title = rc_txtbox_plot.title,
+        plot.subtitle = rc_txtbox_plot.subtitle
+  ) +
+  # remove any scale expansion
+  scale_x_discrete(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%"))+
+  scale_color_ipsum() +
+  scale_fill_ipsum() +
+  labs(
+    title="Part des trois niveaux de formation",
+    subtitle="Niveau de formation atteint le plus élevé")
+
 
 
 
 ```
 
 
-### La migration concerne de plus en plus des personnes en couple
 
+
+
+
+
+
+### Les partenaires s’intègrent plus difficilement sur le marché du travail
 
 ```{r}
-#| label: La migration concerne de plus en plus des personnes en couple
-
-# 2022 to 
-data_all %>% count(A6)
-
-mig_brks <- c(-Inf, 2010, 2015, 2019, Inf)
-
-migm <- data_all %>% 
-  mutate(
-    mig = year - ifelse(A6 < 0, NA, A6),
-    mar = ifelse(B9 == 1, T, F),
-    mig_g = cut(mig, breaks = mig_brks)
-  ) %>% 
-  group_by(mig_g) %>% 
-  summarise(
-    n = n(),
-    tot_weight = sum(weight, na.rm = T),
-    mar = sum(weight[which(mar)], na.rm = T),
-    mar_share = (mar / tot_weight) * 100
-  ) %>% 
-  ungroup 
- 
-  
-  
-  summarise(
-    n = n(),
-    share_mar = sum(mar, na.rm = T) / n()
-  ) %>% 
-  ungroup()
-
+#| label: Les partenaires s’intègrent plus difficilement sur le marché du travail
 
 
 
