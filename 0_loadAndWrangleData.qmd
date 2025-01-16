@@ -267,7 +267,7 @@ rc_plot_title_size <- 12
 rc_subtitle_size <- 12
 
 rc_txtbox_plot.title <- element_textbox_simple(
-  color = "#595062", 
+  color = "#332e38", 
   lineheight = 1.3,
   padding = margin(0, 1, 2, 0), 
   margin = margin(0, 0, 3, 0)
@@ -309,7 +309,7 @@ edu_chart1 <- edu_main %>%
 
 annot_df <- tibble(
   year = rep(2019, 3),
-  share_w = c(27, 72, 95),
+  share_w = c(27, 72, 93),
   txt = c("Tertiaire", "Secondaire II", "Secondaire I")
 )
 
@@ -317,7 +317,8 @@ edu_chart1_a <- flush_ticks(edu_chart1)  +
   geom_richtext(data = annot_df, aes(x = year, y = share_w, label = txt, group = 1),
                 fill = NA, label.color = NA,# remove background and outline,
                 color = "white", size = 5,
-                hjust = 0.5, family = font_rc_light
+                fontface = "bold",
+                hjust = 0.5, family = font_rc
   )
 
 
@@ -368,11 +369,12 @@ edu_chart2 <- edu_all_genre %>%
     aes(ymin = male, ymax = female, group = 1),
     fill = "#968aa8", alpha = 0.2) +
   geom_point(aes(x = year, y = share_w, group = type,
-                 color = type), size = 2,
+                 color = type, size = n), 
              alpha = 0.6) +
   geom_line(aes(x = year, y = share_w, group = type,
-                color = type, size = n, alpha = al), 
-            lineend="round") +
+                color = type, alpha = al), 
+            size = 1,
+            lineend="round", show.legend = F) +
   theme_ipsum_rc(axis="xy", grid = "Y",
                  base_size = rc_base_size,
                  plot_title_size = rc_plot_title_size,
@@ -380,13 +382,18 @@ edu_chart2 <- edu_all_genre %>%
                  plot_margin = margin(10, 5, 10, 0),
   ) + 
   theme(
-    legend.position = "none",
+    legend.position = c(0.95, 0.1),
     #plot.title.position = "plot",
     plot.title = rc_txtbox_plot.title,
-    plot.subtitle = rc_txtbox_plot.subtitle
+    plot.subtitle = rc_txtbox_plot.subtitle,
+    legend.text = element_text(size = 8, color = "darkgrey"), # Reduce legend text size
+    legend.title = element_text(size = 10, color = "darkgrey", face = "bold", 
+                                hjust =0.5), # Reduce legend title size
+    legend.key.size = unit(0.8, "lines") # Reduce legend key size
+     
   ) +
-  scale_size(range = c(0.1, 1.5)) +
-  scale_alpha(range = c(0.5, 1)) +
+  scale_size(range = c(0.1, 3)) +
+  scale_alpha(range = c(0.5, 1), ) +
   scale_x_continuous(
     breaks =seq(2016, 2024, 2),
     # limits = c(2016,2024),
@@ -396,6 +403,8 @@ edu_chart2 <- edu_all_genre %>%
                      labels = function(x) paste0(x, "%")) +
   scale_colour_manual(
     values=c("#7725eb", "#469b88", "#262626")) +
+  # To hide the alpha legend as well:
+  guides(color = "none", alpha = "none") +
   geom_text(data=. %>% 
               arrange(desc(year)) %>% 
               group_by(type) %>% 
@@ -428,7 +437,7 @@ edu3_pays_df <- edu3_pays %>%
   arrange(desc(share_w)) %>% 
   select(type, share_w, n)
 
-pc_shift_txt <- 1
+pc_shift_txt <- 0
 edu3_pays_df_sub <- edu3_pays_df %>% 
   filter(
     type %in% c("France", "Autre OCDE", "Asie", "Autre UE/AELE", 
@@ -443,13 +452,16 @@ edu3_pays_df_sub <- edu3_pays_df %>%
   ) %>% 
   arrange(desc(share_w)) %>% 
   mutate(
-    y = share_w - pc_shift_txt,
+    y = share_w,
     angle = ifelse(share_w > share_tot_3,
-                   90, -90),
+                   90, -90)
   )
 
 nudge_y_txt <- ifelse(
- edu3_pays_df_sub$share_w > share_tot_3, 0, pc_shift_txt * 1.5
+ edu3_pays_df_sub$share_w > share_tot_3, 1, -1
+)
+nudge_x_txt <- ifelse(
+  edu3_pays_df_sub$share_w > share_tot_3, -0.2, +0.2
 )
 
 arrow_txt <- 
@@ -464,20 +476,24 @@ arrow_txt <-
 
 edu_chart3 <- edu3_pays_df_sub %>% 
   ggplot(aes(x=type, y=share_w)) +
-  geom_point(aes(color = color), size = 3) + 
+  geom_point(aes(color = color, size = n)) + 
   geom_segment(
     aes(x=type, xend=type, y=share_tot_3, yend=share_w,
-        color = color), size = 1, alpha = 0.4) +
+        color = color, size = log1p(n), alpha = 0.4), show.legend = F) +
   theme_ipsum_rc(grid="Y", axis="y", 
                  base_size = rc_base_size,
                  plot_title_size = rc_plot_title_size,
                  subtitle_size = rc_subtitle_size,
                  plot_margin = margin(10, 5, 10, 0)
   ) + 
-  theme(legend.position = "none",
+  theme(legend.position = c(0.1, 0.1),
       #  plot.title.position = "plot",
         plot.title = rc_txtbox_plot.title,
-        plot.subtitle = rc_txtbox_plot.subtitle
+        plot.subtitle = rc_txtbox_plot.subtitle,
+      legend.text = element_text(size = 8, color = "darkgrey"), # Reduce legend text size
+      legend.title = element_text(size = 10, color = "darkgrey", face = "bold", 
+                                  hjust =0.5), # Reduce legend title size
+      legend.key.size = unit(0.8, "lines") # Reduce legend key size
   ) +
   geom_hline(yintercept = share_tot_3,
              linewidth = 1.5, color = "#262626") +
@@ -487,12 +503,13 @@ edu_chart3 <- edu3_pays_df_sub %>%
                      labels = function(x) paste0(x, "%")) +
   geom_richtext(
     aes(label = type, x = type, y = y,
-        angle = angle, color = color),
+        angle = angle,
+        color = color),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 3.4,
+    size = 3.8,
     hjust = 1, family = font_rc,
-    vjust = 0,
-    nudge_y = nudge_y_txt
+    nudge_y = nudge_y_txt,
+    nudge_x = nudge_x_txt
   ) +
   scale_color_identity() +
   geom_curve(
@@ -508,8 +525,10 @@ edu_chart3 <- edu3_pays_df_sub %>%
   labs(
     title = "Différences par pays d’origine",
     subtitle = "Les plus et les moins qualifiés, % avec formation tertiaire en 2022"
-  )
+  ) + 
+  guides(size = guide_legend(override.aes = list(color = "darkgrey"))) 
   
+edu_chart3
 
 #(edu_chart1_a + edu_chart2_a) / edu_chart3
 
@@ -635,14 +654,15 @@ mig_chart1 <- migm_df %>%
                  plot_margin = margin(10, 5, 10, 0)
   ) + 
   theme(legend.position = c(0.98, 0.1),
-        legend.title = element_text(color = "white", face = "bold", hjust = 0),
-        legend.text = element_text(color = "white"),
+        legend.title = element_text(color = "lightgrey", face = "bold", hjust = 0.5, size = 10),
+        legend.text = element_text(color = "lightgrey", size = 8),
         legend.justification = c(1, 0.8),
-        legend.key.size = unit(0.5, "cm"), 
+        legend.key.size = unit(0.8, "lines"), # Reduce legend key size
         #plot.title.position = "plot",
         plot.title = rc_txtbox_plot.title,
         plot.subtitle = rc_txtbox_plot.subtitle
   ) +
+  guides(size = guide_legend(override.aes = list(color = "grey")))  +
   # remove any scale expansion
   scale_x_discrete(expand = c(0,0), name = "") +
   # have y scale not start at 0, add unit % 
