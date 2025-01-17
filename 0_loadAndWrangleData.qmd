@@ -653,7 +653,7 @@ mig_chart1 <- migm_df %>%
                  subtitle_size = rc_subtitle_size,
                  plot_margin = margin(10, 5, 10, 0)
   ) + 
-  theme(legend.position = c(0.98, 0.1),
+  theme(legend.position = c(0.98, 0.15),
         legend.title = element_text(color = "lightgrey", face = "bold", hjust = 0.5, size = 10),
         legend.text = element_text(color = "lightgrey", size = 8),
         legend.justification = c(1, 0.8),
@@ -683,16 +683,199 @@ annot_df <- tibble(
 )
 
 mig_chart1_a <- mig_chart1  +
-  geom_richtext(data = annot_df, aes(x = year, y = value, label = txt, group = 1),
-                fill = NA, label.color = NA,# remove background and outline,
-                color = "white", size = 9, fontface = "bold",
-                hjust = 0.5, family = font_rc
+  geom_richtext(
+    data = annot_df, 
+    aes(x = year, y = value, label = txt, group = 1),
+    fill = NA, label.color = NA,# remove background and outline,
+    color = "white", size = 9, fontface = "bold",
+    hjust = 0.5, family = font_rc
   )
-
 mig_chart1_a
 
 
 
+
+## Focus
+mign <- data_all %>% 
+  mutate(
+    mar = case_when(
+      B9 == 1 ~ T,
+      B9 == 2 ~ F,
+      T ~ NA
+    )
+  ) %>% 
+  group_by(pays, mar) %>% 
+  reframe(
+    n = n(),
+    tot_weight = sum(weight, na.rm = T),
+  ) %>% 
+  filter(!is.na(mar))
+
+
+mign_df <- mign %>% 
+  group_by(pays) %>% 
+  reframe(
+    tot = sum(n),
+    mar_share = (tot_weight[which(mar)] / (sum(tot_weight, na.rm = T))) * 100
+  ) %>% 
+  mutate(
+    non_mar_share = 100 - mar_share
+  ) %>% 
+  filter(!is.na(pays)) %>% 
+  arrange(desc(non_mar_share)) %>% 
+  mutate(pays = fct_reorder(pays, mar_share)) %>% 
+  pivot_longer(mar_share:non_mar_share, names_to = "type") 
+
+
+
+# https://dqn.website/post/interactive-mekko-charts-in-r/
+
+mign_df %<>% 
+  group_by(type) %>% 
+  arrange(desc(pays)) %>%
+  mutate(
+    ymax = cumsum(tot) / sum(tot), 
+    ymin = (ymax - (tot/sum(tot)))
+  ) %>% ungroup() %>% 
+  group_by(pays) %>% 
+  arrange(type) %>%
+  mutate(xmax = cumsum(value), xmin = xmax - value) %>%
+  ungroup() %>% 
+  arrange(pays)
+
+mign_sub <- mign_df %>% 
+  filter(pays != "Autres pays")
+
+mig_chart2 <- ggplot(mign_sub) + 
+  geom_rect(aes(ymin = ymin, 
+                ymax = ymax, xmin = xmin, 
+                xmax = xmax, fill = type), 
+            colour = "white", size = 0.5, alpha = 0.95) +
+  theme_ipsum_rc(
+    grid="X", axis="x", 
+    grid_col = "black",
+    base_size = rc_base_size,
+    plot_title_size = rc_plot_title_size,
+    subtitle_size = rc_subtitle_size,
+    plot_margin = margin(10, 5, 10, 0)
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.title = rc_txtbox_plot.title,
+    plot.subtitle = rc_txtbox_plot.subtitle
+  ) + 
+  scale_fill_manual(values = c( "#3f2d54", "#c9d175")) +
+  geom_vline(xintercept = 50, linetype = "dashed",
+             linewidth = 0.5, color = "lightgrey") +
+  
+  scale_x_continuous(name = "", expand = c(0,0), position = "top",
+                     labels = function(x) paste0(x, "%")) +
+  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+
+
+# job labels tibble
+mign_labels <- mign_sub %>% 
+  filter(type == "mar_share") %>%
+  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
+  select(pays, xmin, y, yRange) %>% 
+  ungroup()
+
+value_labels <- mign_sub %>% 
+  select(pays, type, xmin, xmax, ymax, value) %>%
+  mutate(
+    x = ifelse(type == "mar_share", xmax, xmin),
+    y = ymax - 0.005,
+    label = paste0(round(value, 1), "%"),
+    hjust = ifelse(type == "mar_share", 1.05, -0.25)
+  ) 
+  
+
+mig_chart2_a <- mig_chart2 + 
+  geom_richtext(
+    data = mign_labels,
+    aes(x = xmin + 0.008, y = y, 
+        label = as.character(pays), size = yRange),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 7,
+    hjust = 0, vjust = 1, colour = "white",
+    family = font_rc
+  ) +
+  geom_richtext(
+    data = value_labels,
+    aes(x = x, y = y, label = label, hjust = hjust),
+    fill = NA, label.color = NA,# remove background and outline,
+    vjust = 1, size = 5, alpha = 0.9, colour = "white",
+    family = font_rc_light
+  ) +
+  annotate(
+    geom = "richtext",
+    x=92,y = 0.5, angle = -90, label = "Seul",
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 17,
+    family = font_rc, fontface = "bold", 
+    alpha = 0.6,
+    color = "white"
+  ) +
+  labs(
+    title = "Les personnes des pays voisins migrent plus souvent seuls",
+    subtitle = "Part des personnes en couple ou seules lors de leur migration, par pays"
+  )
+  
+# 3
+# 1.        Your spouse/partner already lived in Switzerland when you met.
+# 2.        You moved together.
+# 3.        Your spouse/partner moved before you.
+# 4.        Your spouse/partner moved after you.
+# 5.        Your spouse/partner has not yet moved to Switzerland.
+
+# miggc_df <- data_all %>% 
+#   filter(B10 %in% 1:5) %>% 
+#   mutate(
+#     mc = case_when(
+#       B10 == 1 ~ "Partenaire déjà en Suisse",
+#       B10 == 2 ~ "Migration ensemble",
+#       B10 %in% c(3,4) ~ "Partenaire a migré après",
+#       B10 == 5 ~ "Partenaire n'a pas encore migré",
+#       T ~ ""
+#     )
+#   ) %>% 
+#   mutate(
+#     migy = year - (ifelse(A6 < 0, NA, A6) -1)
+#   ) %>% 
+#   left_join(
+#     migy2gr
+#   ) %>% 
+#   select(
+#     migg, mc, B10, weight
+#   )
+# 
+# miggc_df %<>% 
+#   group_by(migg, mc) %>% 
+#    reframe(
+#     n = n(),
+#     weight = sum(weight, na.rm = T),
+#   ) 
+# 
+# tot_weight <- miggc_df %>% 
+#   group_by(migg) %>% 
+#   summarise(
+#     n_tot = sum(n),
+#     tot_weight = sum(weight)
+#   ) %>% 
+#   select(-n_tot)
+# 
+# miggcp_df <- left_join(
+#   miggc_df,
+#   tot_weight
+# ) %>% 
+#   mutate(
+#     share = (weight / tot_weight) * 100
+#   ) 
+# 
+# 
+# miggcp_df %>% 
+#   ggplot(aes(x = migg, y = share, group = mc, fill = mc)) +
+#   geom_area()
 
 ```
 
