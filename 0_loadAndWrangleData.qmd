@@ -45,9 +45,11 @@ library(paletteer)
 library(colorspace)
 library(stevethemes)
 
+
 ### Interactive
 library(patchwork)
 library(ggtext)
+library("waffle")
 library(ggforce)
 library(directlabels)
 library(geomtextpath)
@@ -901,6 +903,55 @@ mig_chart2_a <- mig_chart2 +
 # miggcp_df %>% 
 #   ggplot(aes(x = migg, y = share, group = mc, fill = mc)) +
 #   geom_area()
+
+
+migcww <- tibble(
+  share = round(c(44,	32.0,	15.7,	7.8)),
+  labels = c("Partenaire déjà en Suisse",
+             "Migration ensemble",
+             "Partenaire a migré après",
+             "Partenaire n'a pas encore migré"
+             )
+) 
+  
+  
+migcww %>% 
+  ggplot(
+    aes(fill = labels, values = share)
+  ) +
+  geom_waffle(
+    n_rows = 10,
+    size = 0.9, 
+    colour = "white",
+    flip = TRUE
+  ) +
+  theme_ipsum_rc(
+    grid="", axis="", 
+    grid_col = "black",
+    base_size = rc_base_size,
+    plot_title_size = rc_plot_title_size,
+    subtitle_size = rc_subtitle_size,
+    plot_margin = margin(15, 5, 10, 0)
+  ) + 
+  theme(
+   # legend.position = "none",
+    axis.text.y = element_blank(),  # Hide y-axis text
+    axis.ticks.y = element_blank() , # Hide y-axis ticks
+    plot.title = rc_txtbox_plot.title,
+    plot.subtitle = rc_txtbox_plot.subtitle
+  ) +
+    scale_fill_manual(values = c("#75b8d1", "#d18975", "#758bd1",  "#d1ab75")) 
+  
+  
+  
+  
+
+
+
+
+
+
+
 
 
 migcw <- tibble(
