@@ -1122,43 +1122,87 @@ pimt_sub <- pimt_df %>%
   
 pimt_subw <- pimt_sub %>% 
   select(year, sexe, share_non) %>% 
-  pivot_wider(names_from= sexe, values_from = share_non)
+  pivot_wider(names_from= sexe, values_from = share_non) %>% 
+  mutate(
+    gap = female - male,
+    x_gap = (female + male) / 2
+  )
   
 
 # gradient segment
 # https://stackoverflow.com/questions/55752424/draw-a-geom-segment-line-with-a-colour-gradient-or-is-there-another-way-to-emp
 
-pimt_sub %>% 
+pimt_chart1 <- pimt_sub %>% 
   ggplot() +
   geom_link(data = pimt_subw, 
             aes(male,
                 xend = female,
                 y = year, yend = year,
                 color = stat(index)),
-            lwd = 3, alpha = 0.7) +
+            lwd = 3, alpha = 0.9, show.legend = F) +
   geom_point(
     aes(x = share_non, y = year, fill = sexe,
         size = n_y), pch = 21) +
-  scale_size_continuous(range = c(5,7)) +
-   theme_ipsum_rc(
-    grid="xy", axis="xy", 
+  scale_size_continuous(range = c(7,9), name = "n") +
+  theme_ipsum_rc(
+    grid="X", axis="X", 
     base_size = rc_base_size,
     plot_title_size = rc_plot_title_size,
     subtitle_size = rc_subtitle_size,
     plot_margin = margin(15, 5, 10, 0)
   ) + 
   theme(
-    legend.position = "none",
+    legend.position = c(0.27, 0.17),
     plot.title = rc_txtbox_plot.title,
-    plot.subtitle = rc_txtbox_plot.subtitle
+    plot.subtitle = rc_txtbox_plot.subtitle,
+    axis.text.y = element_text(
+      margin = margin(t = 0, r = -30, b = 0, l = 0, unit = "pt"),
+      face = "bold"),
+    legend.title = element_text(color = "darkgrey", face = "bold", hjust = 0.5, size = 10),
+    legend.text = element_text(color = "darkgrey", size = 8),
+    legend.justification = c(1, 0.8),
+    legend.key.size = unit(0.8, "lines"), # Reduce legend key size
   ) + 
   scale_colour_gradient(low = "#469b88", high = "#7725eb") +
   scale_fill_manual(values = c("#7725eb", "#469b88")) +
   scale_x_continuous(name = "", expand = c(0.1,0.1), 
-                     labels = NULL, position = "top",
+                     position = "top",
+                     labels = function(x) paste0(x, "%"),
                      limits = c(0, max(pimt_sub$share_non))) +
-  scale_y_discrete(name = "",  labels = NULL, 
-                     expand = c(0.1,0.1)) 
+  scale_y_continuous(name = "",  
+                      breaks = c(2018, 2020, 2022),
+                      expand = c(0.1,0.1)) +
+  guides(fill = "none", size = guide_legend(
+    override.aes = list(fill = "lightgrey", colour = "darkgrey"))) 
+
+
+pimit_chart1_a <- pimt_chart1 +
+  geom_richtext(data = pimt_sub,
+                fill = NA, label.color = NA, # remove background and outline
+                aes(x = share_non, y = year, 
+                    family = font_rc_light,
+                    label = prettyNum(share_non, digits = 3)),
+                vjust = 0, nudge_y = 0.07, colour = "darkgrey"
+  ) +
+  geom_richtext(data = pimt_subw,
+                fill = NA, label.color = NA, # remove background and outline
+                aes(x = x_gap, y = year, 
+                     family = font_rc,
+                    label =  prettyNum(gap, digits = 2)),
+                fontface = "bold",
+                vjust = 0, nudge_y = 0.04, colour = "darkgrey"
+  ) +
+  labs(
+    title = str_c(
+      "Les <span style='color:#7725eb'>femmes</span> sont davantage concernées que les <span style='color:#469b88'>hommes</span> par la non utilisation de leurs compétences"),
+    subtitle = "% de personnes qui considèrent ne pas utiliser leurs compétences au travail"
+  )
+
+pimit_chart1_a
+
+
+
+
 
 
 ```
