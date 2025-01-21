@@ -34,6 +34,7 @@ library(hrbrthemes)
 library(skimr)
 library(systemfonts)
 library(marquee)
+library(ggforce)
 
 Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
 options(OutDec = ",")
@@ -915,7 +916,7 @@ migcww <- tibble(
 ) 
   
   
-migcww %>% 
+migcw_chart_a <- migcww %>% 
   ggplot(
     aes(fill = labels, values = share)
   ) +
@@ -926,21 +927,27 @@ migcww %>%
     flip = TRUE
   ) +
   theme_ipsum_rc(
-    grid="", axis="", 
-    grid_col = "black",
+    grid=FALSE, axis=F, 
+   # grid_col = "black",
     base_size = rc_base_size,
     plot_title_size = rc_plot_title_size,
     subtitle_size = rc_subtitle_size,
     plot_margin = margin(15, 5, 10, 0)
   ) + 
   theme(
-   # legend.position = "none",
+    legend.position = "top",
     axis.text.y = element_blank(),  # Hide y-axis text
     axis.ticks.y = element_blank() , # Hide y-axis ticks
+    axis.text.x = element_blank(),  # Hide y-axis text
+    axis.ticks.x = element_blank() , # Hide y-axis ticks
     plot.title = rc_txtbox_plot.title,
     plot.subtitle = rc_txtbox_plot.subtitle
   ) +
-    scale_fill_manual(values = c("#75b8d1", "#d18975", "#758bd1",  "#d1ab75")) 
+    scale_fill_manual(values = c("#75b8d1", "#d18975", "#758bd1",  "#d1ab75"))  +
+  labs(
+    title = str_c("Migration en couple: un déplacement rarement conjoint (1 fois sur 3)"),
+    subtitle = "Parmi les personnes qui étaient en couple au moment de la migration"
+  ) + guides(fill = guide_legend(nrow = 2, title =""))
   
   
   
@@ -952,7 +959,7 @@ migcww %>%
 
 
 
-
+### no longer used !! 
 
 migcw <- tibble(
   share = c(44.6,	32.0,	15.7,	7.8),
@@ -1008,7 +1015,7 @@ migcw %<>%
                  "**Migration ensemble**", txt) 
   )
 
-migcw_chart_a <- migcw_chart +
+migcw_chart_b <- migcw_chart +
   geom_richtext(data = migcw, 
     aes(x = 0.6, y=x-10, label = txt),
     fill = NA, label.color = NA,# remove background and outline,
@@ -1068,15 +1075,90 @@ dev.off()
 
 
 
-
-
-
-
 ### Les partenaires s’intègrent plus difficilement sur le marché du travail
+
+E38
+1.      Yes, fully appropriate
+2.      Yes, rather appropriate
+3.      No, not really appropriate
+4.      No, absolutely not appropriate
+-9. No answer
 
 ```{r}
 #| label: Les partenaires s’intègrent plus difficilement sur le marché du travail
 
+pimt_df <- data_all %>% 
+  filter(!is.na(E38) & E38 != -9 & E38 != -7) %>% 
+  select(A6, B1, E38, sexe, pays, year, weight) %>% 
+  mutate(
+    migy = year - (ifelse(A6 < 0, NA, A6) -1),
+    comp_utilisees = ifelse(E38 <= 2, "oui", "non")
+  ) %>% 
+  left_join(
+    migy2gr
+  ) 
+
+pimt_tot <- pimt_df %>% 
+  group_by(sexe, year) %>% 
+  reframe(
+    n_y = n(),
+    weight_y = sum(weight, na.rm = T)
+  ) %>% 
+  arrange(year, sexe) 
+
+pimt_sub <- pimt_df %>% 
+  filter(comp_utilisees  == "non") %>% 
+  group_by(sexe, year) %>% 
+  reframe(
+    weight = sum(weight, na.rm = T)
+  ) %>% 
+  left_join(
+    pimt_tot
+  ) %>% 
+  arrange(year, sexe) %>% 
+  mutate(
+    share_non = (weight / weight_y) * 100
+  ) 
+  
+pimt_subw <- pimt_sub %>% 
+  select(year, sexe, share_non) %>% 
+  pivot_wider(names_from= sexe, values_from = share_non)
+  
+
+# gradient segment
+# https://stackoverflow.com/questions/55752424/draw-a-geom-segment-line-with-a-colour-gradient-or-is-there-another-way-to-emp
+
+pimt_sub %>% 
+  ggplot() +
+  geom_link(data = pimt_subw, 
+            aes(male,
+                xend = female,
+                y = year, yend = year,
+                color = stat(index)),
+            lwd = 3, alpha = 0.7) +
+  geom_point(
+    aes(x = share_non, y = year, fill = sexe,
+        size = n_y), pch = 21) +
+  scale_size_continuous(range = c(5,7)) +
+   theme_ipsum_rc(
+    grid="xy", axis="xy", 
+    base_size = rc_base_size,
+    plot_title_size = rc_plot_title_size,
+    subtitle_size = rc_subtitle_size,
+    plot_margin = margin(15, 5, 10, 0)
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.title = rc_txtbox_plot.title,
+    plot.subtitle = rc_txtbox_plot.subtitle
+  ) + 
+  scale_colour_gradient(low = "#469b88", high = "#7725eb") +
+  scale_fill_manual(values = c("#7725eb", "#469b88")) +
+  scale_x_continuous(name = "", expand = c(0.1,0.1), 
+                     labels = NULL, position = "top",
+                     limits = c(0, max(pimt_sub$share_non))) +
+  scale_y_discrete(name = "",  labels = NULL, 
+                     expand = c(0.1,0.1)) 
 
 
 ```
