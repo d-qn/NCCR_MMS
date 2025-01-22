@@ -1087,6 +1087,19 @@ E38
 ```{r}
 #| label: Les partenaires s’intègrent plus difficilement sur le marché du travail
 
+
+migy2gr2 <- tibble(
+  migy = 2006:2022,
+  migg = c(rep(seq(2006, 2020, 2), each = 2), 2020),
+  migg4 = c(rep(seq(2006, 2018, 4), each = 4), 2018),
+) %>% 
+  mutate(
+    migg = ifelse(migg >= 2020, "2020\n2022", str_c(migg,"\n", migg+1)) %>% as.factor(),
+    migg4 = ifelse(migg4 >= 2018, "2018\n2022", str_c(migg4,"\n", migg4+4)) %>% as.factor()
+  )
+
+
+
 pimt_df <- data_all %>% 
   filter(!is.na(E38) & E38 != -9 & E38 != -7) %>% 
   select(A6, B1, E38, sexe, pays, year, weight) %>% 
@@ -1095,7 +1108,7 @@ pimt_df <- data_all %>%
     comp_utilisees = ifelse(E38 <= 2, "oui", "non")
   ) %>% 
   left_join(
-    migy2gr
+    migy2gr2
   ) 
 
 pimt_tot <- pimt_df %>% 
@@ -1201,8 +1214,29 @@ pimit_chart1_a <- pimt_chart1 +
 pimit_chart1_a
 
 
+pimtm_tot <- pimt_df %>% 
+  group_by(migg4) %>% 
+  reframe(
+    n_y = n(),
+    weight_y = sum(weight, na.rm = T)
+  ) 
 
-
+pimt_df %>% 
+  filter(comp_utilisees == "non") %>% 
+  group_by(migg4) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T)
+  ) %>% 
+  left_join(pimtm_tot) %>% 
+  filter(!is.na(migg4)) %>% 
+  mutate(
+    share_non = (weight / weight_y) * 100
+  ) %>% 
+  ggplot(
+    aes(x = migg4, y = share_non, group = 1)
+  ) +
+  geom_line()
 
 
 ```
