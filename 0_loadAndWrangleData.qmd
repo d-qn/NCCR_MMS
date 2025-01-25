@@ -1178,11 +1178,14 @@ pimt_chart1 <- pimt_sub %>%
   ) + 
   scale_colour_gradient(low = "#469b88", high = "#7725eb") +
   scale_fill_manual(values = c("#7725eb", "#469b88")) +
-  scale_x_continuous(name = "", expand = c(0.1,0.1), 
+  scale_x_continuous(name = "", 
+                     expand = c(0.5,0.1), 
                      position = "top",
-                     labels = function(x) paste0(x, "%"),
-                     limits = c(0, max(pimt_sub$share_non))) +
+                     #limits = c(0, max(pimt_sub$share_non)),
+                     labels = function(x) paste0(x, "%")
+                     ) +
   scale_y_continuous(name = "",  
+                     position = "left",
                       breaks = c(2018, 2020, 2022),
                       expand = c(0.1,0.1)) +
   guides(fill = "none", size = guide_legend(
@@ -1254,7 +1257,7 @@ pimit_chart2 <- pimt_sub2 %>%
     plot.subtitle = rc_txtbox_plot.subtitle,
     axis.text.y = element_text(
       margin = margin(t = 0, r = -30, b = 0, l = 0, unit = "pt"),
-      face = "bold", color = rc_axis_tick_txt_color),
+      color = rc_axis_tick_txt_color),
     legend.title = element_text(color = "darkgrey", face = "bold", hjust = 0.5, size = 10),
     legend.text = element_text(color = "darkgrey", size = 8),
     legend.justification = c(1, 0.8),
