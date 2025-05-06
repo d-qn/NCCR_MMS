@@ -200,7 +200,6 @@ showtext_auto()
 # showtext_auto()
 ```
 
-
 ### Ggplot2 theme settings
 
 ```{r}
@@ -239,6 +238,7 @@ legend_base_col <- "lightgrey"
 
 
 ```
+
 ### Education history and current situation
 
 ```{r}
