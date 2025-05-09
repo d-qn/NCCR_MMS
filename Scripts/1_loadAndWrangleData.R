@@ -50,6 +50,8 @@ data_read <- data_file_path %>%
       as_tibble() 
   }) 
 
+# save csv files
+
 data_read %>% 
   select(matches("^[A-Z][0-9]+$"), year, weight) %>% 
   write_csv(here("Output", "data", "merged_MMS_AWYonly_files.csv"))

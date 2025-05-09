@@ -1,4 +1,4 @@
-
+Codes2txt: <https://docs.google.com/spreadsheets/d/11FtmUtb59vTaIEDex-VsUsuPUU4PrPUSwfHh-cNB7JM/edit?gid=309754628#gid=309754628>
 
 * En 2016, la variable sur la déqualification n'avait pas été posée
 
