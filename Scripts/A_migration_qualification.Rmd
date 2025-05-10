@@ -1,0 +1,452 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+### Load & wranglge
+
+```{r setup & load data, include=FALSE}
+source("Scripts/_helpers.R")
+```
+
+
+```{r wrangle}
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
+c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes E38.csv"))
+
+
+data_all <- mms_df  %>% 
+  ### subset !!!
+  select(
+    A1, A6, B1, B9, D1, E38, year, weight, everything()
+  ) %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  left_join(c2t_D1) %>% 
+  left_join(c2t_E38)
+
+
+data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique() %>% sort()
+
+# data_all %>% 
+#   group_by(year, groupe_edu) %>% 
+#   summarise(
+#     tot = sum(weight, na.rm = T)
+#   ) %>% 
+#   ungroup() %>% 
+#   group_by(year) %>% 
+#   mutate(
+#     toty = sum(tot)
+#   ) %>% 
+#   ungroup %>% 
+#   mutate(
+#     share = tot/toty
+#   )
+
+# https://projects.susielu.com/viz-palette?colors=%5B%22#66b8d4%22,%22%23f7d777%22,%22%23d1ab75%22,%22%23d97053%22,%22%238fd176%22,%22%23198f58%22,%22%236a7aaa%22,%22%230050b5%22,%22%236d5288%22,%22%23d17393%22,%22%23eca53a%22,%22%2354aa9f%22,%22%23b1b1b1%22%5D&backgroundColor=%22white%22&fontColor=%22black%22&mode=%22normal%22
+pays2col <- tibble(
+  pays = c("France", "Allemagne", "Espagne", "Autriche", "Italie", "Portugal",
+           "Autre UE/AELE",
+           "Autre Europe",
+           "Autre OCDE",
+           "Asie",
+           "Amerique latine",
+           "Afrique",
+           "Autres pays"),
+  
+  color = c("#66b8d4","#f7d777","#d1ab75","#d97053",
+            "#8fd176","#198f58","#6a7aaa","#0050b5",
+            "#6d5288","#d17393","#eca53a","#855541",
+            "#b1b1b1")
+)
+
+
+```
+
+
+### La migration est de plus en plus hautement qualifiée
+
+```{r wrangle more & check}
+edu_main <- data_all %>% 
+  group_by(year, groupe_edu) %>% 
+  summarise(
+    n = n(),
+    weight_sum = sum(weight)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year) %>% 
+  mutate(
+    toty = sum(n),
+    tot_weight = sum(weight_sum)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share_w = (weight_sum /tot_weight) * 100
+  ) 
+
+# check
+edu_main %>% 
+  group_by(year) %>% 
+  reframe(n = sum(n))
+
+edu_genre <- data_all %>% 
+  group_by(year, groupe_edu, sexe) %>% 
+  summarise(
+    n = n(),
+    weight_sum = sum(weight)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year, sexe) %>% 
+  mutate(
+    toty = sum(n),
+    tot_weight = sum(weight_sum)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share_w = (weight_sum /tot_weight) * 100
+  ) 
+
+edu3_pays <- data_all %>% 
+  group_by(year, groupe_edu, pays) %>% 
+  summarise(
+    n = n(),
+    weight_sum = sum(weight)
+  ) %>% 
+  ungroup() %>% 
+  group_by(year, pays) %>% 
+  mutate(
+    toty = sum(n),
+    tot_weight = sum(weight_sum)
+  ) %>% 
+  ungroup %>% 
+  mutate(
+    share_w = (weight_sum /tot_weight) * 100
+  ) %>% 
+  filter(groupe_edu == "Tertiaire")
+
+# du3_pays %>% filter(year == 2022) %>% arrange(desc(share_w))
+
+# check n
+data_all %>% 
+  filter(year == 2018 | year == 2024) %>% 
+  group_by(year, groupe_edu, pays) %>% 
+  summarise(
+    n = n(),
+  ) %>% 
+  ungroup() %>% 
+  group_by(year, pays) %>% 
+  mutate(
+    toty = sum(n)
+  ) %>% 
+  ungroup  %>% 
+  group_by(year, pays) %>% 
+  reframe(
+    n = sum(n)
+  ) %>% 
+  arrange(pays)
+          
+```
+
+#### Main stacke area
+
+
+```{r main}
+
+edu_chart1 <- edu_main %>% 
+  ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
+  geom_area(aes(fill = groupe_edu), alpha = 0.9) + 
+  theme_ipsum_rc(grid="XY", axis="xy", 
+                 grid_col = "black",
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0), #color = "#3f2d54", linewidth = 0.5),
+    #plot.title.position = "plot",
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),    
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  ) +
+  # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2016, 2024, 2)) +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%"))+
+  scale_color_ipsum() +
+  scale_fill_ipsum() +
+  labs(
+    title="Part des trois niveaux de formation",
+    subtitle="Niveau de formation atteint le plus élevé")
+
+annot_df <- tibble(
+  year = rep(2020, 3),
+  share_w = c(27, 72, 93),
+  txt = c("Tertiaire", "Secondaire II", "Secondaire I")
+)
+
+edu_chart1_a <- flush_ticks(edu_chart1)  +
+  geom_richtext(data = annot_df, aes(x = year, y = share_w, label = txt, group = 1),
+                fill = NA, label.color = NA,# remove background and outline,
+                color = "white", size = 5,
+                fontface = "bold",
+                hjust = 0.5, family = font_rc
+  )
+
+edu_chart1_a 
+```
+
+
+### Line chart by gender
+
+```{r edu 2}
+edu_all_genre <- bind_rows(
+  edu_main %>% 
+    select(year, groupe_edu, share_w, n) %>% 
+    mutate(type = "all"),
+  edu_genre %>% 
+    select(year, sexe, groupe_edu, share_w, n) %>% 
+    rename(type = sexe)
+) %>%  
+  filter(groupe_edu == "Tertiaire") %>% 
+  mutate(
+    al = ifelse(type == "all", 0.7, 1)
+  )
+
+edu_genre_rib_df <- edu_all_genre %>% 
+  filter(type %in% c("male", "female") & 
+           groupe_edu == "Tertiaire") %>% 
+  select(year, share_w, type) %>% 
+  pivot_wider(names_from = type, values_from = share_w)
+
+edu_chart2 <- edu_all_genre %>% 
+  mutate(
+    type = case_when(
+      type == "all" ~ "TOTAL",
+      type == "male" ~ "Hommes",
+      type == "female" ~ "Femmes",
+      T ~ type
+    )
+  ) %>% 
+  ggplot(aes(x= year)) +
+  geom_ribbon(
+    data = edu_genre_rib_df,
+    aes(ymin = male, ymax = female, group = 1),
+    fill = "#968aa8", alpha = 0.2) +
+  geom_point(aes(x = year, y = share_w, group = type,
+                 color = type, size = n), 
+             alpha = 0.6) +
+  geom_line(aes(x = year, y = share_w, group = type,
+                color = type, alpha = al), 
+            size = 1,
+            lineend="round", show.legend = F) +
+  theme_ipsum_rc(axis="xy", grid = "Y",
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    legend.position = c(0.95, 0.1),
+    #plot.title.position = "plot",
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),
+    legend.text = element_text(size = 8, color = legend_base_col), # Reduce legend text size
+    legend.title = element_text(size = 10, color = legend_base_col, face = "bold", 
+                                hjust =0.5), # Reduce legend title size
+    legend.key.size = unit(0.8, "lines"), # Reduce legend key size
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  ) +
+  scale_size(range = c(0.1, 3)) +
+  scale_alpha(range = c(0.5, 1), ) +
+  scale_x_continuous(
+    breaks =seq(2016, 2024, 2),
+    # limits = c(2016,2024),
+    expand = c(0.01,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0.015,0.015), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  scale_colour_manual(
+    values=c("#7725eb", "#469b88", "#262626")) +
+  # To hide the alpha legend as well:
+  guides(color = "none", alpha = "none",
+         size = guide_legend(override.aes = list(color = legend_base_col))) +
+  geom_text(data=. %>% 
+              arrange(desc(year)) %>% 
+              group_by(type) %>% 
+              slice(1), 
+            aes(label=type, y = share_w,
+                colour = type, alpha = al), 
+            family = font_rc,
+            fontface = "bold",
+            position=position_nudge(0.2), hjust=0, 
+            show.legend=FALSE, size = 4) +
+  coord_cartesian(xlim = c(2016, 2026.4)) 
+
+edu_chart2_a <- edu_chart2 +
+  labs(
+    title = "Différence selon le genre",
+    subtitle = "Part avec formation tertiaire")
+
+edu_chart2_a
+
+```
+
+#### Lollipop by nationality
+
+```{r edu 3}
+share_tot_3 <- edu_all_genre %>% 
+  filter(year == max(year) & type == "all") %>% 
+  .$share_w
+
+
+edu3_pays_df <- edu3_pays %>%
+  select(year, pays, groupe_edu, share_w, n) %>%
+  rename(type = pays) %>% 
+  filter(year == 2024) %>% 
+  arrange(desc(share_w)) %>% 
+  select(type, share_w, n)
+
+pc_shift_txt <- 0
+edu3_pays_df_sub <- edu3_pays_df %>% 
+  filter(
+    type %in% c("France", "Autre OCDE", 
+                "Asie", "Autre UE/AELE", 
+                "Autre Europe",  "Amerique latine", "Afrique", "Portugal")
+  ) %>% 
+  left_join(
+    pays2col,
+    by = c("type" = "pays")
+  ) %>% 
+  mutate(
+    type = fct_reorder(type, share_w, .desc = T)
+  ) %>% 
+  arrange(desc(share_w)) %>% 
+  mutate(
+    y = share_w,
+    angle = ifelse(share_w > share_tot_3,
+                   90, -90)
+  )
+
+nudge_y_txt <- ifelse(
+ edu3_pays_df_sub$share_w > share_tot_3, 1, -1
+)
+nudge_x_txt <- ifelse(
+  edu3_pays_df_sub$share_w > share_tot_3, -0.2, +0.2
+)
+
+arrow_txt <- 
+  tibble(
+    x1 = 0.5,
+    x2 = 1,
+    y1 = share_tot_3 -4,
+    y2 = share_tot_3
+  )
+
+edu_chart3 <- edu3_pays_df_sub %>% 
+  ggplot(aes(x=type, y=share_w)) +
+  geom_point(aes(color = color, size = n)) + 
+  geom_segment(
+    aes(x=type, xend=type, y=share_tot_3, yend=share_w,
+        color = color, size = log1p(n), alpha = 0.4), show.legend = F) +
+  theme_ipsum_rc(grid="Y", axis="y", 
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    legend.position = c(0.1, 0.1),
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),
+    legend.text = element_text(size = 8, color = legend_base_col), # Reduce legend text size
+    legend.title = element_text(
+      size = 10, color = legend_base_col, 
+      face = "bold", hjust =0.5), # Reduce legend title size
+      legend.key.size = unit(0.8, "lines"), # Reduce legend key size
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  ) +
+  geom_hline(yintercept = share_tot_3,
+             linewidth = 1.5, color = "#262626") +
+  
+  scale_x_discrete(name = "", labels = NULL) +
+  scale_y_continuous(name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  geom_richtext(
+    aes(label = type, x = type, y = y,
+        angle = angle,
+        color = color),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 3.8,
+    hjust = 1, family = font_rc,
+    nudge_y = nudge_y_txt,
+    nudge_x = nudge_x_txt
+  ) +
+  scale_color_identity() +
+  geom_curve(
+    data = arrow_txt, 
+    aes(x = x1, y = y1, xend = x2, yend = y2),
+    # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
+    color = "#8c8c8c", curvature = -0.3, size = .3) +
+  annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
+           family = font_rc,
+           color = "#8c8c8c", size = 4,
+           hjust = 0,
+           label = "Part du total avec une formation tertaire en 2024") +
+  labs(
+    title = "Différences par pays d’origine",
+    subtitle = "Les plus et les moins qualifiés, % avec formation tertiaire en 2024"
+  ) + 
+  guides(size = guide_legend(override.aes = list(color = legend_base_col))) 
+  
+edu_chart3
+
+```
+
+### patchwork
+
+
+```{r patch}
+
+patchwork <- (edu_chart1_a + edu_chart2_a) / edu_chart3
+# patchwork
+# 
+# (edu_chart1_a + edu_chart2_a) / edu_chart3
+
+svglite::svglite(
+  filename = here("Output", "charts", "education.svg"),
+  height = 12,
+  width = 9,
+  fix_text_size = T,
+  bg = pw_bg_color
+  )
+
+patchwork + 
+  plot_annotation(
+    title="La migration est de plus en plus hautement qualifiée",
+    theme = theme(
+      plot.title.position = 'plot', 
+      plot.title = element_textbox_simple(
+        size = 23, 
+        hjust = 0.5,
+        colour = "#3f2d54",
+        face = "bold",
+        family = "Merriweather",
+        lineheight = 1.3,
+        padding = pw_padding,
+        margin = pw_margin
+      )))
+  
+
+dev.off()
+
+```
