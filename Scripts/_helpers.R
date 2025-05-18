@@ -140,3 +140,34 @@ pw_margin <- margin(10, 3, 10, 3)
 plot_margin <- margin(15, 15, 10, 0)
 legend_base_col <- "lightgrey"
 
+
+## Marimekko wrangle helper 
+
+mms_mekko_wrangler <- function(df, 
+                               # the var to stack the column on
+                               var1, 
+                               # the var to stack the rows on
+                               var2, 
+                               # var value
+                               varv,
+                               tot_n) {
+#  browser()
+  df %>% 
+    group_by(!!sym(var1)) %>% 
+    arrange(desc(!!sym(var2))) %>% 
+    mutate(
+      ymax = cumsum(!!sym(tot_n)) / sum(!!sym(tot_n)),
+      ymin = (ymax - (!!sym(tot_n)/sum(!!sym(tot_n))))
+    ) %>% 
+    ungroup() %>%
+    group_by(!!sym(var2)) %>%
+    arrange(!!sym(var1)) %>%
+    mutate(
+      xmax = cumsum(!!sym(varv)), 
+      xmin = xmax - !!sym(varv)
+    ) %>%
+    ungroup() %>%
+    arrange(!!sym(var2)) 
+}
+
+

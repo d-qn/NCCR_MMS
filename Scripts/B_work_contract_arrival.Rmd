@@ -208,26 +208,121 @@ fhf_df %>%
 
 
 ```{r focus par pays}
-fpp_df %>% 
+
+fpp_pays_ordered <- fpp_df %>% 
   filter(contrat == "Oui") %>% 
-  ggplot(aes(x = reorder(pays, -share), y = share, group = pays)) +
-  geom_col() +
-  theme_ipsum_rc() +
-    theme_ipsum_rc(grid="Y",
-                   axis = T,
-                 base_size = rc_base_size,
-                 plot_title_size = rc_plot_title_size,
-                 subtitle_size = rc_subtitle_size,
-                 plot_margin = plot_margin
+  mutate(
+    pays = factor(pays) %>% fct_reorder(share, .desc = T)
+  ) %>% 
+  arrange(pays) %>% 
+  .$pays %>% as.character()
+
+fpp2mekko_df <- mms_mekko_wrangler(
+  fpp_df %>% 
+    mutate(
+      pays = factor(pays, levels = fpp_pays_ordered),
+      contrat = factor(contrat),
+    ) %>% arrange(pays),
+  var1 = "contrat", 
+  var2 = "pays", 
+  varv = "share", 
+  tot_n = "n_pays"
+) %>% 
+  left_join(pays2col)
+  
+fpp_col <- c( "#8FA1E1", "#B3B974")
+  
+fpp_chart <- fpp2mekko_df %>%   
+  ggplot(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
+  geom_rect(aes(fill = contrat),
+                     colour = "white", size = 0.9, alpha = 0.95) +
+  theme_ipsum_rc(
+    grid="X", axis="x", 
+    grid_col = "black",
+    base_size = rc_base_size, # make it smaller
+    plot_title_size = rc_plot_title_size,
+    subtitle_size = rc_subtitle_size,
+    plot_margin = plot_margin
   ) + 
   theme(
+    plot.caption = element_textbox_simple(
+      color = "darkgrey", margin = margin(7, 0,0,0)),
     legend.position = "none",
-    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
-    #plot.title.position = "plot",
-    plot.title = rc_txtbox_plot.title(),
-    plot.subtitle = rc_txtbox_plot.subtitle(),    
+    plot.title = rc_txtbox_plot.title(2),
+    plot.subtitle = rc_txtbox_plot.subtitle(),
     axis.text.x = element_text(color = rc_axis_tick_txt_color),
-    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)   
+  ) + 
+  #scale_fill_identity() +
+  scale_fill_manual(values = fpp_col) +
+  geom_vline(xintercept = 50, linetype = "dashed",
+             linewidth = 0.5, color = "lightgrey") +
+  
+  scale_x_continuous(name = "", expand = c(0,0), position = "top",
+                     labels = function(x) paste0(x, "%")) +
+  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+
+fpp_chart
+
+# job labels tibble
+fpp_pays_labels <- fpp2mekko_df %>% 
+  filter(contrat == "Oui") %>%
+  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
+  select(pays, xmin, y, yRange) %>% 
+  ungroup()
+
+fpp_value_labels <- fpp2mekko_df %>% 
+  select(pays, contrat, xmin, xmax, ymax, share) %>%
+  mutate(
+    x = ifelse(contrat == "Oui", xmax, xmin),
+    y = ymax - 0.01,
+    label = paste0(round(share, 1), "%"),
+    hjust = ifelse(contrat == "Oui", 1.05, -0.05)
+  ) 
+
+fpp_chart +
+   geom_richtext(
+    data = fpp_pays_labels,
+    aes(x = xmin + 0.01, y = y, 
+        label = as.character(pays), size = yRange),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 4,
+    hjust = 0, vjust = 1, colour = "white",
+    family = font_rc
+  ) +
+  geom_richtext(
+    data = fpp_value_labels,
+    aes(x = x + 0.01, y = y, label = label, hjust = hjust),
+    fill = NA, label.color = NA,# remove background and outline,
+    vjust = 1, size = 3, alpha = 0.9, colour = "white",
+    family = font_rc_light
+  ) +
+  annotate(
+    geom = "richtext",
+    x=90,y = 0.5, angle = -90, label = "Seul",
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 10,
+    family = font_rc, fontface = "bold", 
+    alpha = 0.6,
+    color = "white"
+  ) +
+  labs(
+    title = str_c("Les personnes des pays voisins migrent plus souvent <span style = 'color:", 
+    col_seul, ";'>seuls</span>"),
+    
+    subtitle = str_c(
+      "% de personnes <span style = 'color:", 
+      col_couple, ";'>",
+      "en couple</span> ou <span style = 'color:", col_seul,
+      ";'>",
+      "seules</span> lors de leur migration, par pays"),
+
+    caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: "#,
+  # mign_sub %>% select(tot, pays) %>% 
+  #   distinct() %>%  .$tot %>% sum() %>% prettyNum(big.mark = " ") )
+    )
   )
+
+
 
 ```
