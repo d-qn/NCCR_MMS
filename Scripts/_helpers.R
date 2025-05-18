@@ -35,6 +35,29 @@ mms_load_data <- function(main = T) {
 }
 mms_df <- mms_load_data()
 
+# utility generic yes/no reencoding function
+mms_encode_yes_no_code <- function(x) {
+  x = case_when(
+    x == "1" ~ "Oui",
+    x == "2" ~ "Non",
+    TRUE ~ NA_character_
+  )
+}
+
+# recode A6 arrival year
+mms_encode_migration_year <- function(x, year) {
+  year - (ifelse(x < 0, NA, x) -1)
+}
+
+migy2yearIntervals <- tibble(
+  migy = 2005:2024,
+  mig_2y = rep(seq(2005, 2024, 2), each = 2),
+  mig_4y = rep(seq(2005,2024, 4), each = 4)
+) %>% 
+  mutate(
+    mig_2y = str_c(mig_2y,"\n", mig_2y+1) %>% as.factor(),
+    mig_4y = str_c(mig_4y,"\n", mig_4y+3) %>% as.factor()
+  )
 
 
 
@@ -43,8 +66,22 @@ mms_df <- mms_load_data()
 
 
 
-
-
+# https://projects.susielu.com/viz-palette?colors=%5B%22#66b8d4%22,%22%23f7d777%22,%22%23d1ab75%22,%22%23d97053%22,%22%238fd176%22,%22%23198f58%22,%22%236a7aaa%22,%22%230050b5%22,%22%236d5288%22,%22%23d17393%22,%22%23eca53a%22,%22%2354aa9f%22,%22%23b1b1b1%22%5D&backgroundColor=%22white%22&fontColor=%22black%22&mode=%22normal%22
+pays2col <- tibble(
+  pays = c("France", "Allemagne", "Espagne", "Autriche", "Italie", "Portugal",
+           "Autre UE/AELE",
+           "Autre Europe",
+           "Autre OCDE",
+           "Asie",
+           "Amerique latine",
+           "Afrique",
+           "Autres pays"),
+  
+  color = c("#66b8d4","#f7d777","#d1ab75","#d97053",
+            "#8fd176","#198f58","#6a7aaa","#0050b5",
+            "#6d5288","#d17393","#eca53a","#855541",
+            "#b1b1b1")
+)
 
 ### VIZ SETTINGS ###
 library(showtext)
@@ -61,12 +98,12 @@ font_add(font_ps,
 
 
 font_add("Merriweather", 
-         regular = systemfonts::match_font("Merriweather"),
+         regular = systemfonts::match_fonts("Merriweather"),
          bold = "/Users/duc-q.nguyen/Library/Fonts/Merriweather-Bold.ttf"
 )
 
-font_add("Ratio", regular = systemfonts::match_font("Ratio")$path)
-font_add("Ratio-Medium", regular = systemfonts::match_font("Ratio-Medium")$path)
+font_add("Ratio", regular = systemfonts::match_fonts("Ratio")$path)
+font_add("Ratio-Medium", regular = systemfonts::match_fonts("Ratio-Medium")$path)
 showtext_auto()
 
 

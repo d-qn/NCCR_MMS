@@ -1,5 +1,5 @@
 ---
-title: "MMS_NCCR_template"
+title: "Migration qualification"
 author: "Duc-Quang Nguyen"
 date: "2025-05-10"
 output: html_document
@@ -9,6 +9,7 @@ output: html_document
 
 ```{r setup & load data, include=FALSE}
 source("Scripts/_helpers.R")
+run_n_check <- T
 ```
 
 
@@ -47,24 +48,6 @@ data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique() %>% sort()
 #     share = tot/toty
 #   )
 
-# https://projects.susielu.com/viz-palette?colors=%5B%22#66b8d4%22,%22%23f7d777%22,%22%23d1ab75%22,%22%23d97053%22,%22%238fd176%22,%22%23198f58%22,%22%236a7aaa%22,%22%230050b5%22,%22%236d5288%22,%22%23d17393%22,%22%23eca53a%22,%22%2354aa9f%22,%22%23b1b1b1%22%5D&backgroundColor=%22white%22&fontColor=%22black%22&mode=%22normal%22
-pays2col <- tibble(
-  pays = c("France", "Allemagne", "Espagne", "Autriche", "Italie", "Portugal",
-           "Autre UE/AELE",
-           "Autre Europe",
-           "Autre OCDE",
-           "Asie",
-           "Amerique latine",
-           "Afrique",
-           "Autres pays"),
-  
-  color = c("#66b8d4","#f7d777","#d1ab75","#d97053",
-            "#8fd176","#198f58","#6a7aaa","#0050b5",
-            "#6d5288","#d17393","#eca53a","#855541",
-            "#b1b1b1")
-)
-
-
 ```
 
 
@@ -89,9 +72,12 @@ edu_main <- data_all %>%
   ) 
 
 # check
-edu_main %>% 
-  group_by(year) %>% 
-  reframe(n = sum(n))
+if(run_n_check) {
+  edu_main %>% 
+    group_by(year) %>% 
+    reframe(n = sum(n))  
+}
+
 
 edu_genre <- data_all %>% 
   group_by(year, groupe_edu, sexe) %>% 
@@ -131,24 +117,26 @@ edu3_pays <- data_all %>%
 # du3_pays %>% filter(year == 2022) %>% arrange(desc(share_w))
 
 # check n
-data_all %>% 
-  filter(year == 2018 | year == 2024) %>% 
-  group_by(year, groupe_edu, pays) %>% 
-  summarise(
-    n = n(),
-  ) %>% 
-  ungroup() %>% 
-  group_by(year, pays) %>% 
-  mutate(
-    toty = sum(n)
-  ) %>% 
-  ungroup  %>% 
-  group_by(year, pays) %>% 
-  reframe(
-    n = sum(n)
-  ) %>% 
-  arrange(pays)
-          
+if(run_n_check) {
+  data_all %>% 
+    filter(year == 2018 | year == 2024) %>% 
+    group_by(year, groupe_edu, pays) %>% 
+    summarise(
+      n = n(),
+    ) %>% 
+    ungroup() %>% 
+    group_by(year, pays) %>% 
+    mutate(
+      toty = sum(n)
+    ) %>% 
+    ungroup  %>% 
+    group_by(year, pays) %>% 
+    reframe(
+      n = sum(n)
+    ) %>% 
+    arrange(pays) %>% 
+    pivot_wider(names_from = year, values_from = n) 
+}          
 ```
 
 #### Main stacke area

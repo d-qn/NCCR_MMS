@@ -1,0 +1,233 @@
+---
+title: "Work contrat on arrival"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("Scripts/_helpers.R")
+run_n_check <- T
+```
+
+Concernant la variable a6 (année d'arrivée), la codification de celle-ci dépend de l'année de l'enquête dans le sens où dans la première enquête nous sommes parti du plus récent (1 = 2016) au plus ancien (11 = 2006). Tous les deux ans, on a dû adapter les modalités et l'institut de sondage a choisi de continuer de la même manière (du plus récent au plus ancien) mais en commençant successivement en 2018, 2020, 2022.
+
+Voici les formats que j'utilise pour les analyses
+
+value arr22a 1-3 = "2020-2022" 4-8 ="2015-2019" 9-13 ="2010-2014" 14-17 ="2006-2009"; value arr20a 1 = "2020-2022" 2-6 ="2015-2019" 7-11 ="2010-2014" 12-15 ="2006-2009"; value arr18a 1-4 ="2015-2018" 5-9 ="2010-2014" 10-13 ="2006-2009"; value arr16a 1-2 ="2015-2016" 3-7 ="2010-2014" 8-11 ="2006-2009";
+
+```{r wrangle}
+data_all <- mms_df %>% 
+  mutate(
+    contrat = mms_encode_yes_no_code(E4),
+    migy = mms_encode_migration_year(A6,year)
+  ) %>% 
+  # join sexe A1 & country B1
+  left_join(
+    read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+  ) %>% 
+  left_join(
+    read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+  ) %>% 
+  left_join(
+    migy2yearIntervals
+  ) %>% 
+  select(contrat, year:mig_4y, everything())
+
+
+b_df <- data_all %>% 
+  select(contrat, year:mig_4y)
+```
+
+
+
+```{r wrangle more & check}
+
+mig2y_df <- b_df %>% 
+  group_by(mig_2y, contrat) %>% 
+  summarise(
+    n = n(),
+    weight = sum(weight, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  group_by(mig_2y) %>% 
+  mutate(
+    share = weight/sum(weight),
+    n_y = sum(n, na.rm = T)
+  ) %>% 
+  arrange(desc(share)) %>% 
+  mutate(
+    share = round(share*100,1)
+  ) %>% 
+  select(-weight) %>% 
+  ungroup() %>% 
+  filter(!is.na(mig_2y) & !is.na(contrat))  %>% 
+  arrange(mig_2y, contrat)
+
+
+mig4y_df <- b_df %>% 
+  group_by(mig_4y, contrat) %>% 
+  summarise(
+    n = n(),
+    weight = sum(weight, na.rm = T)
+  ) %>% 
+  ungroup() %>%
+  group_by(mig_4y) %>%
+  mutate(
+    share = weight/sum(weight),
+    n_y = sum(n, na.rm = T)
+  ) %>%
+  arrange(desc(share)) %>%
+  mutate(
+    share = round(share*100,1)
+  ) %>%
+  select(-weight) %>%
+  ungroup() %>%
+  filter(!is.na(mig_4y) & !is.na(contrat)) %>%
+  arrange(mig_4y, contrat)
+  
+
+fhf_df<- b_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(contrat)) %>%  
+  group_by(sexe, contrat) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T)
+  ) %>%
+  group_by(sexe) %>%
+  mutate(
+    share = weight/sum(weight),
+    n_sexe = sum(n, na.rm = T)
+  ) %>% 
+  mutate(
+    share = round(share*100,1)
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    contrat = factor(contrat, levels = c("Oui", "Non"))
+  ) %>% 
+  arrange(contrat, sexe)
+  
+
+fpp_df <- b_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(contrat) & (!is.na(pays))) %>%
+  group_by(pays, contrat) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T)
+  ) %>%
+  group_by(pays) %>%
+  mutate(
+    share = weight/sum(weight),
+    n_pays = sum(n, na.rm = T)
+  ) %>%
+    mutate(
+    share = round(share*100,1)
+  ) %>% 
+  ungroup() %>%
+  mutate(
+    contrat = factor(contrat, levels = c("Oui", "Non"))
+  ) %>%
+  arrange(contrat, pays) %>% 
+  filter(n_pays >30)
+  
+if(run_n_check) {
+  fpp_df %>% 
+    select(pays, n_pays, share, contrat) %>% 
+    pivot_wider(
+      names_from = contrat,
+      values_from = share
+    ) %>%
+    arrange(desc(Oui)) %>% 
+    kable() 
+  
+  ## Autre Europe doesn't match !! !!!!!! only
+}
+  
+```
+
+### Viz
+
+```{r main chart}  
+mig4y_df %>% 
+  filter(contrat == "Oui") %>%
+  ggplot(aes(x = mig_4y, y = share, group = 1)) +
+  geom_line(aes(linewidth  = n_y), alpha = 0.2, lineend = "round" )  +
+  geom_point(
+    aes(size = n_y, alpha = 0.95)
+  ) +
+  theme_ipsum_rc() +
+    theme_ipsum_rc(grid="Y",
+                   axis = T,
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
+    #plot.title.position = "plot",
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),    
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  ) 
+
+```
+
+
+
+```{r focus by gender in 2024}
+
+fhf_df %>% 
+  filter(contrat == "Oui") %>% 
+  ggplot(aes(x = sexe, y = share, group = rev(sexe))) +
+  geom_col() +
+  theme_ipsum_rc() +
+    theme_ipsum_rc(grid="Y",
+                   axis = T,
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
+    #plot.title.position = "plot",
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),    
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  ) 
+
+```
+
+
+```{r focus par pays}
+fpp_df %>% 
+  filter(contrat == "Oui") %>% 
+  ggplot(aes(x = reorder(pays, -share), y = share, group = pays)) +
+  geom_col() +
+  theme_ipsum_rc() +
+    theme_ipsum_rc(grid="Y",
+                   axis = T,
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
+    #plot.title.position = "plot",
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),    
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  )
+
+```
