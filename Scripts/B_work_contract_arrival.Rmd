@@ -154,7 +154,7 @@ if(run_n_check) {
 mig4y_df %>% 
   filter(contrat == "Oui") %>%
   ggplot(aes(x = mig_4y, y = share, group = 1)) +
-  geom_line(aes(linewidth  = n_y), alpha = 0.2, lineend = "round" )  +
+  geom_line(aes(linewidth  = n_y), alpha = 0.1, lineend = "round" )  +
   geom_point(
     aes(size = n_y, alpha = 0.95)
   ) +
@@ -230,8 +230,10 @@ fpp2mekko_df <- mms_mekko_wrangler(
 ) %>% 
   left_join(pays2col)
   
-fpp_col <- c( "#8FA1E1", "#B3B974")
-  
+col_couple <- lighten("#758bd1", amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
+col_seul <- darken("#c9d175", 0.1) #"#c9d175" 
+
+
 fpp_chart <- fpp2mekko_df %>%   
   ggplot() +
   geom_rect(aes(xmin = xmin, xmax = xmax, 
