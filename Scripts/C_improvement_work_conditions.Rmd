@@ -1,0 +1,172 @@
+---
+title: "La migration conduit généralement à une amélioration des conditions de travail
+"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+Variable
+E27 : Concernant votre statut professionnel, que diriez-vous de manière générale si vous comparez votre situation d’aujourd’hui avec celle que vous aviez avant votre déménagement en Suisse en {#fa6} ? Elle …
+Evolution par année
+Résultat
+Une majorité de personnes interrogées actives indique que la situation professionnelle s’est améliorée avec la migration, comparativement à la situation professionnelle précédant la migration. Peu d’évolution en fonction de l’année de l’enquête
+
+E27	Regarding your professional situation, what would you say overall when comparing your situation today with your situation before moving to Switzerland in [A6]? It has…
+	1.        improved substantially
+	2.        improved slightly
+	3.        remained the same
+	4.        worsened slightly
+	5.        worsened substantially
+	-9. No answer
+
+```{r setup & load data, include=FALSE}
+source("Scripts/_helpers.R")
+run_n_check <- T
+```
+
+
+```{r wrangle}
+
+data_all <- mms_df %>% 
+  mutate(
+    wcond = case_when(
+      E27 == 1 ~ "Amélioration substantielle",
+      E27 == 2 ~ "Amélioration légère",
+      E27 == 3 ~ "Pas de changement",
+      E27 == 4 ~ "Détérioration légère",
+      E27 == 5 ~ "Détérioration substantielle",
+      TRUE ~ NA_character_
+    ),
+    wcond3 = case_when(
+      E27 == 1 ~ "Amélioration",
+      E27 == 2 ~ "Amélioration",
+      E27 == 3 ~ "Identique",
+      E27 == 4 ~ "Détérioration",
+      E27 == 5 ~ "Détérioration",
+      TRUE ~ NA_character_
+    ),
+    # A2 year of birth
+    age = year - A2,
+    age_gr2 = ifelse(
+      age < 40, "Moins de 40 ans", "40+ ans"),
+    migy = mms_encode_migration_year(A6,year)
+  ) %>% 
+  # join sexe A1 & country B1
+  left_join(
+    read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+  ) %>% 
+  left_join(
+    read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+  ) %>% 
+  left_join(
+    migy2yearIntervals
+  ) %>% 
+  select(year:mig_4y, everything())
+
+
+c_df <- data_all %>% 
+  select(year:mig_4y)
+  
+```
+
+
+```{r wrangle more & check}
+wcond_df <- c_df %>% 
+  filter(!is.na(wcond3)) %>% 
+  group_by(year, wcond3) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+    #share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  group_by(year) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+
+if(run_n_check) {
+  wcond_df %>% 
+    select(year, n_y, wcond3, share) %>%
+    pivot_wider(
+      names_from = wcond3,
+      values_from = share
+    ) 
+}
+
+
+wcond_p_df <- c_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(wcond3)) %>% 
+  group_by(pays, wcond3) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(pays) %>%
+  mutate(
+    n_pays = sum(n, na.rm = TRUE),
+    tot_weight = sum(weight, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup() %>% 
+  select(-tot_weight) 
+
+
+if(run_n_check) {
+  wcond_p_df %>% 
+    select(pays, wcond3, n_pays, share) %>% 
+    pivot_wider(
+      names_from = wcond3,
+      values_from = share
+    )  
+}
+wcond_sexe_df <- c_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(wcond3)) %>% 
+  group_by(sexe, wcond3) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(sexe) %>%
+  mutate(
+    n_sexe = sum(n, na.rm = TRUE),
+    tot_weight = sum(weight, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup() %>% 
+  select(-tot_weight)
+
+if(run_n_check) {
+  wcond_sexe_df %>% 
+    select(sexe, wcond3, n_sexe, share) %>% 
+    pivot_wider(
+      names_from = wcond3,
+      values_from = share
+    )  
+}
+
+
+wcond_age_df <- c_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(wcond3)) %>% 
+  group_by(age_gr2, wcond3) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(age_gr2) %>%
+  mutate(
+    n_age = sum(n, na.rm = TRUE),
+    tot_weight = sum(weight, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup() %>% 
+  select(-tot_weight)
+
+```
+
+
