@@ -232,7 +232,7 @@ fpp2mekko_df <- mms_mekko_wrangler(
   
 col_couple <- lighten("#758bd1", amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
 col_seul <- darken("#c9d175", 0.1) #"#c9d175" 
-
+fpp_col <- c(col_couple, col_seul)
 
 fpp_chart <- fpp2mekko_df %>%   
   ggplot() +
