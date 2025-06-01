@@ -27,25 +27,23 @@ run_n_check <- T
 
 
 ```{r wrangle}
+wcond_codes <- tibble(
+  E27 = c(1, 2, 3, 4, 5),
+  wcond5 = c("Amélioration substantielle", "Amélioration légère", 
+            "Pas de changement", "Détérioration légère", 
+            "Détérioration substantielle"),
+  wcond3 = c("Amélioration", "Amélioration", "Identique", 
+             "Détérioration", "Détérioration")
+)
+
 
 data_all <- mms_df %>% 
+  left_join(
+    wcond_codes, by = "E27"
+  ) %>% 
   mutate(
-    wcond = case_when(
-      E27 == 1 ~ "Amélioration substantielle",
-      E27 == 2 ~ "Amélioration légère",
-      E27 == 3 ~ "Pas de changement",
-      E27 == 4 ~ "Détérioration légère",
-      E27 == 5 ~ "Détérioration substantielle",
-      TRUE ~ NA_character_
-    ),
-    wcond3 = case_when(
-      E27 == 1 ~ "Amélioration",
-      E27 == 2 ~ "Amélioration",
-      E27 == 3 ~ "Identique",
-      E27 == 4 ~ "Détérioration",
-      E27 == 5 ~ "Détérioration",
-      TRUE ~ NA_character_
-    ),
+    wcond5 = factor(wcond5, wcond_codes$wcond5),
+    wcond3 = factor(wcond3, levels = c("Amélioration", "Identique", "Détérioration"), ordered = TRUE),
     # A2 year of birth
     age = year - A2,
     age_gr2 = ifelse(
@@ -72,7 +70,7 @@ c_df <- data_all %>%
 
 
 ```{r wrangle more & check}
-wcond_df <- c_df %>% 
+wcond3_df <- c_df %>% 
   filter(!is.na(wcond3)) %>% 
   group_by(year, wcond3) %>% 
   reframe(
@@ -87,8 +85,23 @@ wcond_df <- c_df %>%
   ) %>% 
   ungroup()
 
+wcond5_df <- c_df %>% 
+  filter(!is.na(wcond5)) %>% 
+  group_by(year, wcond5) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+    #share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  group_by(year) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+
 if(run_n_check) {
-  wcond_df %>% 
+  wcond3_df %>% 
     select(year, n_y, wcond3, share) %>%
     pivot_wider(
       names_from = wcond3,
@@ -169,4 +182,53 @@ wcond_age_df <- c_df %>%
 
 ```
 
+### VIZ
 
+```{r main chart}
+wcond_area <- wcond5_df %>% 
+  ggplot(aes(x = year, y = share, group = rev(wcond5))) +
+  geom_area(aes(fill = wcond5), alpha = 0.9) + 
+  theme_ipsum_rc(grid="", axis="xy", 
+                 grid_col = "black",
+                 base_size = rc_base_size,
+                 plot_title_size = rc_plot_title_size,
+                 subtitle_size = rc_subtitle_size,
+                 plot_margin = plot_margin
+  ) + 
+  theme(
+    #legend.position = "none",
+    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0), #color = "#3f2d54", linewidth = 0.5),
+    #plot.title.position = "plot",
+    plot.title = rc_txtbox_plot.title(),
+    plot.subtitle = rc_txtbox_plot.subtitle(),    
+    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
+  ) +
+  # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2016, 2022, 2)) +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%"))+
+  scale_color_ipsum() +
+  scale_fill_ipsum() +
+  labs(
+    title="Part des trois niveaux de formation",
+    subtitle="Niveau de formation atteint le plus élevé")
+
+wcond_area
+# annot_df <- tibble(
+#   year = rep(2019, 3),
+#   share_w = c(27, 72, 93),
+#   txt = c("Tertiaire", "Secondaire II", "Secondaire I")
+# )
+# 
+# edu_chart1_a <- flush_ticks(edu_chart1)  +
+#   geom_richtext(data = annot_df, aes(x = year, y = share_w, label = txt, group = 1),
+#                 fill = NA, label.color = NA,# remove background and outline,
+#                 color = "white", size = 5,
+#                 fontface = "bold",
+#                 hjust = 0.5, family = font_rc
+#   )
+
+
+```
