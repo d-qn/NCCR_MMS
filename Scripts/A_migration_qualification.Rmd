@@ -142,6 +142,70 @@ if(run_n_check) {
 #### Main stacke area
 
 
+```{r color palettes trials}
+edu_chart_1 <- edu_main %>% 
+  ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
+  geom_area(aes(fill = groupe_edu), alpha = 1) + 
+  theme_mms(grid="XY", axis="xy", 
+                 grid_col =  scales::alpha("lightgrey", 0.5),
+                 base_size = mms_base_size,
+                 plot_title_size = mms_plot_title_size,
+                 subtitle_size = mms_subtitle_size,
+                 plot_margin = mms_plot_margin
+  ) + 
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = NA),  # transparent
+        panel.ontop = TRUE
+  ) +
+  # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2016, 2024, 2)) +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    title="Part des trois niveaux de formation",
+    subtitle="Niveau de formation atteint le plus élevé")
+
+
+annot_df <- tibble(
+  year = rep(2020, 3),
+  share_w = c(27, 72, 93),
+  txt = c("Tertiaire", "Secondaire II", "Secondaire I")
+)
+
+edu_chart_1a <- flush_ticks(edu_chart_1)  +
+  geom_richtext(data = annot_df, aes(
+    x = year, y = share_w, label = txt, group = 1),
+    fill = NA, label.color = NA,# remove background and outline,
+    color = "white", size = 5,
+    fontface = "bold",
+    hjust = 0.5, family = mms_base_family
+  )
+
+edu_chart_t1 <- edu_chart_1a +
+  scale_fill_manual(values = mms_colors_education()[2:4]) 
+
+edu_chart_t2 <- edu_chart_1a + 
+  scale_fill_nccr_categorical()
+
+
+# patchwork
+# (edu_chart1_a + edu_chart2_a) / edu_chart3
+
+svglite::svglite(
+  filename = here("Output", "charts", "trials", "edu_colors.svg"),
+  height = 11.7,
+  width = 8.3,
+  fix_text_size = T
+  )
+
+edu_chart_t1 / edu_chart_t2
+
+dev.off()
+
+
+```
+
 ```{r main}
 
 edu_chart1 <- edu_main %>% 
@@ -411,7 +475,7 @@ patchwork <- (edu_chart1_a + edu_chart2_a) / edu_chart3
 # (edu_chart1_a + edu_chart2_a) / edu_chart3
 
 svglite::svglite(
-  filename = here("Output", "charts", "education.svg"),
+  filename = here("Output", "charts", "samples", "education.svg"),
   height = 12,
   width = 9,
   fix_text_size = T,
