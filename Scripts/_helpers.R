@@ -97,17 +97,17 @@ showtext_auto()
 mms_base_size <- 13
 mms_base_family <- "roboto_slab"
 mms_subtitle_family <- "robot_slab_light"
-mms_plot_title_size <- 15
+mms_plot_title_size <- 14
 mms_subtitle_size <- 14
 mms_plot_title_color <- "#0d0d0d"  #"#665c70"
 mms_plot_subtitle_color <- "#403d43"
-mms_axis_tick_txt_color <- "#b3afb6"
+mms_axis_tick_txt_color <- "#9a949e"
 mms_plot_bg_color <- "#ffffff"
 
 pw_bg_color <- mms_plot_bg_color
 pw_padding <- margin(0, 0 , 0, 0)
 pw_margin <- margin(10, 3, 10, 3)
-mms_plot_margin <- margin(10, 10, 5, 5)
+mms_plot_margin <- margin(10, 10, 5, 10)
 mms_legend_base_col <- "lightgrey"
 
 mms_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
@@ -325,16 +325,33 @@ nccr_all_colors <- function() {
   return(colors)
 }
 
-# ggplot2 scale function for categorical
-scale_color_nccr_categorical <- function(...) {
+# =============================================================================
+# CATEGORICAL COLOR SCALE (12 colors)
+# =============================================================================
+
+# ggplot2 scale functions for categorical
+scale_color_nccr_categorical <- function(order = 1:12, ...) {
+  colors <- nccr_categorical()[order]
   ggplot2::discrete_scale("colour", "nccr_categorical", 
-                          function(n) nccr_categorical()[1:n], ...)
+                         function(n) colors[1:n], ...)
 }
 
-scale_fill_nccr_categorical <- function(...) {
+scale_fill_nccr_categorical <- function(order = 1:12, ...) {
+  colors <- nccr_categorical()[order]
   ggplot2::discrete_scale("fill", "nccr_categorical", 
-                          function(n) nccr_categorical()[1:n], ...)
+                         function(n) colors[1:n], ...)
 }
+
+# Convenience function to see color positions
+show_nccr_categorical_numbers <- function() {
+  colors <- nccr_categorical()
+  par(mar = c(3, 1, 2, 1))
+  barplot(rep(1, 12), col = colors, 
+          main = "NCCR Categorical Colors with Numbers", 
+          names.arg = 1:12, axes = FALSE)
+  par(mar = c(5, 4, 4, 2))
+}
+
 
 # =============================================================================
 # SEQUENTIAL COLOR SCALES (12 colors each)
