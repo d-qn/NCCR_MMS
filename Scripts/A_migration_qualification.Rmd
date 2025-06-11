@@ -216,7 +216,7 @@ edu_chart_1 <- edu_main %>%
                  base_size = mms_base_size,
                  plot_title_size = mms_plot_title_size,
                  subtitle_size = mms_subtitle_size,
-                 plot_margin = mms_plot_margin
+                 plot_margin = mms_plot_margin_l
   ) + 
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
@@ -228,9 +228,10 @@ edu_chart_1 <- edu_main %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      labels = function(x) paste0(x, "%")) +
   labs(
-    title="Part des trois niveaux de formation",
+    title = str_c("Forte progression de la migration ", 
+                  "<span style='color:#62836A'>hautement qualifiée</span>"),
     subtitle="Niveau de formation atteint le plus élevé") +
-  scale_fill_nccr_categorical(order = c(3,4,6))
+  scale_fill_nccr_categorical(order = c(3,4,12))
 
 
 annot_df <- tibble(
@@ -293,7 +294,7 @@ edu_chart2 <- edu_all_genre %>%
     fill = "#968aa8", alpha = 0.2) +
   geom_point(aes(x = year, y = share_w, group = type,
                  color = type, size = n), 
-             alpha = 0.6) +
+             alpha = 0.4) +
   geom_line(aes(x = year, y = share_w, group = type,
                 color = type, alpha = al), 
             size = 1,
@@ -302,20 +303,22 @@ edu_chart2 <- edu_all_genre %>%
                  base_size = mms_base_size,
                  plot_title_size = mms_plot_title_size,
                  subtitle_size = mms_subtitle_size,
-                 plot_margin = mms_plot_margin
+                 plot_margin = mms_plot_margin_r
   ) + 
   theme(
-    legend.position = c(0.95, 0.1),
+    legend.position = c(0.9, 0.1),
+    legend.key.height = unit(0.7, "lines"),
+    #legend.spacing.y = unit(0.01, "lines"),
     legend.text = element_text(size = 8, color = legend_base_col), # Reduce legend text size
     legend.title = element_text(size = 10, color = legend_base_col, face = "bold", 
                                 hjust =0.5) # Reduce legend title size
 ) +
-  scale_size(range = c(0.1, 3)) +
+  scale_size(range = c(0.1, 2)) +
   scale_alpha(range = c(0.5, 1), ) +
   scale_x_continuous(
     breaks =seq(2016, 2024, 2),
     # limits = c(2016,2024),
-    expand = c(0.01,0), name = "") +
+    expand = c(0.02,0), name = "") +
   # have y scale not start at 0, add unit % 
   scale_y_continuous(expand = c(0.015,0.015), name = "", 
                      labels = function(x) paste0(x, "%"),
@@ -332,16 +335,17 @@ edu_chart2 <- edu_all_genre %>%
             aes(label=type, y = share_w,
                 colour = type, alpha = al), 
             family = mms_base_family,
-            fontface = "bold",
+            #fontface = "bold",
             position=position_nudge(0.2), hjust=0, 
-            show.legend=FALSE, size = 4) +
+            show.legend=FALSE, size = 3) +
   coord_cartesian(xlim = c(2016, 2026.4)) 
 
 
 edu_chart2_a <- edu_chart2 +
   labs(
-    title = "Différence selon le genre",
-    subtitle = "Part avec formation tertiaire")
+    title = str_c("Les <span style='color:#8E5A6F;'>femmes</span> ",
+    "migrantes plus qualifiées que les <span style='color:#5DA6AD;'>hommes"),
+    subtitle = "Part avec formation tertiaire, selon le genre")
 
 edu_chart2_a
 
@@ -351,36 +355,52 @@ edu_chart2_a
 
 ```{r edu 3}
 share_tot_3 <- edu_all_genre %>% 
-  filter(year == max(year) & type == "all") %>% 
-  .$share_w
+  filter(year %in% c(2018, 2024) & type == "all") %>% 
+  select(year, share_w) %>% 
+  mutate(type = "Moyenne")
 
 
 edu3_pays_df <- edu3_pays %>%
   select(year, pays, groupe_edu, share_w, n) %>%
   rename(type = pays) %>% 
-  filter(year == 2024) %>% 
-  arrange(desc(share_w)) %>% 
-  select(type, share_w, n)
+  filter(year %in% c(2018, 2024)) %>% 
+  select(type, year, share_w, n) %>% 
+  arrange(year, desc(share_w)) %>% 
+   left_join(
+    pays2col,
+    by = c("type" = "pays")
+  ) %>% mutate(
+    type = fct_reorder(type, share_w, .fun = max, .desc = T)
+  ) 
+
+edu3_pays_w <- edu3_pays_df %>% 
+  select(-n) %>% 
+  pivot_wider(
+    names_from = year, values_from = share_w
+)  
 
 pc_shift_txt <- 0
 edu3_pays_df_sub <- edu3_pays_df %>% 
   filter(
-    type %in% c("France", "Autre OCDE", 
-                "Asie", "Autre UE/AELE", 
-                "Autre Europe",  "Amerique latine", "Afrique", "Portugal")
+    year == 2024 & 
+    type %in% c("Allemagne", "France", "Italie", "Autriche", "Autre OCDE", 
+                "Portugal", "Espagne", "Autre UE/AELE", "Autre Europe", 
+                "Autre OCDE",
+                "Asie", 
+                "Amerique latine", "Afrique")
   ) %>% 
-  left_join(
-    pays2col,
-    by = c("type" = "pays")
-  ) %>% 
+  # left_join(
+  #   pays2col,
+  #   by = c("type" = "pays")
+  # ) %>% 
   mutate(
     type = fct_reorder(type, share_w, .desc = T)
   ) %>% 
   arrange(desc(share_w)) %>% 
   mutate(
     y = share_w,
-    angle = ifelse(share_w > share_tot_3,
-                   90, -90)
+    angle = 0#ifelse(share_w > share_tot_3,
+            #       90, -90)
   )
 
 nudge_y_txt <- ifelse(
@@ -399,12 +419,13 @@ arrow_txt <-
   )
 
 
-edu_chart3 <- edu3_pays_df_sub %>% 
+edu_chart3 <- edu3_pays_df %>% 
   ggplot(aes(x=type, y=share_w)) +
-  geom_point(aes(color = color, size = n)) + 
+  geom_point(data = edu3_pays_df %>% filter(year == 2024), aes(color = color, size = n, group = year)) + 
   geom_segment(
-    aes(x=type, xend=type, y=share_tot_3, yend=share_w,
-        color = color, size = log1p(n), alpha = 0.4), show.legend = F) +
+    data = edu3_pays_w,
+    aes(x=type, xend=type, y=`2018`, yend=`2024`,
+        color = color, alpha = 0.4), show.legend = F) +
   theme_mms(grid="Y", axis="y") + 
   theme(
     legend.position = c(0.1, 0.1),
@@ -415,33 +436,34 @@ edu_chart3 <- edu3_pays_df_sub %>%
       face = "bold", hjust =0.5), # Reduce legend title size
       legend.key.size = unit(0.8, "lines"), # Reduce legend key size
   ) +
-  geom_hline(yintercept = share_tot_3,
-             linewidth = 1.5, color = "#262626") +
+  # geom_hline(yintercept = share_tot_3,
+  #            linewidth = 1.5, color = "#262626") +
   
   scale_x_discrete(name = "", labels = NULL) +
   scale_y_continuous(name = "", 
                      labels = function(x) paste0(x, "%")) +
   geom_richtext(
-    aes(label = type, x = type, y = y,
+    data = edu3_pays_df_sub,
+    aes(label = type, x = type, y = share_w,
         angle = angle,
         color = color),
     fill = NA, label.color = NA,# remove background and outline,
     size = 3.8,
-    hjust = 1, family = mms_base_family,
-    nudge_y = nudge_y_txt,
-    nudge_x = nudge_x_txt
+    hjust = 0, family = mms_base_family#,
+    # nudge_y = nudge_y_txt,
+    # nudge_x = nudge_x_txt
   ) +
   scale_color_identity() +
-  geom_curve(
-    data = arrow_txt, 
-    aes(x = x1, y = y1, xend = x2, yend = y2),
-    # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
-    color = "#8c8c8c", curvature = -0.3, size = .3) +
-  annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
-           family = mms_base_family,
-           color = "#8c8c8c", size = 4,
-           hjust = 0,
-           label = "Part du total avec une formation tertaire en 2024") +
+  # geom_curve(
+  #   data = arrow_txt, 
+  #   aes(x = x1, y = y1, xend = x2, yend = y2),
+  #   # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
+  #   color = "#8c8c8c", curvature = -0.3, size = .3) +
+  # annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
+  #          family = mms_base_family,
+  #          color = "#8c8c8c", size = 4,
+  #          hjust = 0,
+  #          label = "Part du total avec une formation tertaire en 2024") +
   labs(
     title = "Différences par pays d’origine",
     subtitle = "Les plus et les moins qualifiés, % avec formation  tertiaire en 2024"
@@ -478,7 +500,7 @@ patchwork +
       plot.title = element_textbox_simple(
         size = 20, 
         hjust = 0,
-        colour = "#3f2d54",
+        colour = "#0c0b0e",
         face = "bold",
         family = mms_base_family,
         lineheight = 1.3,

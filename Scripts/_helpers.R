@@ -99,16 +99,18 @@ mms_base_family <- "roboto_slab"
 mms_subtitle_family <- "robot_slab_light"
 mms_plot_title_size <- 13
 mms_subtitle_size <- 11
-mms_plot_title_color <- "#0d0d0d"  #"#665c70"
+mms_plot_title_color <- "#57555e"  #"#665c70"
 mms_plot_subtitle_color <- "#403d43"
 mms_axis_tick_txt_color <- "#9a949e"
 mms_plot_bg_color <- "#ffffff"
-mms_plot_line_color <- "#d0d0d0"  #"#c8c8c8"
+mms_plot_line_color <- "#ffffff" #"#d0d0d0"  #"#c8c8c8"
 
 pw_bg_color <- mms_plot_bg_color
 pw_padding <- margin(0, 0 , 3, 0)
-pw_margin <- margin(20, 15, 10, 15)
-mms_plot_margin <- margin(15, 15, 5, 15)
+pw_margin <- margin(40, 30, 30, 15)
+mms_plot_margin <- margin(15, 20, 5, 10)
+mms_plot_margin_l <- margin(15, 25, 5, 10)
+mms_plot_margin_r <- margin(15, 10, 5, 25)
 mms_legend_base_col <- "lightgrey"
 
 mms_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
