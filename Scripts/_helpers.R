@@ -94,20 +94,21 @@ showtext_auto()
 
 ### New ggplot2 theme
 
-mms_base_size <- 13
+mms_base_size <- 12
 mms_base_family <- "roboto_slab"
 mms_subtitle_family <- "robot_slab_light"
-mms_plot_title_size <- 14
-mms_subtitle_size <- 14
+mms_plot_title_size <- 13
+mms_subtitle_size <- 11
 mms_plot_title_color <- "#0d0d0d"  #"#665c70"
 mms_plot_subtitle_color <- "#403d43"
 mms_axis_tick_txt_color <- "#9a949e"
 mms_plot_bg_color <- "#ffffff"
+mms_plot_line_color <- "#d0d0d0"  #"#c8c8c8"
 
 pw_bg_color <- mms_plot_bg_color
-pw_padding <- margin(0, 0 , 0, 0)
-pw_margin <- margin(10, 3, 10, 3)
-mms_plot_margin <- margin(10, 10, 5, 10)
+pw_padding <- margin(0, 0 , 3, 0)
+pw_margin <- margin(20, 15, 10, 15)
+mms_plot_margin <- margin(15, 15, 5, 15)
 mms_legend_base_col <- "lightgrey"
 
 mms_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
@@ -152,15 +153,16 @@ theme_mms <- function(
   ) %+replace% 
     theme(
       plot.title = mms_plot_title,
+      plot.title.position = "plot",
       plot.subtitle = mms_plot_subtitle,
       axis.text.x = element_text(color = mms_axis_tick_txt_color),
       axis.text.y = element_text(color = mms_axis_tick_txt_color),
       panel.background = element_rect(fill = mms_plot_bg_color, 
-                                      color = mms_plot_bg_color,
+                                      #color = mms_plot_line_color,
                                       linewidth = 0),
       plot.background = element_rect(fill = mms_plot_bg_color, 
-                                     color = mms_plot_bg_color,
-                                     linewidth = 0),
+                                     color = mms_plot_line_color,
+                                     linewidth = 1),
       plot.margin = plot_margin
     )
 }

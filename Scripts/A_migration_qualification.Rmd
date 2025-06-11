@@ -477,13 +477,13 @@ patchwork +
       plot.title.position = 'plot', 
       plot.title = element_textbox_simple(
         size = 20, 
-        hjust = 0.5,
+        hjust = 0,
         colour = "#3f2d54",
         face = "bold",
         family = mms_base_family,
         lineheight = 1.3,
         padding = pw_padding,
-        margin = pw_margin
+        margin =  pw_margin
       )))
   
 
