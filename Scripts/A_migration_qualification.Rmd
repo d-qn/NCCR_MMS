@@ -410,22 +410,23 @@ nudge_x_txt <- ifelse(
   edu3_pays_df_sub$share_w > share_tot_3, -0.2, +0.2
 )
 
-arrow_txt <- 
-  tibble(
-    x1 = 0.5,
-    x2 = 1,
-    y1 = share_tot_3 -4,
-    y2 = share_tot_3
-  )
+# arrow_txt <- 
+#   tibble(
+#     x1 = 0.5,
+#     x2 = 1,
+#     y1 = share_tot_3 -4,
+#     y2 = share_tot_3
+#   )
 
 
 edu_chart3 <- edu3_pays_df %>% 
   ggplot(aes(x=type, y=share_w)) +
   geom_point(data = edu3_pays_df %>% filter(year == 2024), aes(color = color, size = n, group = year)) + 
+    geom_point(data = edu3_pays_df %>% filter(year == 2018), aes(color = color, size = n, group = year), shape = 15) + 
   geom_segment(
     data = edu3_pays_w,
     aes(x=type, xend=type, y=`2018`, yend=`2024`,
-        color = color, alpha = 0.4), show.legend = F) +
+        color = color, alpha = 0.4), size = 1, show.legend = F) +
   theme_mms(grid="Y", axis="y") + 
   theme(
     legend.position = c(0.1, 0.1),
@@ -449,8 +450,9 @@ edu_chart3 <- edu3_pays_df %>%
         color = color),
     fill = NA, label.color = NA,# remove background and outline,
     size = 3.8,
-    hjust = 0, family = mms_base_family#,
-    # nudge_y = nudge_y_txt,
+    hjust = 0.5, 
+    family = mms_base_family,
+    nudge_y = 2#nudge_y_txt,
     # nudge_x = nudge_x_txt
   ) +
   scale_color_identity() +
