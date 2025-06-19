@@ -291,7 +291,7 @@ edu_chart2 <- edu_all_genre %>%
   geom_ribbon(
     data = edu_genre_rib_df,
     aes(ymin = male, ymax = female, group = 1),
-    fill = nccr_bi_colors[1], alpha = 0.15) +
+    fill = nccr_bi_colors[13], alpha = 0.15) +
   geom_point(aes(x = year, y = share_w, 
                  group = type,
                  color = type, size = n), 
@@ -337,8 +337,8 @@ edu_chart2 <- edu_all_genre %>%
                 colour = type), 
             family = mms_base_family,
             #fontface = "bold",
-            position=position_nudge(0.2), hjust=0, 
-            show.legend=FALSE, size = 3.5) +
+            position=position_nudge(0.3), hjust=0, 
+            show.legend=FALSE, size = 3) +
   coord_cartesian(xlim = c(2016, 2026)) 
 
 
@@ -414,13 +414,20 @@ nudge_x_txt <- ifelse(
   edu3_pays_df_sub$share_w > share_tot_3, -0.2, +0.2
 )
 
-# arrow_txt <- 
-#   tibble(
-#     x1 = 0.5,
-#     x2 = 1,
-#     y1 = share_tot_3 -4,
-#     y2 = share_tot_3
-#   )
+annot_sub <- edu3_pays_df %>% 
+  filter(type == "Autre Europe") %>% 
+  select(type, share_w) %>% 
+  mutate(type = as.numeric(type))
+
+# A tibble: 2 × 5
+arrow_txt <-
+  tibble(
+    x1 = annot_sub$type-2,
+    x2 = annot_sub$type,
+    y1 = annot_sub$share_w-3,
+    y2 = annot_sub$share_w,
+    label = c("2018", "2024")
+  )
 
 
 edu_chart3 <- edu3_pays_df %>% 
@@ -445,7 +452,7 @@ edu_chart3 <- edu3_pays_df %>%
         color = color, alpha = 0.4), size = 1, show.legend = F) +
   theme_mms(grid="Y", axis="y") + 
   theme(
-    legend.position = c(0.1, 0.1),
+    legend.position = c(0.05, 0.1),
     legend.text = element_text(size = 8, 
                                color = mms_legend_base_col), # Reduce legend text size
     legend.title = element_text(
@@ -473,19 +480,22 @@ edu_chart3 <- edu3_pays_df %>%
     nudge_y = 1
   ) +
   scale_color_identity() +
-  # geom_curve(
-  #   data = arrow_txt, 
-  #   aes(x = x1, y = y1, xend = x2, yend = y2),
-  #   # arrow = arrow(length = unit(0.08, "inch")), size = 0.5,
-  #   color = "#8c8c8c", curvature = -0.3, size = .3) +
-  # annotate(geom = "text", x = 0.5, y = share_tot_3-5, 
-  #          family = mms_base_family,
-  #          color = "#8c8c8c", size = 4,
-  #          hjust = 0,
-  #          label = "Part du total avec une formation tertaire en 2024") +
+  geom_curve(
+    data = arrow_txt,
+    aes(x = x1, y = y1, xend = x2, yend = y2),
+    color = nccr_bi_colors[13], curvature = 0.15, size = .3) +
+  geom_richtext(
+    data = arrow_txt, 
+    aes(x = x1, y = y1, label = label),
+    family = mms_base_family,
+    fontface ="bold",
+    fill = NA, label.color = NA,# remove background and outline,
+    color = nccr_bi_colors[13], size = 4,
+    hjust = 1, vjust = 0.5
+  ) +
   labs(
-    title = "Différences par pays d’origine",
-    subtitle = "Les plus et les moins qualifiés, % avec formation  tertiaire en 2024"
+    title = "Plus de diplômés du tertiaire chez les ressortissants d’Asie et d’Europe de l’Est",
+    subtitle = "Différence entre 2018 et 2024 du taux de formation tertiaire selon le pays d’origine"
   ) + 
   guides(size = guide_legend(override.aes = list(color = legend_base_col))) 
 
