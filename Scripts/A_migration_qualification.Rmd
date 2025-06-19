@@ -424,7 +424,7 @@ arrow_txt <-
   tibble(
     x1 = annot_sub$type-2,
     x2 = annot_sub$type,
-    y1 = annot_sub$share_w-3,
+    y1 = annot_sub$share_w-4,
     y2 = annot_sub$share_w,
     label = c("2018", "2024")
   )
@@ -483,7 +483,7 @@ edu_chart3 <- edu3_pays_df %>%
   geom_curve(
     data = arrow_txt,
     aes(x = x1, y = y1, xend = x2, yend = y2),
-    color = nccr_bi_colors[13], curvature = 0.15, size = .3) +
+    color = nccr_bi_colors[13], curvature = 0.2, size = .3) +
   geom_richtext(
     data = arrow_txt, 
     aes(x = x1, y = y1, label = label),
