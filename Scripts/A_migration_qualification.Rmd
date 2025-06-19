@@ -334,18 +334,21 @@ edu_chart2 <- edu_all_genre %>%
               group_by(type) %>% 
               slice(1), 
             aes(label=type, y = share_w,
-                colour = type, alpha = al), 
+                colour = type), 
             family = mms_base_family,
             #fontface = "bold",
             position=position_nudge(0.2), hjust=0, 
             show.legend=FALSE, size = 3.5) +
-  coord_cartesian(xlim = c(2016, 2025)) 
+  coord_cartesian(xlim = c(2016, 2026)) 
 
 
 edu_chart2_a <- edu_chart2 +
   labs(
-    title = str_c("Les <span style='color:#8E5A6F;'>femmes</span> ",
-    "migrantes plus qualifiées que les <span style='color:#5DA6AD;'>hommes"),
+    title = str_c("Les <span style='color:",
+                  nccr_bi_colors[2], 
+                  ";'>femmes</span> ",
+    "migrantes plus qualifiées que les <span style='color:", 
+    nccr_bi_colors[4], ";'>hommes"),
     subtitle = "Part avec formation tertiaire, selon le genre")
 
 edu_chart2_a
@@ -401,7 +404,7 @@ edu3_pays_df_sub <- edu3_pays_df %>%
   ) %>% 
   mutate(
     # Insert line breaks between words
-    labels = gsub(" ", "\n", type)
+    labels = gsub(" ", "<br>", type)
   )
 
 nudge_y_txt <- ifelse(
@@ -452,6 +455,9 @@ edu_chart3 <- edu3_pays_df %>%
   ) +
   scale_x_discrete(name = "", labels = NULL) +
   scale_y_continuous(name = "", 
+                     limits = c(
+                       min(edu3_pays_df$share_w), 
+                       max(edu3_pays_df$share_w) + 3),
                      labels = function(x) paste0(x, "%")) +
   scale_size_continuous(range = c(2, 4)) +
   geom_richtext(
@@ -462,9 +468,9 @@ edu_chart3 <- edu3_pays_df %>%
     fill = NA, label.color = NA,# remove background and outline,
     size = 3.3,
     hjust = 0.5, 
+    vjust = 0,
     family = mms_base_family,
-    nudge_y = 2#nudge_y_txt,
-    # nudge_x = nudge_x_txt
+    nudge_y = 1
   ) +
   scale_color_identity() +
   # geom_curve(

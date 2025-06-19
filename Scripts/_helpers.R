@@ -107,11 +107,11 @@ mms_plot_line_color <- "#ffffff" #"#d0d0d0"  #"#c8c8c8"
 
 pw_bg_color <- mms_plot_bg_color
 pw_padding <- margin(0, 0 , 3, 0)
-pw_margin <- margin(40, 30, 30, 15)
+pw_margin <- margin(30, 20, 20, 10)
 mms_plot_margin <- margin(15, 20, 5, 10)
 mms_plot_margin_l <- margin(15, 25, 5, 10)
 mms_plot_margin_r <- margin(15, 10, 5, 25)
-mms_legend_base_col <- "lightgrey"
+mms_legend_base_col <- "grey"
 
 mms_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
   color = mms_plot_title_color, 
@@ -119,7 +119,7 @@ mms_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_te
   size = mms_plot_title_size,
   colour = mms_plot_title_color,
   lineheight = 1.3,
-  padding = margin(0, 1, 5, 0), 
+  padding = margin(0, 1, 4, 0), 
   margin = margin(0, 0, fixed_top_margin + (5 * nrow_txt), 0)
 )
 
@@ -176,7 +176,8 @@ nccr_bi_colors <- c(
   "#CFC666", "#9F994F",
   "#C8866F", "#9F6C59",
   "#8884A6", "#6E6C88",
-  "#80AF8A", "#678E6F"
+  "#80AF8A", "#678E6F",
+  "#c4d0d4"
 ) 
 
 
@@ -281,9 +282,10 @@ nccr_sequential_cyan <- function() {
   return(colors)
 }
 
+# https://gka.github.io/palettes/#/12%7Cs%7C00536f,578092,528ea7,9a9a9a,a6ccd8%7Cffffe0,ff005e,93003a%7C1%7C1
 nccr_sequential_blue <- function() {
   colors <- c(
-    '#00617b', '#27728c', '#41849d', '#5995ae', '#73a7bd', '#8cbaca', '#a6ccd8', '#bfdfe5', '#d8f2f2'
+    '#00536f', '#1f5d77', '#316780', '#3f7289', '#4a7d93', '#52889f', '#6992a5', '#829ba7', '#91a6af', '#9bb2ba', '#a2bfc8', '#a6ccd8'
   )
   return(colors)
 }
