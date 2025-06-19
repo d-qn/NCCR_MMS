@@ -170,62 +170,14 @@ theme_mms <- function(
 }
 
 
-### Exact style guide colors ###
-
-mms_colors_gender <- function() {
-  c(
-    Female = "#BE7895",   # C=0 M=50 Y=0 K=20
-    Male   = "#945E75",   # C=0 M=50 Y=0 K=40
-    Base   = "#A86B85"    # K=30
-  )
-}
-
-mms_colors_education <- function() {
-  c(
-    Aucune         = "#71C8E6",  # 50/0/0/0
-    `Secondaire I`  = "#65AEC7",  # K=15
-    `Secondaire II` = "#5494A8",  # K=30
-    Tertiaire     = "#44798C",  # K=45
-    Base         = "#5494A8"   # K=30 (duplicate of Secondary_II)
-  )
-}
-
-mms_colors_reasons <- function() {
-  c(
-    Professional_only      = "#DED159",  # 0/0/75/15
-    Family_only            = "#B8AF4C",  # K=30
-    Family_and_professional= "#958E3E",  # K=45
-    Other_reasons          = "#777331",  # K=60
-    Base                   = "#B8AF4C"
-  )
-}
-
-mms_colors_arrival <- function() {
-  c(
-    "2020–2024" = "#948EB8",  # 40/40/0/0
-    "2015–2019" = "#7C789A",  # K=20
-    "2010–2014" = "#696582",  # K=35
-    "2006–2009" = "#54526B",  # K=50
-    Base        = "#7C789A"
-  )
-}
-
-mms_colors_countries <- function() {
-  c(
-    Other_Europe     = "#5B8F6C",  # 50/0/50/30
-    Italy            = "#996699",  # 30/0/30/30
-    Germany          = "#804D80",  # 50/0/50/50
-    Africa           = "#FFCCFF",  # 50/0/50/0
-    France           = "#734D73"   # 50/0/50/60
-    # Add others as needed
-  )
-}
-mms_colors_age <- function() {
-  c(
-    "24–40" = "#D3826A",  # 0/50/50/0
-    "25–34" = "#A86955",  # 0/50/50/20
-  )
-}
+nccr_bi_colors <- c(
+  "#B47B94", "#8C6074",
+  "#70A4BA", "#578092",
+  "#CFC666", "#9F994F",
+  "#C8866F", "#9F6C59",
+  "#8884A6", "#6E6C88",
+  "#80AF8A", "#678E6F"
+) 
 
 
 ### END styleguide ###
@@ -234,32 +186,6 @@ mms_colors_age <- function() {
 # NCCR Color Scales for ggplot2
 # Based on the NCCR "on the move" style guide
 
-# Precise CMYK to RGB conversion (colorimeter standard)
-cmyk_to_rgb <- function(c, m, y, k) {
-  # Convert percentages to decimals
-  c <- c / 100
-  m <- m / 100
-  y <- y / 100
-  k <- k / 100
-  
-  # Standard colorimeter conversion formula
-  r <- round(255 * (1 - c) * (1 - k))
-  g <- round(255 * (1 - m) * (1 - k))
-  b <- round(255 * (1 - y) * (1 - k))
-  
-  # Return hex code
-  sprintf("#%02X%02X%02X", r, g, b)
-}
-
-# Exact base colors from style guide (measured with Apple Digital Color Meter)
-base_colors <- list(
-  gender = "#A86B85",      # Page 1 - Gender base
-  education = "#5494A8",   # Page 2 - Education base
-  migration = "#B8AF4C",   # Page 3 - Migration base
-  age = "#B37964",         # Page 4 - Age base
-  arrival = "#7B7897",     # Page 5 - Arrival base
-  countries = "#749E7C"    # Page 6 - Countries base
-)
 
 # =============================================================================
 # CATEGORICAL COLOR SCALE (12 colors)
@@ -267,67 +193,52 @@ base_colors <- list(
 
 nccr_categorical <- function() {
   # Exact colors from NCCR style guide (measured with Apple Digital Color Meter)
-  colors <- c(
-    "#A86B85",    # Gender base
-    "#5494A8",    # Education base
-    "#B8AF4C",    # Migration base
-    "#B37964",    # Age base
-    "#7B7897",    # Arrival base
-    "#749E7C",    # Countries base
-    # Harmonious variations based on measured colors
-    "#8E5A6F",    # Darker gender variant
-    "#477A8A",    # Darker education variant
-    "#9A9240",    # Darker migration variant
-    "#985F52",    # Darker age variant
-    "#686080",    # Darker arrival variant
-    "#62836A"     # Darker countries variant
-  )
-  return(colors)
+  return(nccr_bi_colors)
 }
 
 # Function to get all 31 colors from style guide
-nccr_all_colors <- function() {
-  colors <- c(
-    # Gender category
-    "#CC66CC",    # Female: C=0, M=50, Y=0, K=20
-    "#994D99",    # Male: C=0, M=50, Y=0, K=40
-    "#B359B3",    # Base: C=0, M=50, Y=0, K=30
-    # Education category
-    "#80FFFF",    # None: C=50, M=0, Y=0, K=0
-    "#6CD9D9",    # Secondary I: C=50, M=0, Y=0, K=15
-    "#59B3B3",    # Secondary II: C=50, M=0, Y=0, K=30
-    "#468C8C",    # Tertiary: C=50, M=0, Y=0, K=45
-    # Migration category
-    "#D9D936",    # Professional only: C=0, M=0, Y=75, K=15
-    "#B3B32D",    # Family only: C=0, M=0, Y=75, K=30
-    "#8C8C23",    # Family+professional: C=0, M=0, Y=75, K=45
-    "#66661A",    # Other reasons: C=0, M=0, Y=75, K=60
-    # Age category
-    "#E67373",    # 24-40 light: C=0, M=50, Y=50, K=10
-    "#CC6666",    # Base: C=0, M=50, Y=50, K=20
-    "#B35959",    # 24-40 dark: C=0, M=50, Y=50, K=30
-    # Arrival category
-    "#9999FF",    # 2020-2024: C=40, M=40, Y=0, K=0
-    "#7A7ACC",    # 2015-2019: C=40, M=40, Y=0, K=20
-    "#6363A6",    # 2010-2014: C=40, M=40, Y=0, K=35
-    "#4D4D80",    # 2006-2009: C=40, M=40, Y=0, K=50
-    "#7ACCCC",    # Base: C=40, M=0, Y=0, K=20
-    # Countries category
-    "#59B359",    # Other Europe: C=50, M=0, Y=50, K=30
-    "#7DB37D",    # Italy: C=30, M=0, Y=30, K=30
-    "#66CC66",    # Other OECD: C=50, M=0, Y=50, K=20
-    "#4D994D",    # Other EU/EFTA: C=50, M=0, Y=50, K=40
-    "#6B996B",    # Austria: C=30, M=0, Y=30, K=40
-    "#80FF80",    # Africa: C=50, M=0, Y=50, K=0
-    "#408040",    # Germany: C=50, M=0, Y=50, K=50
-    "#598059",    # Portugal: C=30, M=0, Y=30, K=50
-    "#8AE68A",    # Latin America: C=40, M=0, Y=40, K=10
-    "#336633",    # France: C=50, M=0, Y=50, K=60
-    "#476647",    # Spain: C=30, M=0, Y=30, K=60
-    "#A1E6A1"     # Asia: C=30, M=0, Y=30, K=10
-  )
-  return(colors)
-}
+# nccr_all_colors <- function() {
+#   colors <- c(
+#     # Gender category
+#     "#CC66CC",    # Female: C=0, M=50, Y=0, K=20
+#     "#994D99",    # Male: C=0, M=50, Y=0, K=40
+#     "#B359B3",    # Base: C=0, M=50, Y=0, K=30
+#     # Education category
+#     "#80FFFF",    # None: C=50, M=0, Y=0, K=0
+#     "#6CD9D9",    # Secondary I: C=50, M=0, Y=0, K=15
+#     "#59B3B3",    # Secondary II: C=50, M=0, Y=0, K=30
+#     "#468C8C",    # Tertiary: C=50, M=0, Y=0, K=45
+#     # Migration category
+#     "#D9D936",    # Professional only: C=0, M=0, Y=75, K=15
+#     "#B3B32D",    # Family only: C=0, M=0, Y=75, K=30
+#     "#8C8C23",    # Family+professional: C=0, M=0, Y=75, K=45
+#     "#66661A",    # Other reasons: C=0, M=0, Y=75, K=60
+#     # Age category
+#     "#E67373",    # 24-40 light: C=0, M=50, Y=50, K=10
+#     "#CC6666",    # Base: C=0, M=50, Y=50, K=20
+#     "#B35959",    # 24-40 dark: C=0, M=50, Y=50, K=30
+#     # Arrival category
+#     "#9999FF",    # 2020-2024: C=40, M=40, Y=0, K=0
+#     "#7A7ACC",    # 2015-2019: C=40, M=40, Y=0, K=20
+#     "#6363A6",    # 2010-2014: C=40, M=40, Y=0, K=35
+#     "#4D4D80",    # 2006-2009: C=40, M=40, Y=0, K=50
+#     "#7ACCCC",    # Base: C=40, M=0, Y=0, K=20
+#     # Countries category
+#     "#59B359",    # Other Europe: C=50, M=0, Y=50, K=30
+#     "#7DB37D",    # Italy: C=30, M=0, Y=30, K=30
+#     "#66CC66",    # Other OECD: C=50, M=0, Y=50, K=20
+#     "#4D994D",    # Other EU/EFTA: C=50, M=0, Y=50, K=40
+#     "#6B996B",    # Austria: C=30, M=0, Y=30, K=40
+#     "#80FF80",    # Africa: C=50, M=0, Y=50, K=0
+#     "#408040",    # Germany: C=50, M=0, Y=50, K=50
+#     "#598059",    # Portugal: C=30, M=0, Y=30, K=50
+#     "#8AE68A",    # Latin America: C=40, M=0, Y=40, K=10
+#     "#336633",    # France: C=50, M=0, Y=50, K=60
+#     "#476647",    # Spain: C=30, M=0, Y=30, K=60
+#     "#A1E6A1"     # Asia: C=30, M=0, Y=30, K=10
+#   )
+#   return(colors)
+# }
 
 # =============================================================================
 # CATEGORICAL COLOR SCALE (12 colors)
@@ -364,22 +275,46 @@ show_nccr_categorical_numbers <- function() {
 # Sequential scale 1: Education-based (from measured #5494A8)
 nccr_sequential_cyan <- function() {
   # Base color: #5494A8 (measured)
+  colors <- rev(c(
+    '#406676', '#527788', '#658999', '#7a9baa', '#90adbb', '#a7bfcc', '#bfd2dc', '#d8e4eb', '#f4f7f9'
+  ))
+  return(colors)
+}
+
+nccr_sequential_blue <- function() {
   colors <- c(
-    "#F4F7F9",  # Very light
-    "#E8F0F4",  # 
-    "#DCE8EF",  # 
-    "#D0E1EA",  # 
-    "#C4DAE5",  # 
-    "#B8D2E0",  # 
-    "#A0BDD5",  # 
-    "#88A8CA",  # 
-    "#7099B9",  # 
-    "#5494A8",  # Base measured color
-    "#4A7D8F",  # 
-    "#406676"   # Very dark
+    '#00617b', '#27728c', '#41849d', '#5995ae', '#73a7bd', '#8cbaca', '#a6ccd8', '#bfdfe5', '#d8f2f2'
   )
   return(colors)
 }
+
+pays2col <- tibble(
+  pays = c("France", "Allemagne", "Espagne", "Autriche", "Italie", "Portugal",
+           "Autre UE/AELE",
+           "Autre Europe",
+           "Autre OCDE",
+           "Asie",
+           "Amerique latine",
+           "Afrique",
+           "Autres pays"),
+  
+  color = c(nccr_sequential_blue()[3],
+            nccr_sequential_blue()[4],
+            nccr_sequential_blue()[5],
+            nccr_sequential_blue()[6],
+            nccr_sequential_blue()[7],
+            nccr_sequential_blue()[8],
+            
+            nccr_sequential_blue()[1],
+            nccr_sequential_blue()[2],
+            
+            nccr_sequential_cyan()[5],
+            
+            nccr_bi_colors[7],
+            nccr_bi_colors[1],
+            nccr_bi_colors[8],
+            nccr_bi_colors[3])
+)
 
 # Sequential scale 2: Migration-based (from measured #B8AF4C)
 nccr_sequential_yellow <- function() {
@@ -483,7 +418,7 @@ scale_fill_nccr_div_orpur <- function(...) {
 
 # Display all palettes including the measured colors
 show_nccr_palettes <- function() {
-  par(mfrow = c(5, 1), mar = c(1, 1, 2, 1))
+  par(mfrow = c(6, 1), mar = c(1, 1, 2, 1))
   
   # Categorical (12 colors with measured base colors)
   barplot(rep(1, 12), col = nccr_categorical(), 
@@ -491,6 +426,9 @@ show_nccr_palettes <- function() {
   
   # Sequential Education-based
   barplot(rep(1, 12), col = nccr_sequential_cyan(), 
+          main = "NCCR Sequential Education-based", axes = FALSE)
+  
+  barplot(rep(1, 12), col = nccr_sequential_blue(), 
           main = "NCCR Sequential Education-based", axes = FALSE)
   
   # Sequential Migration-based
@@ -509,33 +447,33 @@ show_nccr_palettes <- function() {
 }
 
 # Print color hex codes
-print_nccr_colors <- function() {
-  cat("NCCR Color Palettes (Based on Apple Digital Color Meter measurements)\n")
-  cat("====================================================================\n\n")
-  
-  cat("Measured Base Colors:\n")
-  cat("Gender:    #A86B85\n")
-  cat("Education: #5494A8\n") 
-  cat("Migration: #B8AF4C\n")
-  cat("Age:       #B37964\n")
-  cat("Arrival:   #7B7897\n")
-  cat("Countries: #749E7C\n\n")
-  
-  cat("Categorical (12 colors):\n")
-  cat(paste(nccr_categorical(), collapse = ", "), "\n\n")
-  
-  cat("Sequential Education-based:\n")
-  cat(paste(nccr_sequential_cyan(), collapse = ", "), "\n\n")
-  
-  cat("Sequential Migration-based:\n")
-  cat(paste(nccr_sequential_yellow(), collapse = ", "), "\n\n")
-  
-  cat("Divergent Gender-Education:\n")
-  cat(paste(nccr_divergent_magenta_cyan(), collapse = ", "), "\n\n")
-  
-  cat("Divergent Age-Countries:\n")
-  cat(paste(nccr_divergent_orange_purple(), collapse = ", "), "\n\n")
-}
+# print_nccr_colors <- function() {
+#   cat("NCCR Color Palettes (Based on Apple Digital Color Meter measurements)\n")
+#   cat("====================================================================\n\n")
+#   
+#   cat("Measured Base Colors:\n")
+#   cat("Gender:    #A86B85\n")
+#   cat("Education: #5494A8\n") 
+#   cat("Migration: #B8AF4C\n")
+#   cat("Age:       #B37964\n")
+#   cat("Arrival:   #7B7897\n")
+#   cat("Countries: #749E7C\n\n")
+#   
+#   cat("Categorical (12 colors):\n")
+#   cat(paste(nccr_categorical(), collapse = ", "), "\n\n")
+#   
+#   cat("Sequential Education-based:\n")
+#   cat(paste(nccr_sequential_cyan(), collapse = ", "), "\n\n")
+#   
+#   cat("Sequential Migration-based:\n")
+#   cat(paste(nccr_sequential_yellow(), collapse = ", "), "\n\n")
+#   
+#   cat("Divergent Gender-Education:\n")
+#   cat(paste(nccr_divergent_magenta_cyan(), collapse = ", "), "\n\n")
+#   
+#   cat("Divergent Age-Countries:\n")
+#   cat(paste(nccr_divergent_orange_purple(), collapse = ", "), "\n\n")
+# }
 
 # =============================================================================
 # USAGE EXAMPLES

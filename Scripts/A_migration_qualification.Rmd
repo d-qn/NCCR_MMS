@@ -231,7 +231,7 @@ edu_chart_1 <- edu_main %>%
     title = str_c("Forte progression de la migration ", 
                   "<span style='color:#62836A'>hautement qualifiée</span>"),
     subtitle="Niveau de formation atteint le plus élevé") +
-  scale_fill_nccr_categorical(order = c(3,4,12))
+  scale_fill_nccr_categorical(order = c(5,6,12))
 
 
 annot_df <- tibble(
@@ -291,13 +291,14 @@ edu_chart2 <- edu_all_genre %>%
   geom_ribbon(
     data = edu_genre_rib_df,
     aes(ymin = male, ymax = female, group = 1),
-    fill = "#968aa8", alpha = 0.2) +
-  geom_point(aes(x = year, y = share_w, group = type,
+    fill = nccr_bi_colors[1], alpha = 0.15) +
+  geom_point(aes(x = year, y = share_w, 
+                 group = type,
                  color = type, size = n), 
-             alpha = 0.4) +
+             alpha = 0.9) +
   geom_line(aes(x = year, y = share_w, group = type,
-                color = type, alpha = al), 
-            size = 1,
+                color = type, alpha = 0.8), 
+            linewidth = 0.5,
             lineend="round", show.legend = F) +
   theme_mms(axis="xy", grid = "Y",
                  base_size = mms_base_size,
@@ -313,7 +314,7 @@ edu_chart2 <- edu_all_genre %>%
     legend.title = element_text(size = 10, color = legend_base_col, face = "bold", 
                                 hjust =0.5) # Reduce legend title size
 ) +
-  scale_size(range = c(0.1, 2)) +
+  scale_size(range = c(0.1, 3)) +
   scale_alpha(range = c(0.5, 1), ) +
   scale_x_continuous(
     breaks =seq(2016, 2024, 2),
@@ -324,7 +325,7 @@ edu_chart2 <- edu_all_genre %>%
                      labels = function(x) paste0(x, "%"),
                      position = "right") +
   scale_colour_manual(
-    values=c("#8E5A6F", "#5DA6AD", "#262626")) +
+    values=c(nccr_bi_colors[c(2,4)], "#898989")) +
   # To hide the alpha legend as well:
   guides(color = "none", alpha = "none",
          size = guide_legend(override.aes = list(color = legend_base_col))) +
@@ -337,8 +338,8 @@ edu_chart2 <- edu_all_genre %>%
             family = mms_base_family,
             #fontface = "bold",
             position=position_nudge(0.2), hjust=0, 
-            show.legend=FALSE, size = 3) +
-  coord_cartesian(xlim = c(2016, 2026.4)) 
+            show.legend=FALSE, size = 3.5) +
+  coord_cartesian(xlim = c(2016, 2025)) 
 
 
 edu_chart2_a <- edu_chart2 +
@@ -381,18 +382,14 @@ edu3_pays_w <- edu3_pays_df %>%
 
 pc_shift_txt <- 0
 edu3_pays_df_sub <- edu3_pays_df %>% 
-  filter(
-    year == 2024 & 
-    type %in% c("Allemagne", "France", "Italie", "Autriche", "Autre OCDE", 
-                "Portugal", "Espagne", "Autre UE/AELE", "Autre Europe", 
-                "Autre OCDE",
-                "Asie", 
-                "Amerique latine", "Afrique")
+  group_by(type) %>% 
+  reframe(
+    share_w = max(share_w)
   ) %>% 
-  # left_join(
-  #   pays2col,
-  #   by = c("type" = "pays")
-  # ) %>% 
+  left_join(
+    pays2col,
+    by = c("type" = "pays")
+  ) %>%
   mutate(
     type = fct_reorder(type, share_w, .desc = T)
   ) %>% 
@@ -401,6 +398,10 @@ edu3_pays_df_sub <- edu3_pays_df %>%
     y = share_w,
     angle = 0#ifelse(share_w > share_tot_3,
             #       90, -90)
+  ) %>% 
+  mutate(
+    # Insert line breaks between words
+    labels = gsub(" ", "\n", type)
   )
 
 nudge_y_txt <- ifelse(
@@ -421,8 +422,20 @@ nudge_x_txt <- ifelse(
 
 edu_chart3 <- edu3_pays_df %>% 
   ggplot(aes(x=type, y=share_w)) +
-  geom_point(data = edu3_pays_df %>% filter(year == 2024), aes(color = color, size = n, group = year)) + 
-    geom_point(data = edu3_pays_df %>% filter(year == 2018), aes(color = color, size = n, group = year), shape = 15) + 
+  # geom_hline(yintercept = share_tot_3$share_w[2],
+  #            linewidth = 1, color = "#898989", alpha = 0.5,
+  #            linetype = "dotted") +
+  # geom_hline(yintercept = share_tot_3$share_w[1],
+  #            linewidth = 1, linetype = "dotted", 
+  #            color = "#898989", alpha = 0.5) +
+  geom_point(data = edu3_pays_df %>% 
+             filter(year == 2024), 
+             aes(color = color, size = n, group = year),
+             alpha = 1) + 
+    geom_point(
+      data = edu3_pays_df %>% filter(year == 2018),
+      aes(color = color, size = n, group = year), 
+      alpha = 1, shape = 15, show.legend = F) + 
   geom_segment(
     data = edu3_pays_w,
     aes(x=type, xend=type, y=`2018`, yend=`2024`,
@@ -437,19 +450,17 @@ edu_chart3 <- edu3_pays_df %>%
       face = "bold", hjust =0.5), # Reduce legend title size
       legend.key.size = unit(0.8, "lines"), # Reduce legend key size
   ) +
-  # geom_hline(yintercept = share_tot_3,
-  #            linewidth = 1.5, color = "#262626") +
-  
   scale_x_discrete(name = "", labels = NULL) +
   scale_y_continuous(name = "", 
                      labels = function(x) paste0(x, "%")) +
+  scale_size_continuous(range = c(2, 4)) +
   geom_richtext(
     data = edu3_pays_df_sub,
-    aes(label = type, x = type, y = share_w,
+    aes(label = labels, x = type, y = share_w,
         angle = angle,
         color = color),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 3.8,
+    size = 3.3,
     hjust = 0.5, 
     family = mms_base_family,
     nudge_y = 2#nudge_y_txt,
