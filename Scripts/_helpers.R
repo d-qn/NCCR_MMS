@@ -99,9 +99,9 @@ mms_base_family <- "roboto_slab"
 mms_subtitle_family <- "robot_slab_light"
 mms_plot_title_size <- 13
 mms_subtitle_size <- 11
-mms_plot_title_color <- "#57555e"  #"#665c70"
+mms_plot_title_color <- "#403d43"  #"#665c70"
 mms_plot_subtitle_color <- "#403d43"
-mms_axis_tick_txt_color <- "#9a949e"
+mms_axis_tick_txt_color <- "#817986"
 mms_plot_bg_color <- "#ffffff"
 mms_plot_line_color <- "#ffffff" #"#d0d0d0"  #"#c8c8c8"
 
@@ -177,7 +177,7 @@ nccr_bi_colors <- c(
   "#C8866F", "#9F6C59",
   "#8884A6", "#6E6C88",
   "#80AF8A", "#678E6F",
-  "#c4d0d4"
+  "#b9c3c6", '#878f92'
 ) 
 
 

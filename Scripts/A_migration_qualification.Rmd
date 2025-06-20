@@ -422,9 +422,9 @@ annot_sub <- edu3_pays_df %>%
 # A tibble: 2 × 5
 arrow_txt <-
   tibble(
-    x1 = annot_sub$type-2,
+    x1 = annot_sub$type-c(1,2),
     x2 = annot_sub$type,
-    y1 = annot_sub$share_w-4,
+    y1 = annot_sub$share_w-c(3,6),
     y2 = annot_sub$share_w,
     label = c("2018", "2024")
   )
