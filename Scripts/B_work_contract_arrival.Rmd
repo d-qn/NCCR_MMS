@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup & load data, include=FALSE}
-source("Scripts/_helpers.R")
+source("_helpers.R")
 run_n_check <- T
 ```
 
@@ -36,6 +36,9 @@ data_all <- mms_df %>%
 
 
 b_df <- data_all %>% 
+  mutate(
+    sexe = ifelse(sexe == "male", "Hommes", "Femmes")
+  ) %>% 
   select(contrat, year:mig_4y)
 ```
 
@@ -151,59 +154,100 @@ if(run_n_check) {
 ### Viz
 
 ```{r main chart}  
-mig4y_df %>% 
+mig_job_1 <- mig4y_df %>% 
   filter(contrat == "Oui") %>%
   ggplot(aes(x = mig_4y, y = share, group = 1)) +
-  geom_line(aes(linewidth  = n_y), alpha = 0.1, lineend = "round" )  +
+  geom_line(aes(linewidth  = n_y), 
+            color = nccr_bi_colors[9],
+            alpha = 0.2, lineend = "round" )  +
   geom_point(
-    aes(size = n_y, alpha = 0.95)
+    aes(size = n_y), alpha = 1,
+    color = nccr_bi_colors[10]
   ) +
-  theme_ipsum_rc() +
-    theme_ipsum_rc(grid="Y",
-                   axis = T,
-                 base_size = rc_base_size,
-                 plot_title_size = rc_plot_title_size,
-                 subtitle_size = rc_subtitle_size,
-                 plot_margin = plot_margin
+  theme_mms(grid="Y",
+            axis = T,
+            mms_txtbox_plot.title(nrow_txt = 2),
+            mms_txtbox_plot.subtitle(nrow_txt = 2)
+
   ) + 
   theme(
-    legend.position = "none",
-    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
-    #plot.title.position = "plot",
-    plot.title = rc_txtbox_plot.title(),
-    plot.subtitle = rc_txtbox_plot.subtitle(),    
-    axis.text.x = element_text(color = rc_axis_tick_txt_color),
-    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
-  ) 
+    legend.position = c(0.85, 0.9),
+    legend.key.height = unit(0.7, "lines"),
+    #legend.spacing.y = unit(0.01, "lines"),
+    legend.text = element_text(size = 8, 
+                               color = mms_legend_base_col), # Reduce legend text size
+    legend.title = element_text(size = 10, 
+                                color = mms_legend_base_col, face = "bold", 
+                                hjust =0.5) # Reduce legend title size
+  ) +
+  guides(
+    size = guide_legend(
+      override.aes = list(
+        color = mms_legend_base_col,  # This makes the legend points grey
+        fill = mms_legend_base_col    # Just in case the theme uses fill
+      )
+    )
+  )+
+  scale_y_continuous(expand = c(0.017,0.012), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    x = "", y = "",
+    subtitle = "Contrat ou offre d’emploi en Suisse au moment du déménagement",
+    title = "Près d’une personne sur deux arrive en Suisse avec un contrat de travail",
+    size = "n",
+    linewidth = "n"
+  )
 
+mig_job_1
 ```
 
 
 
 ```{r focus by gender in 2024}
 
-fhf_df %>% 
+mig_job_2 <- fhf_df %>% 
   filter(contrat == "Oui") %>% 
   ggplot(aes(x = sexe, y = share, group = rev(sexe))) +
-  geom_col() +
-  theme_ipsum_rc() +
-    theme_ipsum_rc(grid="Y",
-                   axis = T,
-                 base_size = rc_base_size,
-                 plot_title_size = rc_plot_title_size,
-                 subtitle_size = rc_subtitle_size,
-                 plot_margin = plot_margin
+  geom_col(aes(fill = sexe)) +
+  geom_richtext(aes(label = sexe),
+                fill = NA, label.color = NA,# remove background and outline,
+                size = 5, alpha = 1,
+                #fontface = "bold",
+                family = mms_base_family,
+                vjust = 1.5, color = "white") +
+  geom_text(aes(label = paste0(share, "%"), color = sexe), vjust = -.7, 
+            family = mms_base_family, size = 3) +
+  theme_mms(grid="Y",
+            axis = F,
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
+  coord_cartesian(clip = "off") +
   theme(
     legend.position = "none",
     plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
     #plot.title.position = "plot",
-    plot.title = rc_txtbox_plot.title(),
-    plot.subtitle = rc_txtbox_plot.subtitle(),    
-    axis.text.x = element_text(color = rc_axis_tick_txt_color),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank(),
+    #axis.text.x = element_text(color = rc_axis_tick_txt_color),
     axis.text.y = element_text(color = rc_axis_tick_txt_color)  
-  ) 
+  ) +
+  scale_x_discrete(expand = c(0.4,0.1))+
+    scale_y_continuous(expand = c(0,1), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  scale_fill_manual(values = nccr_bi_colors[c(1,3)]) +
+  scale_color_manual(values = nccr_bi_colors[c(1,3)]) +
+   labs(
+    x = "", y = "",
+    subtitle = "Contrat ou offre d’emploi en Suisse au moment du déménagement, par sexe en 2024",
+    title = str_c("Le contrat de travail, deux fois plus fréquent chez les <span style='color:", 
+    nccr_bi_colors[3], ";'>hommes</span> que chez les <span style='color:",
+                  nccr_bi_colors[1], 
+                  ";'>femmes</span>")# à l’arrivée en Suisse")
+  )
 
+mig_job_2
 ```
 
 
@@ -230,8 +274,8 @@ fpp2mekko_df <- mms_mekko_wrangler(
 ) %>% 
   left_join(pays2col)
   
-col_couple <- lighten("#758bd1", amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
-col_seul <- darken("#c9d175", 0.1) #"#c9d175" 
+col_couple <- nccr_bi_colors[10] #, amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
+col_seul <- nccr_bi_colors[7] #"#c9d175" 
 fpp_col <- c(col_couple, col_seul)
 
 fpp_chart <- fpp2mekko_df %>%   
@@ -239,44 +283,39 @@ fpp_chart <- fpp2mekko_df %>%
   geom_rect(aes(xmin = xmin, xmax = xmax, 
                 ymin = ymin, ymax = ymax,
                 fill = contrat),
-                     colour = "white", size = 0.9, alpha = 0.95) +
-  theme_ipsum_rc(
-    grid="X", axis="x", 
-    grid_col = "black",
-    base_size = rc_base_size, # make it smaller
-    plot_title_size = rc_plot_title_size,
-    subtitle_size = rc_subtitle_size,
-    plot_margin = plot_margin
+            colour = "white", size = 0.9, alpha = 0.95) +
+  theme_mms(
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
-    plot.caption = element_textbox_simple(
-      color = "darkgrey", margin = margin(7, 0,0,0)),
     legend.position = "none",
-    plot.title = rc_txtbox_plot.title(2),
-    plot.subtitle = rc_txtbox_plot.subtitle(),
-    axis.text.x = element_text(color = rc_axis_tick_txt_color),
-    axis.text.y = element_text(color = rc_axis_tick_txt_color)   
+    axis.line = element_blank()
   ) + 
-  #scale_fill_identity() +
+  scale_fill_identity() +
   scale_fill_manual(values = fpp_col) +
   geom_vline(xintercept = 50, linetype = "dashed",
-             linewidth = 0.5, color = "lightgrey") +
-  
+             linewidth = 0.5, color = nccr_bi_colors[13]) +
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
                      labels = function(x) paste0(x, "%")) +
   scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
 
-fpp_chart
+#fpp_chart
 
 # job labels tibble
-fpp_pays_labels <- fpp2mekko_df %>% 
+fpp_pays_labels <- fpp2mekko_df %>%
   filter(contrat == "Oui") %>%
   mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
-  select(pays, xmin, y, yRange) %>% 
-  ungroup()
+  select(pays, xmin, y, yRange) %>%
+  ungroup() %>% 
+  mutate(
+    # Insert line breaks between words
+    labels = gsub(" ", "<br>", pays)
+  )
 
 fpp_value_labels <- fpp2mekko_df %>% 
-  select(pays, contrat, xmin, xmax, ymax, share) %>%
+  select(pays, contrat, xmin, xmax, ymin, ymax, share) %>%
   mutate(
     x = ifelse(contrat == "Oui", xmax, xmin),
     y = ymax - 0.01,
@@ -284,48 +323,83 @@ fpp_value_labels <- fpp2mekko_df %>%
     hjust = ifelse(contrat == "Oui", 1.05, -0.05)
   ) 
 
-fpp_chart +
+mig_job_3 <- fpp_chart +
    geom_richtext(
     data = fpp_pays_labels,
     aes(x = xmin + 0.01, y = y, 
-        label = as.character(pays), size = yRange),
+        label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 6,
-    hjust = 0, vjust = 1, colour = "white",
-    family = font_rc
+    size = 4,
+    hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
+    family = mms_base_family
   ) +
   geom_richtext(
     data = fpp_value_labels,
-    aes(x = x + 0.01, y = y, label = label, hjust = hjust),
+    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 1, size = 4, alpha = 0.9, colour = "white",
-    family = font_rc_light
+    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.9, colour = "white",
+    family = mms_base_family
   ) +
   annotate(
     geom = "richtext",
-    x=90,y = 0.5, angle = -90, label = "Seul",
+    x=90,y = 0.5, angle = -90, label = "sans emploi",
     fill = NA, label.color = NA,# remove background and outline,
     size = 10,
-    family = font_rc, fontface = "bold", 
-    alpha = 0.6,
+    family = mms_base_family, fontface = "bold", 
+    alpha = 0.7,
     color = "white"
   ) +
   labs(
-    title = str_c("Les personnes des pays voisins migrent plus souvent <span style = 'color:", 
-    col_seul, ";'>seuls</span>"),
+    title = str_c("Les ressortissants de pays voisins s’installent plus souvent en Suisse avec un emploi — sauf les Italiens"),
     
-    subtitle = str_c(
-      "% de personnes <span style = 'color:", 
-      col_couple, ";'>",
-      "en couple</span> ou <span style = 'color:", col_seul,
-      ";'>",
-      "seules</span> lors de leur migration, par pays"),
+    subtitle = str_c("Contrat ou offre d’emploi en Suisse au moment du déménagement, par pays d'origine en 2024"),
 
     caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: "#,
   # mign_sub %>% select(tot, pays) %>% 
   #   distinct() %>%  .$tot %>% sum() %>% prettyNum(big.mark = " ") )
     )
   )
+mig_job_3
+```
+
+```{r patch}
+
+
+patchwork <- (mig_job_1 /mig_job_2) +
+   plot_layout(heights = c(1, 1)) | mig_job_3 
+patchwork
+
+#patchwork <- (edu_chart_1a + edu_chart2_a) / edu_chart3
+# patchwork
+# 
+# (edu_chart1_a + edu_chart2_a) / edu_chart3
+
+svglite::svglite(
+  filename = here("Output", "charts", "B_travail.svg"),
+  height = 11.7,
+  width = 8.3,
+  fix_text_size = T,
+  bg = pw_bg_color
+  )
+
+patchwork + 
+  plot_annotation(
+    title="Un contrat de travail au moment de l’arrivée en Suisse",
+    theme = theme(
+      plot.title.position = 'plot', 
+      plot.title = element_textbox_simple(
+        size = 20, 
+        hjust = 0,
+        colour = "#0c0b0e",
+        face = "bold",
+        family = mms_base_family,
+        lineheight = 1.3,
+        padding = pw_padding,
+        margin =  pw_margin
+      )))
+  
+
+dev.off()
 
 
 

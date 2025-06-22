@@ -99,9 +99,9 @@ mms_base_family <- "roboto_slab"
 mms_subtitle_family <- "robot_slab_light"
 mms_plot_title_size <- 13
 mms_subtitle_size <- 11
-mms_plot_title_color <- "#403d43"  #"#665c70"
+mms_plot_title_color <- "#262428"  #"#665c70"
 mms_plot_subtitle_color <- "#403d43"
-mms_axis_tick_txt_color <- "#817986"
+mms_axis_tick_txt_color <- "#878f92"
 mms_plot_bg_color <- "#ffffff"
 mms_plot_line_color <- "#ffffff" #"#d0d0d0"  #"#c8c8c8"
 
@@ -113,22 +113,23 @@ mms_plot_margin_l <- margin(15, 25, 5, 10)
 mms_plot_margin_r <- margin(15, 10, 5, 25)
 mms_legend_base_col <- "grey"
 
-mms_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
+mms_txtbox_plot.title <- function(nrow_txt = 1) element_textbox_simple(
   color = mms_plot_title_color, 
   face = "bold",
   size = mms_plot_title_size,
   colour = mms_plot_title_color,
   lineheight = 1.3,
-  padding = margin(0, 1, 4, 0), 
-  margin = margin(0, 0, fixed_top_margin + (5 * nrow_txt), 0)
+  padding = margin(0, 0, 0, 0),  # no internal padding
+  margin = margin(0, 0, nrow_txt * 10, 0)  # space *after* title
 )
 
-mms_txtbox_plot.subtitle <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
+mms_txtbox_plot.subtitle <- function(nrow_txt = 1) element_textbox_simple(
   color = mms_plot_subtitle_color,
   lineheight = 1.4,
   size = mms_subtitle_size,
   colour = mms_plot_subtitle_color,
-  margin = margin(fixed_top_margin + (5 * nrow_txt), 0, 10, 0)
+  padding = margin(0, 0, 0, 0),
+  margin = margin(0, 0, 15, 0)  # space *after* subtitle before plot
 )
 
 
