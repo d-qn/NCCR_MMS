@@ -254,13 +254,13 @@ nccr_categorical <- function() {
 # =============================================================================
 
 # ggplot2 scale functions for categorical
-scale_color_nccr_categorical <- function(order = 1:12, ...) {
+scale_color_nccr_categorical <- function(order = 1:14, ...) {
   colors <- nccr_categorical()[order]
   ggplot2::discrete_scale("colour", "nccr_categorical", 
                          function(n) colors[1:n], ...)
 }
 
-scale_fill_nccr_categorical <- function(order = 1:12, ...) {
+scale_fill_nccr_categorical <- function(order = 1:14, ...) {
   colors <- nccr_categorical()[order]
   ggplot2::discrete_scale("fill", "nccr_categorical", 
                          function(n) colors[1:n], ...)
@@ -351,6 +351,7 @@ scale_color_nccr_seq_cyan <- function(...) {
   ggplot2::scale_color_gradientn(colors = nccr_sequential_cyan(), ...)
 }
 
+
 scale_fill_nccr_seq_cyan <- function(...) {
   ggplot2::scale_fill_gradientn(colors = nccr_sequential_cyan(), ...)
 }
@@ -368,20 +369,9 @@ scale_fill_nccr_seq_yellow <- function(...) {
 # =============================================================================
 
 # Divergent scale 1: Gender to Education (measured colors)
-nccr_divergent_magenta_cyan <- function() {
+nccr_divergent_orange_green <- function() {
   colors <- c(
-    "#8E5A6F",   # Dark gender
-    "#94606B",   # 
-    "#9A6667",   # 
-    "#A06C63",   # 
-    "#A6725F",   # 
-    "#AC785B",   # Light gender
-    "#7B8899",   # Light education
-    "#758E9D",   # 
-    "#6F94A1",   # 
-    "#699AA5",   # 
-    "#63A0A9",   # 
-    "#5DA6AD"    # Dark education
+    '#985d45', '#af7560', '#c19080', '#cdada4', '#d3cbcd', '#a5b9a6', '#7fa486', '#5f8d69', '#457651'
   )
   return(colors)
 }
@@ -431,26 +421,26 @@ show_nccr_palettes <- function() {
   par(mfrow = c(6, 1), mar = c(1, 1, 2, 1))
   
   # Categorical (12 colors with measured base colors)
-  barplot(rep(1, 12), col = nccr_categorical(), 
+  barplot(rep(1, 14), col = nccr_categorical(), 
           main = "NCCR Categorical (measured base colors)", axes = FALSE)
   
   # Sequential Education-based
-  barplot(rep(1, 12), col = nccr_sequential_cyan(), 
+  barplot(rep(1, 14), col = nccr_sequential_cyan(), 
           main = "NCCR Sequential Education-based", axes = FALSE)
   
-  barplot(rep(1, 12), col = nccr_sequential_blue(), 
+  barplot(rep(1, 14), col = nccr_sequential_blue(), 
           main = "NCCR Sequential Education-based", axes = FALSE)
   
   # Sequential Migration-based
-  barplot(rep(1, 12), col = nccr_sequential_yellow(), 
+  barplot(rep(1, 14), col = nccr_sequential_yellow(), 
           main = "NCCR Sequential Migration-based", axes = FALSE)
   
   # Divergent Gender-Education
-  barplot(rep(1, 12), col = nccr_divergent_magenta_cyan(), 
+  barplot(rep(1, 9), col = nccr_divergent_orange_green(), 
           main = "NCCR Divergent Gender-Education", axes = FALSE)
   
   # Divergent Age-Countries
-  barplot(rep(1, 12), col = nccr_divergent_orange_purple(), 
+  barplot(rep(1, 14), col = nccr_divergent_orange_purple(), 
           main = "NCCR Divergent Age-Countries", axes = FALSE)
   
   par(mfrow = c(1, 1))
