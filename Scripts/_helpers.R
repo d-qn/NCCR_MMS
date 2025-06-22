@@ -103,7 +103,7 @@ mms_plot_title_color <- "#262428"  #"#665c70"
 mms_plot_subtitle_color <- "#403d43"
 mms_axis_tick_txt_color <- "#878f92"
 mms_plot_bg_color <- "#ffffff"
-mms_plot_line_color <- "#ffffff" #"#d0d0d0"  #"#c8c8c8"
+mms_plot_line_color <-  "#ffffff" #"#d0d0d0"  #"#c8c8c8"
 
 pw_bg_color <- mms_plot_bg_color
 pw_padding <- margin(0, 0 , 10, 0)
@@ -119,8 +119,9 @@ mms_txtbox_plot.title <- function(nrow_txt = 1) element_textbox_simple(
   size = mms_plot_title_size,
   colour = mms_plot_title_color,
   lineheight = 1.3,
-  padding = margin(0, 0, 0, 0),  # no internal padding
-  margin = margin(0, 0, nrow_txt * 10, 0)  # space *after* title
+  halign = 0,  # ⬅️ align with left side of chart panel
+ # padding = margin(0, 0, 0, 0),  # no internal padding
+  margin = margin(0, 15, nrow_txt * 10, 15)  # space *after* title
 )
 
 mms_txtbox_plot.subtitle <- function(nrow_txt = 1) element_textbox_simple(
@@ -128,8 +129,9 @@ mms_txtbox_plot.subtitle <- function(nrow_txt = 1) element_textbox_simple(
   lineheight = 1.4,
   size = mms_subtitle_size,
   colour = mms_plot_subtitle_color,
-  padding = margin(0, 0, 0, 0),
-  margin = margin(0, 0, 15, 0)  # space *after* subtitle before plot
+  halign = 0,  # ⬅️ align with left side of chart panel
+ # padding = margin(0, 0, 0, 0),
+  margin = margin(0, 15, 15, 15)  # space *after* subtitle before plot
 )
 
 
@@ -161,7 +163,7 @@ theme_mms <- function(
       axis.text.x = element_text(color = mms_axis_tick_txt_color),
       axis.text.y = element_text(color = mms_axis_tick_txt_color),
       panel.background = element_rect(fill = mms_plot_bg_color, 
-                                      #color = mms_plot_line_color,
+                                     color = mms_plot_line_color,
                                       linewidth = 0),
       plot.background = element_rect(fill = mms_plot_bg_color, 
                                      color = mms_plot_line_color,

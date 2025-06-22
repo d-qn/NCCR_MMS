@@ -299,7 +299,7 @@ edu_chart2 <- edu_all_genre %>%
              alpha = 0.9) +
   geom_line(aes(x = year, y = share_w, group = type,
                 color = type, alpha = 0.8), 
-            linewidth = 0.5,
+            linewidth = 1,
             lineend="round", show.legend = F) +
   theme_mms(axis="xy", grid = "Y",
                  base_size = mms_base_size,
@@ -329,7 +329,7 @@ edu_chart2 <- edu_all_genre %>%
                      labels = function(x) paste0(x, "%"),
                      position = "right") +
   scale_colour_manual(
-    values=c(nccr_bi_colors[c(1,3)], "#898989")) +
+    values=c(nccr_bi_colors[c(1,3,13)])) +
   # To hide the alpha legend as well:
   guides(color = "none", alpha = "none",
          size = guide_legend(override.aes = list(color = mms_legend_base_col))) +
