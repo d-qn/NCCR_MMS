@@ -239,14 +239,14 @@ mig_job_2 <- fhf_df %>%
   scale_x_discrete(expand = c(0.4,0.1))+
     scale_y_continuous(expand = c(0,1), name = "", 
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_bi_colors[c(1,3)]) +
-  scale_color_manual(values = nccr_bi_colors[c(1,3)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(2,4)]) +
+  scale_color_manual(values = nccr_bi_colors[c(2,4)]) +
    labs(
     x = "", y = "",
     subtitle = "Contrat ou offre d’emploi en Suisse au moment du déménagement, par sexe en 2024",
     title = str_c("Le contrat de travail, deux fois plus fréquent chez les <span style='color:", 
-    nccr_bi_colors[3], ";'>hommes</span> que chez les <span style='color:",
-                  nccr_bi_colors[1], 
+    nccr_bi_colors[4], ";'>hommes</span> que chez les <span style='color:",
+                  nccr_bi_colors[2], 
                   ";'>femmes</span>")# à l’arrivée en Suisse")
   )
 
@@ -351,18 +351,15 @@ mig_job_3 <- fpp_chart +
     fill = NA, label.color = NA,# remove background and outline,
     size = 10,
     family = mms_base_family, fontface = "bold", 
-    alpha = 0.8,
+    alpha = 0.6,
     color = nccr_bi_colors[9] #"white"
   ) +
   labs(
     title = str_c("Les ressortissants de pays voisins s’installent plus souvent en Suisse avec un emploi"),
-    
-    subtitle = str_c("Contrat ou offre d’emploi en Suisse au moment du déménagement, par pays d'origine en 2024")#,
-
-  #  caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: "#,
-  # mign_sub %>% select(tot, pays) %>% 
-  #   distinct() %>%  .$tot %>% sum() %>% prettyNum(big.mark = " ") )
- #   )
+    subtitle = str_c("Contrat ou offre d’emploi en Suisse au moment du déménagement, par pays d'origine en 2024"),
+    caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: ",#,
+                    fpp2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ") 
+   )
   )
 mig_job_3
 ```

@@ -166,7 +166,14 @@ theme_mms <- function(
       plot.background = element_rect(fill = mms_plot_bg_color, 
                                      color = mms_plot_line_color,
                                      linewidth = 1),
-      plot.margin = plot_margin
+      plot.margin = plot_margin,
+      plot.caption = element_textbox_simple(
+        hjust = 1,
+        margin = margin(0, 0, 15, 0),
+        color = mms_axis_tick_txt_color, 
+        size = mms_base_size * 0.8, 
+        family = mms_base_family
+      ),
     )
 }
 
