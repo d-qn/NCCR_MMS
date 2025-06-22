@@ -167,7 +167,8 @@ mig_job_1 <- mig4y_df %>%
   theme_mms(grid="Y",
             axis = T,
             mms_txtbox_plot.title(nrow_txt = 2),
-            mms_txtbox_plot.subtitle(nrow_txt = 2)
+            mms_txtbox_plot.subtitle(nrow_txt = 2),
+            plot_margin = margin(15, 20, 50, 10)
 
   ) + 
   theme(
@@ -179,7 +180,7 @@ mig_job_1 <- mig4y_df %>%
     legend.title = element_text(size = 10, 
                                 color = mms_legend_base_col, face = "bold", 
                                 hjust =0.5) # Reduce legend title size
-  ) +
+    ) +
   guides(
     size = guide_legend(
       override.aes = list(
@@ -188,7 +189,7 @@ mig_job_1 <- mig4y_df %>%
       )
     )
   )+
-  scale_y_continuous(expand = c(0.017,0.012), name = "", 
+  scale_y_continuous(expand = c(0.047,0.012), name = "", 
                      labels = function(x) paste0(x, "%")) +
   labs(
     x = "", y = "",
@@ -211,7 +212,7 @@ mig_job_2 <- fhf_df %>%
   geom_col(aes(fill = sexe)) +
   geom_richtext(aes(label = sexe),
                 fill = NA, label.color = NA,# remove background and outline,
-                size = 5, alpha = 1,
+                size = 4, alpha = 1,
                 #fontface = "bold",
                 family = mms_base_family,
                 vjust = 1.5, color = "white") +
@@ -225,13 +226,12 @@ mig_job_2 <- fhf_df %>%
   coord_cartesian(clip = "off") +
   theme(
     legend.position = "none",
-    plot.background = element_rect(fill = main_plot_bg_color, linewidth = 0),
+    plot.background = element_rect(fill = mms_plot_bg_color, linewidth = 0),
     #plot.title.position = "plot",
     axis.line.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.text.x = element_blank(),
     #axis.text.x = element_text(color = rc_axis_tick_txt_color),
-    axis.text.y = element_text(color = rc_axis_tick_txt_color)  
   ) +
   scale_x_discrete(expand = c(0.4,0.1))+
     scale_y_continuous(expand = c(0,1), name = "", 
@@ -275,7 +275,7 @@ fpp2mekko_df <- mms_mekko_wrangler(
   left_join(pays2col)
   
 col_couple <- nccr_bi_colors[10] #, amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
-col_seul <- nccr_bi_colors[7] #"#c9d175" 
+col_seul <- desaturate(nccr_bi_colors[9], amount = 0.4) %>% lighten(amount = 0.4) #"#c9d175" 
 fpp_col <- c(col_couple, col_seul)
 
 fpp_chart <- fpp2mekko_df %>%   
@@ -283,22 +283,24 @@ fpp_chart <- fpp2mekko_df %>%
   geom_rect(aes(xmin = xmin, xmax = xmax, 
                 ymin = ymin, ymax = ymax,
                 fill = contrat),
-            colour = "white", size = 0.9, alpha = 0.95) +
+            colour = "white", #nccr_bi_colors[13]
+             size = 0.9, alpha = 1) +
   theme_mms(
     grid="X", axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     legend.position = "none",
-    axis.line = element_blank()
+    axis.line.x = element_blank()
   ) + 
   scale_fill_identity() +
   scale_fill_manual(values = fpp_col) +
   geom_vline(xintercept = 50, linetype = "dashed",
              linewidth = 0.5, color = nccr_bi_colors[13]) +
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
-                     labels = function(x) paste0(x, "%")) +
+                     labels = function(x) paste0(x, "%"),
+                     breaks = c(50)) +
   scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
 
 #fpp_chart
@@ -329,7 +331,7 @@ mig_job_3 <- fpp_chart +
     aes(x = xmin + 0.01, y = y, 
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 4,
+    size = 3.5,
     hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
     family = mms_base_family
   ) +
@@ -346,18 +348,18 @@ mig_job_3 <- fpp_chart +
     fill = NA, label.color = NA,# remove background and outline,
     size = 10,
     family = mms_base_family, fontface = "bold", 
-    alpha = 0.7,
-    color = "white"
+    alpha = 0.8,
+    color = nccr_bi_colors[9] #"white"
   ) +
   labs(
-    title = str_c("Les ressortissants de pays voisins s’installent plus souvent en Suisse avec un emploi — sauf les Italiens"),
+    title = str_c("Les ressortissants de pays voisins s’installent plus souvent en Suisse avec un emploi"),
     
-    subtitle = str_c("Contrat ou offre d’emploi en Suisse au moment du déménagement, par pays d'origine en 2024"),
+    subtitle = str_c("Contrat ou offre d’emploi en Suisse au moment du déménagement, par pays d'origine en 2024")#,
 
-    caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: "#,
+  #  caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: "#,
   # mign_sub %>% select(tot, pays) %>% 
   #   distinct() %>%  .$tot %>% sum() %>% prettyNum(big.mark = " ") )
-    )
+ #   )
   )
 mig_job_3
 ```

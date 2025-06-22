@@ -106,8 +106,8 @@ mms_plot_bg_color <- "#ffffff"
 mms_plot_line_color <- "#ffffff" #"#d0d0d0"  #"#c8c8c8"
 
 pw_bg_color <- mms_plot_bg_color
-pw_padding <- margin(0, 0 , 3, 0)
-pw_margin <- margin(30, 20, 20, 10)
+pw_padding <- margin(0, 0 , 10, 0)
+pw_margin <- margin(20, 20, 20, 10)
 mms_plot_margin <- margin(15, 20, 5, 10)
 mms_plot_margin_l <- margin(15, 25, 5, 10)
 mms_plot_margin_r <- margin(15, 10, 5, 25)
@@ -514,35 +514,35 @@ show_nccr_palettes <- function() {
 
 ## ggplot2 settings old ##
 
-rc_base_size <- 12
-rc_plot_title_size <- 13
-rc_subtitle_size <- 11
-rc_plot_title_color <- "#665c70"
-rc_plot_subtitle_color <- "#403d43"
-
-rc_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
-  color = rc_plot_title_color, 
-  lineheight = 1.3,
-  padding = margin(0, 1, 5, 0), 
-  margin = margin(0, 0, fixed_top_margin + (5 * nrow_txt), 0)
-)
-
-rc_txtbox_plot.subtitle <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
-  color = rc_plot_subtitle_color ,
-  lineheight = 1.4,
-  margin = margin(fixed_top_margin + (5 * nrow_txt), 0, 10, 0)
-)          
-
-rc_axis_tick_txt_color <- "#b3afb6"
-pw_bg_color <- "#f2f2f2"
-
-main_plot_bg_color <- "#ffffff" 
-
-pw_padding <- margin(0, 0 , 0, 0)
-pw_margin <- margin(10, 3, 10, 3)
-
-plot_margin <- margin(15, 15, 10, 0)
-legend_base_col <- "lightgrey"
+# rc_base_size <- 12
+# rc_plot_title_size <- 13
+# rc_subtitle_size <- 11
+# rc_plot_title_color <- "#665c70"
+# rc_plot_subtitle_color <- "#403d43"
+# 
+# rc_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
+#   color = rc_plot_title_color, 
+#   lineheight = 1.3,
+#   padding = margin(0, 1, 5, 0), 
+#   margin = margin(0, 0, fixed_top_margin + (5 * nrow_txt), 0)
+# )
+# 
+# rc_txtbox_plot.subtitle <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
+#   color = rc_plot_subtitle_color ,
+#   lineheight = 1.4,
+#   margin = margin(fixed_top_margin + (5 * nrow_txt), 0, 10, 0)
+# )          
+# 
+# rc_axis_tick_txt_color <- "#b3afb6"
+# pw_bg_color <- "#f2f2f2"
+# 
+# main_plot_bg_color <- "#ffffff" 
+# 
+# pw_padding <- margin(0, 0 , 0, 0)
+# pw_margin <- margin(10, 3, 10, 3)
+# 
+# plot_margin <- margin(15, 15, 10, 0)
+# legend_base_col <- "lightgrey"
 
 ## ggplot2 settings old END ##
 
