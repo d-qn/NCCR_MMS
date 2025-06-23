@@ -277,17 +277,35 @@ fpp2mekko_df <- mms_mekko_wrangler(
 ) %>% 
   left_join(pays2col)
   
-col_couple <- nccr_bi_colors[10] #, amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
-col_seul <- desaturate(nccr_bi_colors[9], amount = 0.4) %>% lighten(amount = 0.4) #"#c9d175" 
-fpp_col <- c(col_couple, col_seul)
+col_contrat <- nccr_bi_colors[10] #, amount = 0.2) %>% desaturate(0.1) #colorspace::adjust_transparency("#3f2d54", alpha = 0.4)
+col_sans <- desaturate(nccr_bi_colors[9], amount = 0.4) %>% lighten(amount = 0.5) #"#c9d175" 
+#col_sans <- nccr_bi_colors[13]
+
+col_voisin <- darken(nccr_bi_colors[10], amount = 0.01)
+
+fpp_col <- tibble(
+  contrat = c("Oui", "Non"),
+  fill_base = c(col_contrat, col_sans)
+)
+
+fpp2mekko_df <- fpp2mekko_df %>% 
+  left_join(fpp_col) %>% 
+  mutate(
+    fill = ifelse(
+      pays %in% c("France", "Allemagne", "Autriche", "Italie") &
+        contrat == "Oui", 
+      col_voisin, fill_base)
+  )
+
 
 fpp_chart <- fpp2mekko_df %>%   
   ggplot() +
-  geom_rect(aes(xmin = xmin, xmax = xmax, 
-                ymin = ymin, ymax = ymax,
-                fill = contrat),
-            colour = "white", #nccr_bi_colors[13]
-             size = 0.9, alpha = 1) +
+  geom_rect(
+    aes(xmin = xmin, xmax = xmax, 
+        ymin = ymin, ymax = ymax,
+        fill = fill),
+    colour = "white", #nccr_bi_colors[13]
+    size = 0.9, alpha = 1) +
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
@@ -305,7 +323,7 @@ fpp_chart <- fpp2mekko_df %>%
     # )
   ) + 
   scale_fill_identity() +
-  scale_fill_manual(values = fpp_col) +
+  #scale_fill_manual(values = fpp_col) +
   geom_vline(xintercept = 50, linetype = "dashed",
              linewidth = 0.5, color = nccr_bi_colors[13]) +
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
@@ -362,7 +380,9 @@ mig_job_3 <- fpp_chart +
     color = nccr_bi_colors[9] #"white"
   ) +
   labs(
-    title = str_c("Les ressortissants de pays voisins s’installent plus souvent en Suisse avec un emploi"),
+    title = str_c("Les ressortissants de <span style='color:",
+                  col_voisin, 
+                  ";'>pays voisins</span> s’installent plus souvent en Suisse avec un emploi"),
     subtitle = str_c("Contrat ou offre d’emploi en Suisse au moment du déménagement, par pays d'origine en 2024"),
     caption = str_c("La hauteur des barres est proportionnelle à la taille de l’échantillon (n), total des sondés: ",#,
                     fpp2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ") 
