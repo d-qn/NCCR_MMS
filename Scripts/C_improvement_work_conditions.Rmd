@@ -284,11 +284,21 @@ wcond5_labels_df <- wcond5_p_df %>%
     pays = factor(pays, levels = rev(sort(unique(wcond5_p_df$pays))))  # ordre pour coord_flip()
   )
 
+fpp2mekko_labels_df <- fpp2mekko_df %>%
+  filter(contrat == "Oui") %>%
+  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
+  select(pays, xmin, y, yRange) %>%
+  ungroup() %>% 
+  mutate(
+    # Insert line breaks between words
+    labels = gsub(" ", "<br>", pays)
+  )
+
 wcond5_p_df %>% 
   arrange(desc(pays)) %>% 
   ggplot(aes(x = pays, y = share)) +
   geom_bar(aes( fill = wcond5), stat = "identity", position = "fill") +
-  coord_flip() +
+  coord_flip(clip = "off") +
   scale_fill_manual(values = nccr_divergent_orange_green()[c(1,3,5,7,9)]) +
   theme_mms(
     grid="X", axis=F
@@ -310,18 +320,27 @@ wcond5_p_df %>%
   geom_richtext(
     data = wcond5_labels_df,
     aes(x = pays, y = -0.02, label = total_amelioration_lbl),
-    hjust = 1,  label.color = NA, size = 4
+    hjust = 1,  label.color = NA, size = 5
   ) +
   geom_richtext(
     data = wcond5_labels_df,
     aes(x = pays, y = 1.02, label = total_deterioration_lbl),
-    hjust = 0, fill = NA, label.color = NA, size = 4
+    hjust = 0, fill = NA, label.color = NA, size = 5
   ) +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = -0.02, 
-           label = "Amélioré", vjust = -3, hjust = 1, size = 3, 
+  #   geom_richtext(
+  #   data = fpp2mekko_labels_df,
+  #   aes(x = xmin + 0.01, y = y, 
+  #       label = labels),
+  #   fill = NA, label.color = NA,# remove background and outline,
+  #   size = 3.5,
+  #   hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
+  #   family = mms_base_family
+  # ) +
+  annotate("text", x = nlevels(wcond5_p_df$pays), y = -.07, 
+           label = "Amélioration", vjust = -5, hjust = 0.5, size = 5, 
            family = mms_base_family, fontface = "bold") +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.02, 
-           label = "Détérioration", vjust = -3, hjust = 0, size = 3, 
+  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.07, 
+           label = "Détérioration", vjust = -5, hjust = 0.5, size = 5, 
            family = mms_base_family, fontface = "bold") 
   
 ```
