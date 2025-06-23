@@ -327,6 +327,7 @@ wcond5_p_df %>%
     aes(x = pays, y = 1.02, label = total_deterioration_lbl),
     hjust = 0, fill = NA, label.color = NA, size = 5
   ) +
+  # <###################### not working !!??
   #   geom_richtext(
   #   data = fpp2mekko_labels_df,
   #   aes(x = xmin + 0.01, y = y, 
@@ -336,10 +337,10 @@ wcond5_p_df %>%
   #   hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
   #   family = mms_base_family
   # ) +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = -.07, 
+  annotate("text", x = nlevels(wcond5_p_df$pays), y = -.09, 
            label = "Amélioration", vjust = -5, hjust = 0.5, size = 5, 
            family = mms_base_family, fontface = "bold") +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.07, 
+  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.09, 
            label = "Détérioration", vjust = -5, hjust = 0.5, size = 5, 
            family = mms_base_family, fontface = "bold") 
   
