@@ -269,7 +269,7 @@ wcond_chart_1
 # https://stackoverflow.com/questions/49161918/plot-divergent-stacked-bar-chart-with-ggplot2
 # https://rfortherestofus.com/2021/10/diverging-bar-chart
 
-```{r divergent stacked bars}
+```{r 2 divergent stacked bars}
 
 wcond5_labels_df <- wcond5_p_df %>%
   mutate(wcond5 = trimws(wcond5)) %>%  # enlever espaces inutiles
@@ -282,16 +282,11 @@ wcond5_labels_df <- wcond5_p_df %>%
     total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, 1), "%</span>"),
     total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
     pays = factor(pays, levels = rev(sort(unique(wcond5_p_df$pays))))  # ordre pour coord_flip()
-  )
-
-fpp2mekko_labels_df <- fpp2mekko_df %>%
-  filter(contrat == "Oui") %>%
-  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
-  select(pays, xmin, y, yRange) %>%
-  ungroup() %>% 
+  ) %>% 
   mutate(
+    y = 0.005,
     # Insert line breaks between words
-    labels = gsub(" ", "<br>", pays)
+    labels = gsub(" ", "<br>", as.character(pays))
   )
 
 wcond5_p_df %>% 
@@ -304,44 +299,53 @@ wcond5_p_df %>%
     grid="X", axis=F
   ) + 
   theme(
-  #  legend.position = "none"
+    legend.position = "none",
+    axis.text.y = element_blank()
   ) +
  scale_y_continuous(
-    name = "", expand = c(0.15, 0),
+    name = "", expand = c(0.1, 0),
     labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
-    breaks = c(0.25, 0.5, 0.75),
+    breaks = c(0.5),
     position = "right"
   ) +
-  scale_x_discrete(expand = c(0.07, 0), name = "") +
+  scale_x_discrete(expand = c(0.05, 0), name = "") +
   labs(
-    title = "En 2024, la majorité des personnes migrantes en Suisse",
-    subtitle = "Situation actuelle sur le marché du travail, comparativement à avant la migration, en 2024, par pays d'origine"
+    title = "L’amélioration de la situation professionnelle varie selon le pays d'origine",
+    subtitle = "En 2024 avec la migration, la situation professionnelle a connu une: "
   ) +
   geom_richtext(
     data = wcond5_labels_df,
     aes(x = pays, y = -0.02, label = total_amelioration_lbl),
-    hjust = 1,  label.color = NA, size = 5
+    hjust = 1,  label.color = NA, size = 5#,
+  #  fontface = "bold"
   ) +
   geom_richtext(
     data = wcond5_labels_df,
     aes(x = pays, y = 1.02, label = total_deterioration_lbl),
     hjust = 0, fill = NA, label.color = NA, size = 5
   ) +
-  # <###################### not working !!??
-  #   geom_richtext(
-  #   data = fpp2mekko_labels_df,
-  #   aes(x = xmin + 0.01, y = y, 
-  #       label = labels),
-  #   fill = NA, label.color = NA,# remove background and outline,
-  #   size = 3.5,
-  #   hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
-  #   family = mms_base_family
-  # ) +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = -.09, 
-           label = "Amélioration", vjust = -5, hjust = 0.5, size = 5, 
-           family = mms_base_family, fontface = "bold") +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.09, 
-           label = "Détérioration", vjust = -5, hjust = 0.5, size = 5, 
-           family = mms_base_family, fontface = "bold") 
+  geom_richtext(
+    data = wcond5_labels_df,
+    aes(x = pays, y = y,
+        label = labels),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 6,
+    hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
+    family = mms_base_family#, fontface = "bold"
+  ) +
+  annotate("text", x = nlevels(wcond5_p_df$pays), y = -.05, 
+           label = "Amélioration", vjust = -5, hjust = 0.5, size = 4, 
+           family = mms_base_family, fontface = "bold", 
+           color = nccr_divergent_orange_green()[9]) +
+  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.01, 
+           label = "Détérioration", vjust = -5, hjust = 0.5, size = 4, 
+           family = mms_base_family, fontface = "bold",
+           color = nccr_divergent_orange_green()[1]) 
   
+```
+
+
+```{r 3}
+
+
 ```
