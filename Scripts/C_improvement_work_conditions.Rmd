@@ -205,6 +205,24 @@ wcond_age_df <- c_df %>%
   ungroup() %>% 
   select(-tot_weight)
 
+wcond_mig4y_df <- c_df %>% 
+  filter(!is.na(wcond3)) %>% 
+  filter(!is.na(mig_4y)) %>% 
+  group_by(mig_4y, wcond3) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(mig_4y) %>%
+  mutate(
+    n_mig_4y = sum(n, na.rm = TRUE),
+    tot_weight = sum(weight, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup() %>% 
+  select(-tot_weight)
+
+
 ```
 
 ### VIZ
@@ -347,7 +365,12 @@ iwc_2
 ```
 
 
-```{r 3}
+```{r 3 sexe & age}
 
+
+```
+
+
+```{r migation year group}
 
 ```
