@@ -411,21 +411,21 @@ svglite::svglite(
   bg = pw_bg_color
   )
 
-patchwork + 
-  plot_annotation(
-    title="Un contrat de travail au moment de l’arrivée en Suisse",
-    theme = theme(
-      plot.title.position = 'plot', 
-      plot.title = element_textbox_simple(
-        size = 20, 
-        hjust = 0,
-        colour = "#0c0b0e",
-        face = "bold",
-        family = mms_base_family,
-        lineheight = 1.3,
-        padding = pw_padding,
-        margin =  pw_margin
-      )))
+patchwork #+ 
+  # plot_annotation(
+  #   title="Un contrat de travail au moment de l’arrivée en Suisse",
+  #   theme = theme(
+  #     plot.title.position = 'plot', 
+  #     plot.title = element_textbox_simple(
+  #       size = 20, 
+  #       hjust = 0,
+  #       colour = "#0c0b0e",
+  #       face = "bold",
+  #       family = mms_base_family,
+  #       lineheight = 1.3,
+  #       padding = pw_padding,
+  #       margin =  pw_margin
+  #     )))
   
 
 dev.off()

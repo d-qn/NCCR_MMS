@@ -210,7 +210,7 @@ wcond_age_df <- c_df %>%
 ### VIZ
 
 ```{r main chart}
-wcond_area <- wcond5_df %>% 
+iwc_1 <- wcond5_df %>% 
  # arrange(wcond5) %>%
   ggplot(aes(x = year, y = share, group = wcond5)) +
   geom_area(aes(fill = wcond5), alpha = 0.96) + 
@@ -251,7 +251,7 @@ annot_df <- tibble(
     by = c("txt" = "wcond5" )
   )
 
-wcond_chart_1 <- wcond_area +
+iwc_1a <- iwc_1 +
   geom_richtext(data = annot_df, 
                 aes(x = year, y = share_w, label = txt, group = 1,  
                     size = size_share, hjust = hjust),
@@ -289,7 +289,7 @@ wcond5_labels_df <- wcond5_p_df %>%
     labels = gsub(" ", "<br>", as.character(pays))
   )
 
-wcond5_p_df %>% 
+iwc_2 <- wcond5_p_df %>% 
   arrange(desc(pays)) %>% 
   ggplot(aes(x = pays, y = share)) +
   geom_bar(aes( fill = wcond5), stat = "identity", position = "fill") +
@@ -342,6 +342,8 @@ wcond5_p_df %>%
            family = mms_base_family, fontface = "bold",
            color = nccr_divergent_orange_green()[1]) 
   
+iwc_2
+
 ```
 
 
