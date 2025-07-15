@@ -280,7 +280,7 @@ iwc_1a <- iwc_1 +
                 family = mms_base_family
   ) +
   scale_size_continuous(range = c(3, 6), guide = "none") 
-wcond_chart_1
+iwc_1a
 
 ```
 
@@ -366,7 +366,84 @@ iwc_2
 
 
 ```{r 3 sexe & age}
+wcond_sa_df <- bind_rows(
+  wcond_sexe_df %>% 
+    rename(var = sexe, n_var = n_sexe) %>% 
+    mutate(varname = "Par sexe"),
+  
+  wcond_age_df %>% 
+    rename(var = age_gr2, n_var = n_age) %>% 
+    mutate(varname = "Par âge")  
+) %>% 
+  mutate(
+    varname = fct_relevel(varname, "Par sexe", "Par âge")
+  )
 
+
+wcond_sa_labels <- wcond_sa_df %>% 
+  group_by(var, varname) %>% 
+  summarise(
+    total_amelioration = share[wcond3 == "Amélioration"],
+    total_deterioration = share[wcond3 == "Détérioration"]
+  ) %>% 
+  mutate(
+    total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, 1), "%</span>"),
+    total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
+    var = fct_reorder(var, total_amelioration, .fun = mean)
+  ) %>% 
+  mutate(
+    y = 0.005,
+    # Insert line breaks between words
+    labels =  case_when(
+      var == "male" ~ "Hommes",
+      var == "female" ~ "Femmes",
+      T ~ var) %>% as.character() #gsub(" ", "<br>", as.character(var))
+  )
+
+iwc_3 <- wcond_sa_df %>% 
+  # drop empty levels 
+  ggplot(aes(x = factor(var), y = share)) +
+  facet_wrap(~varname, ncol = 1, scales = "free_y") +
+  geom_bar(aes(fill = wcond3), stat = "identity", position = "fill") +
+  geom_richtext(data = wcond_sa_labels, 
+                aes(x = var, y = -0.02, label = total_amelioration_lbl),
+                hjust = 1,  label.color = NA, size = 5#,
+    #  fontface = "bold"
+  ) +
+  geom_richtext(data = wcond_sa_labels, 
+                aes(x = var, y = 1.02, label = total_deterioration_lbl),
+                hjust = 0, fill = NA, label.color = NA, size = 5) +
+  geom_richtext(data = wcond_sa_labels,
+                aes(x = var, y = y,
+                    label = labels),
+                fill = NA, label.color = NA,# remove background and outline,
+                size = 7,
+                hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
+                family = mms_base_family#, fontface = "bold"
+  ) +
+  coord_flip() +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  theme_mms(
+    grid="X", axis=F
+  ) + 
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_blank(),
+    panel.spacing.y = unit(0.2, "cm")  # reduce space between facets
+  ) +
+  scale_y_continuous(
+    name = "", expand = c(0.05, 0.05),
+    labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
+    breaks = c(0.5),
+    position = "right"
+  ) +
+  scale_x_discrete(expand = c(0.05, 0), name = "", drop = TRUE) +
+  labs(
+    title = "L’amélioration de la situation professionnelle varie selon le sexe et l'âge",
+    subtitle = "En 2024 avec la migration, la situation professionnelle a connu une: "
+  )
+iwc_3
 
 ```
 
