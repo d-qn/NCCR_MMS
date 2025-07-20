@@ -15,9 +15,9 @@ run_n_check <- T
 
 ```{r wrangle}
 c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
-c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
-c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
-c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes E38.csv"))
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - D1.csv"))
+c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - E38.csv"))
 
 
 data_all <- mms_df  %>% 
@@ -26,12 +26,12 @@ data_all <- mms_df  %>%
     A1, A6, B1, B9, D1, E38, year, weight, everything()
   ) %>% 
   left_join(c2t_A1) %>% 
-  left_join(c2t_B1) %>% 
+  left_join(c2t_B1 %>% select(B1, country)) %>% 
   left_join(c2t_D1) %>% 
   left_join(c2t_E38)
 
 
-data_all %>% filter(is.na(pays)) %>% .$B1 %>% unique() %>% sort()
+data_all %>% filter(is.na(country)) %>% .$B1 %>% unique() %>% sort()
 
 # data_all %>% 
 #   group_by(year, groupe_edu) %>% 
@@ -97,13 +97,13 @@ edu_genre <- data_all %>%
   ) 
 
 edu3_pays <- data_all %>% 
-  group_by(year, groupe_edu, pays) %>% 
+  group_by(year, groupe_edu, country) %>% 
   summarise(
     n = n(),
     weight_sum = sum(weight)
   ) %>% 
   ungroup() %>% 
-  group_by(year, pays) %>% 
+  group_by(year, country) %>% 
   mutate(
     toty = sum(n),
     tot_weight = sum(weight_sum)
@@ -112,7 +112,7 @@ edu3_pays <- data_all %>%
   mutate(
     share_w = (weight_sum /tot_weight) * 100
   ) %>% 
-  filter(groupe_edu == "Tertiaire")
+  filter(groupe_edu == "Tertiary")
 
 # du3_pays %>% filter(year == 2022) %>% arrange(desc(share_w))
 
@@ -120,21 +120,21 @@ edu3_pays <- data_all %>%
 if(run_n_check) {
   data_all %>% 
     filter(year == 2018 | year == 2024) %>% 
-    group_by(year, groupe_edu, pays) %>% 
+    group_by(year, groupe_edu, country) %>% 
     summarise(
       n = n(),
     ) %>% 
     ungroup() %>% 
-    group_by(year, pays) %>% 
+    group_by(year, country) %>% 
     mutate(
       toty = sum(n)
     ) %>% 
     ungroup  %>% 
-    group_by(year, pays) %>% 
+    group_by(year, country) %>% 
     reframe(
       n = sum(n)
     ) %>% 
-    arrange(pays) %>% 
+    arrange(country) %>% 
     pivot_wider(names_from = year, values_from = n) 
 }          
 ```
@@ -229,9 +229,9 @@ edu_chart_1 <- edu_main %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      labels = function(x) paste0(x, "%")) +
   labs(
-    title = str_c("Forte progression de la migration ", 
-                  "<span style='color:#62836A'>hautement qualifiée</span>"),
-    subtitle="Niveau de formation atteint le plus élevé") +
+    title = str_c("Strong increase in ", 
+                  "<span style='color:#62836A'>highly skilled</span> migration"),
+    subtitle="Highest level of education attained") +
   scale_fill_nccr_categorical(order = c(5,6,12))
 
 
@@ -245,8 +245,8 @@ edu_chart_1a <- flush_ticks(edu_chart_1)  +
   geom_richtext(data = annot_df, aes(
     x = year, y = share_w, label = txt, group = 1),
     fill = NA, label.color = NA,# remove background and outline,
-    color = "white", size = 6, alpha = 0.9,
-    fontface = "bold",
+    color = "white", size = 6, alpha = 0.95,
+    #fontface = "bold",
     hjust = 0.5, family = mms_base_family
   )
 
@@ -267,14 +267,14 @@ edu_all_genre <- bind_rows(
     select(year, sexe, groupe_edu, share_w, n) %>% 
     rename(type = sexe)
 ) %>%  
-  filter(groupe_edu == "Tertiaire") %>% 
+  filter(groupe_edu == "Tertiary") %>% 
   mutate(
     al = ifelse(type == "all", 0.7, 1)
   )
 
 edu_genre_rib_df <- edu_all_genre %>% 
   filter(type %in% c("male", "female") & 
-           groupe_edu == "Tertiaire") %>% 
+           groupe_edu == "Tertiary") %>% 
   select(year, share_w, type) %>% 
   pivot_wider(names_from = type, values_from = share_w)
 
@@ -283,8 +283,8 @@ edu_chart2 <- edu_all_genre %>%
   mutate(
     type = case_when(
       type == "all" ~ "TOTAL",
-      type == "male" ~ "Hommes",
-      type == "female" ~ "Femmes",
+      type == "male" ~ "Men",
+      type == "female" ~ "Women",
       T ~ type
     )
   ) %>% 
@@ -329,7 +329,7 @@ edu_chart2 <- edu_all_genre %>%
                      labels = function(x) paste0(x, "%"),
                      position = "right") +
   scale_colour_manual(
-    values=c(nccr_bi_colors[c(1,3,13)])) +
+    values=c(nccr_bi_colors[c(3,13,1)])) +
   # To hide the alpha legend as well:
   guides(color = "none", alpha = "none",
          size = guide_legend(override.aes = list(color = mms_legend_base_col))) +
@@ -348,12 +348,12 @@ edu_chart2 <- edu_all_genre %>%
 
 edu_chart2_a <- edu_chart2 +
   labs(
-    title = str_c("Les <span style='color:",
+    title = str_c("<span style='color:",
                   nccr_bi_colors[1], 
-                  ";'>femmes</span> ",
-    "migrantes plus qualifiées que les <span style='color:", 
-    nccr_bi_colors[3], ";'>hommes"),
-    subtitle = "Part avec formation tertiaire, selon le genre")
+                  ";'>Women</span> ",
+    "migrants more qualified than <span style='color:", 
+    nccr_bi_colors[3], ";'>men"),
+    subtitle = "Share with tertiary education, by gender")
 
 edu_chart2_a
 
@@ -369,8 +369,8 @@ share_tot_3 <- edu_all_genre %>%
 
 
 edu3_pays_df <- edu3_pays %>%
-  select(year, pays, groupe_edu, share_w, n) %>%
-  rename(type = pays) %>% 
+  select(year, country, groupe_edu, share_w, n) %>%
+  rename(type = country) %>% 
   filter(year %in% c(2018, 2024)) %>% 
   select(type, year, share_w, n) %>% 
   arrange(year, desc(share_w)) %>% 
@@ -419,7 +419,7 @@ nudge_x_txt <- ifelse(
 )
 
 annot_sub <- edu3_pays_df %>% 
-  filter(type == "Autre Europe") %>% 
+  filter(type == "Other Europe") %>% 
   select(type, share_w) %>% 
   mutate(type = as.numeric(type))
 
@@ -446,7 +446,7 @@ edu_chart3 <- edu3_pays_df %>%
     data = arrow_txt, 
     aes(x = x1, y = y1, label = label),
     family = mms_base_family,
-    fontface ="bold",
+    #fontface ="bold",
     fill = NA, label.color = NA,# remove background and outline,
     color = nccr_bi_colors[13], size = 4,
     hjust = 1, vjust = 0.5
@@ -469,7 +469,7 @@ edu_chart3 <- edu3_pays_df %>%
   geom_segment(
     data = edu3_pays_w,
     aes(x=type, xend=type, y=`2018`, yend=`2024`,
-        color = color, alpha = 0.4), size = 1, show.legend = F) +
+        color = color, alpha = 0.4), linewidth = 1, show.legend = F) +
   theme_mms(grid="Y", axis="y") + 
   theme(
     legend.position = c(0.05, 0.13),
@@ -501,8 +501,8 @@ edu_chart3 <- edu3_pays_df %>%
   ) +
   scale_color_identity() +
   labs(
-    title = "Plus de diplômés du tertiaire chez les ressortissants d’Asie et d’Europe de l’Est",
-    subtitle = "Différence entre 2018 et 2024 du taux de formation tertiaire selon le pays d’origine"
+    title = "Migrants from Asia and Eastern Europe most likely to hold tertiary degrees",
+    subtitle = "Change in tertiary education rate between 2018 and 2024, by country of origin"
   ) + 
   guides(size = guide_legend(override.aes = list(color = mms_legend_base_col))) 
 
