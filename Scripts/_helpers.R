@@ -6,6 +6,7 @@ library(knitr)
 library(hrbrthemes)
 library(skimr)
 library(systemfonts)
+library(Cairo)
 library(marquee)
 library(ggforce)
 
@@ -299,7 +300,7 @@ nccr_sequential_blue <- function() {
 }
 
 pays2col <- tibble(
-  pays = c("France", "Germany", "Spain", 
+  country = c("France", "Germany", "Spain", 
            "Austria", "Italy", "Portugal",
            "Other EU/EFTA",
            "Other Europe",
