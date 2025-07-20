@@ -27,12 +27,12 @@ run_n_check <- T
 
 ```{r wrangle}
 wcond_codes <- tibble(
-  E27 = c(1, 2, 3, 4, 5),
-  wcond5 = c("Considérablement améliorée ", "Légèrement améliorée", 
-            "Identique", "Légèrement détériorée", 
-            "Considérablement détériorée"),
-  wcond3 = c("Amélioration", "Amélioration", "Identique", 
-             "Détérioration", "Détérioration")
+ E27 = c(1, 2, 3, 4, 5),
+ wcond5 = c("Significantly improved", "Slightly improved", 
+           "Unchanged", "Slightly deteriorated", 
+           "Significantly deteriorated"),
+ wcond3 = c("Improved", "Improved", "Unchanged", 
+            "Deteriorated", "Deteriorated")
 )
 
 
@@ -42,11 +42,11 @@ data_all <- mms_df %>%
   ) %>% 
   mutate(
     wcond5 = factor(wcond5, levels=rev(wcond_codes$wcond5)),
-    wcond3 = factor(wcond3, levels = rev(c("Amélioration", "Identique", "Détérioration"))),
+    wcond3 = factor(wcond3, levels = rev(c("Improved", "Unchanged", "Deteriorated"))),
     # A2 year of birth
     age = year - A2,
     age_gr2 = ifelse(
-      age < 40, "Moins de 40 ans", "40+ ans"),
+      age < 40, "Less than 40 years", "40+ years"),
     migy = mms_encode_migration_year(A6,year)
   ) %>% 
   # join sexe A1 & country B1
@@ -54,7 +54,7 @@ data_all <- mms_df %>%
     read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
   ) %>% 
   left_join(
-    read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+    read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
   ) %>% 
   left_join(
     migy2yearIntervals
@@ -112,12 +112,12 @@ if(run_n_check) {
 wcond_p_df <- c_df %>% 
   filter(year == 2024) %>% 
   filter(!is.na(wcond3)) %>% 
-  group_by(pays, wcond3) %>%
+  group_by(country, wcond3) %>%
   reframe(
     n = n(),
     weight = sum(weight, na.rm = TRUE)
   ) %>% 
-  group_by(pays) %>%
+  group_by(country) %>%
   mutate(
     n_pays = sum(n, na.rm = TRUE),
     tot_weight = sum(weight, na.rm = TRUE),
@@ -129,12 +129,12 @@ wcond_p_df <- c_df %>%
 wcond5_p_df <- c_df %>% 
   filter(year == 2024) %>% 
   filter(!is.na(wcond5)) %>% 
-  group_by(pays, wcond5) %>%
+  group_by(country, wcond5) %>%
   reframe(
     n = n(),
     weight = sum(weight, na.rm = TRUE)
   ) %>% 
-  group_by(pays) %>%
+  group_by(country) %>%
   mutate(
     n_pays = sum(n, na.rm = TRUE),
     tot_weight = sum(weight, na.rm = TRUE),
@@ -142,20 +142,20 @@ wcond5_p_df <- c_df %>%
   ) %>% 
   ungroup() %>% 
   select(-tot_weight) %>% 
-  group_by(pays) %>% 
+  group_by(country) %>% 
   mutate (
     am_tot = sum(share[grepl("améliorée", wcond5)], na.rm = TRUE)
   ) %>% 
   ungroup() %>% 
   mutate(
-    pays = fct_reorder(pays, am_tot, .fun = mean)
+    country = fct_reorder(country, am_tot, .fun = mean)
   )
 
 
 
 if(run_n_check) {
   wcond_p_df %>% 
-    select(pays, wcond3, n_pays, share) %>% 
+    select(country, wcond3, n_pays, share) %>% 
     pivot_wider(
       names_from = wcond3,
       values_from = share
@@ -233,7 +233,9 @@ iwc_1 <- wcond5_df %>%
   ggplot(aes(x = year, y = share, group = wcond5)) +
   geom_area(aes(fill = wcond5), alpha = 0.96) + 
   theme_mms(
-    grid="XY", axis=F
+    grid="XY", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) + 
   theme(
     legend.position = "none",
@@ -276,7 +278,7 @@ iwc_1a <- iwc_1 +
                 nudge_x = c(0.1, 0.1, 0, -0.1, -0.1),
                 fill = NA, label.color = NA,# remove background and outline,
                 color = "white", 
-                fontface = "bold",
+                #fontface = "bold",
                 family = mms_base_family
   ) +
   scale_size_continuous(range = c(3, 6), guide = "none") 
@@ -291,25 +293,25 @@ iwc_1a
 
 wcond5_labels_df <- wcond5_p_df %>%
   mutate(wcond5 = trimws(wcond5)) %>%  # enlever espaces inutiles
-  group_by(pays) %>%
+  group_by(country) %>%
   summarise(
-    total_amelioration = sum(share[wcond5 %in% c("Légèrement améliorée", "Considérablement améliorée")]),
-    total_deterioration = sum(share[wcond5 %in% c("Légèrement détériorée", "Considérablement détériorée")])
+    total_amelioration = sum(share[wcond5 %in% wcond_codes$wcond5[c(1,2)]]),
+    total_deterioration = sum(share[wcond5 %in% wcond_codes$wcond5[c(4,5)]])
   ) %>%
   mutate(
     total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, 1), "%</span>"),
     total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
-    pays = factor(pays, levels = rev(sort(unique(wcond5_p_df$pays))))  # ordre pour coord_flip()
+    country = factor(country, levels = rev(sort(unique(wcond5_p_df$country))))  # ordre pour coord_flip()
   ) %>% 
   mutate(
     y = 0.005,
     # Insert line breaks between words
-    labels = gsub(" ", "<br>", as.character(pays))
+    labels = gsub(" ", "<br>", as.character(country))
   )
 
 iwc_2 <- wcond5_p_df %>% 
-  arrange(desc(pays)) %>% 
-  ggplot(aes(x = pays, y = share)) +
+  arrange(desc(country)) %>% 
+  ggplot(aes(x = country, y = share)) +
   geom_bar(aes( fill = wcond5), stat = "identity", position = "fill") +
   coord_flip(clip = "off") +
   scale_fill_manual(values = nccr_divergent_orange_green()[c(1,3,5,7,9)]) +
@@ -341,30 +343,30 @@ iwc_2 <- wcond5_p_df %>%
   ) +
   geom_richtext(
     data = wcond5_labels_df,
-    aes(x = pays, y = -0.02, label = total_amelioration_lbl),
-    hjust = 1,  label.color = NA, size = 5#,
+    aes(x = country, y = -0.02, label = total_amelioration_lbl),
+    hjust = 1,  label.color = NA, size = 4#,
   #  fontface = "bold"
   ) +
   geom_richtext(
     data = wcond5_labels_df,
-    aes(x = pays, y = 1.02, label = total_deterioration_lbl),
-    hjust = 0, fill = NA, label.color = NA, size = 5
+    aes(x = country, y = 1.02, label = total_deterioration_lbl),
+    hjust = 0, fill = NA, label.color = NA, size = 4
   ) +
   geom_richtext(
     data = wcond5_labels_df,
-    aes(x = pays, y = y,
+    aes(x = country, y = y,
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 6,
+    size = 5,
     hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
     family = mms_base_family#, fontface = "bold"
   ) +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = -.05, 
-           label = "Amélioration", vjust = -5, hjust = 0.5, size = 4, 
+  annotate("text", x = nlevels(wcond5_p_df$country), y = -.05, 
+           label = "Improved", vjust = -5, hjust = 0.5, size = 4, 
            family = mms_base_family, fontface = "bold", 
            color = nccr_divergent_orange_green()[9]) +
-  annotate("text", x = nlevels(wcond5_p_df$pays), y = 1.01, 
-           label = "Détérioration", vjust = -5, hjust = 0.5, size = 4, 
+  annotate("text", x = nlevels(wcond5_p_df$country), y = 1.01, 
+           label = "Deteriorated", vjust = -5, hjust = 0.5, size = 4, 
            family = mms_base_family, fontface = "bold",
            color = nccr_divergent_orange_green()[1]) 
   
@@ -377,22 +379,22 @@ iwc_2
 wcond_sa_df <- bind_rows(
   wcond_sexe_df %>% 
     rename(var = sexe, n_var = n_sexe) %>% 
-    mutate(varname = "Par sexe"),
+    mutate(varname = "By gender"),
   
   wcond_age_df %>% 
     rename(var = age_gr2, n_var = n_age) %>% 
-    mutate(varname = "Par âge")  
+    mutate(varname = "By age")  
 ) %>% 
   mutate(
-    varname = fct_relevel(varname, "Par sexe", "Par âge")
+    varname = fct_relevel(varname, "By gender", "By age")
   )
 
 
 wcond_sa_labels <- wcond_sa_df %>% 
   group_by(var, varname) %>% 
   summarise(
-    total_amelioration = share[wcond3 == "Amélioration"],
-    total_deterioration = share[wcond3 == "Détérioration"]
+    total_amelioration = share[wcond3 == "Improved"],
+    total_deterioration = share[wcond3 == "Deteriorated"]
   ) %>% 
   mutate(
     total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, 1), "%</span>"),
@@ -403,8 +405,8 @@ wcond_sa_labels <- wcond_sa_df %>%
     y = 0.005,
     # Insert line breaks between words
     labels =  case_when(
-      var == "male" ~ "Hommes",
-      var == "female" ~ "Femmes",
+      var == "male" ~ "Men",
+      var == "female" ~ "Women",
       T ~ var) %>% as.character() #gsub(" ", "<br>", as.character(var))
   )
 
@@ -464,5 +466,74 @@ iwc_3
 
 
 ```{r migation year group}
+
+wcondi_labels <- wcond_mig4y_df %>% 
+  filter(wcond3 == "Improved") %>% 
+  select(mig_4y, share, wcond3) 
+
+iwc_4 <- wcond_mig4y_df %>% 
+  ggplot(aes(x = mig_4y, y = share, group = wcond3)) +
+  geom_col(aes(fill = wcond3), alpha = 0.96) + 
+  geom_text(
+    data = wcondi_labels,
+    aes(label = paste0(share, "%")),
+    vjust = 2.2,
+    color = "white",
+    size = 4,
+    family = mms_base_family
+  ) +
+  theme_mms(
+    grid="", axis=F
+  ) + 
+  theme(
+    legend.position = "none",
+    axis.text.y = element_blank()
+    #panel.background = element_rect(fill = NA),  # transparent
+    #panel.ontop = TRUE
+  ) +
+  # remove any scale expansion
+  scale_x_discrete(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%")#,
+                    # breaks = c(25,50,75)
+                    )+
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+   labs(
+    title = "Long-established residents report more improvements in their professional situation",
+    subtitle = "Labor market outcomes in 2024 vs. pre-migration status, by years since arrival"
+  )
+
+```
+
+
+```{r patch}
+
+
+patchwork <- (iwc_1a /iwc_3/iwc_4) +
+   plot_layout(heights = c(1.7, 1,1.3)) | iwc_2 
+patchwork
+
+
+svglite::svglite(
+  filename = here("Output", "charts", "C_work_improvement.svg"),
+  height = 11.7,
+  width = 8.3,
+  fix_text_size = T,
+  bg = pw_bg_color
+  )
+
+patchwork
+dev.off()
+
+CairoPDF(here("Output", "charts", "C_work_improvement.pdf"),
+    height = 11.7,
+    width = 8.3,
+    bg = pw_bg_color)
+    
+patchwork
+
+dev.off()
+
 
 ```
