@@ -397,31 +397,16 @@ mig_job_3
 
 ```{r patch}
 
-
 patchwork <- (mig_job_1 /mig_job_2) +
    plot_layout(heights = c(1, 1)) | mig_job_3 
 patchwork
 
-svglite::svglite(
-  filename = here("Output", "charts", "B_travail.svg"),
-  height = 11.7,
-  width = 8.3,
-  fix_text_size = T,
-  bg = pw_bg_color
+mms_export_vector(
+  plot = patchwork,
+  filepath = here("Output", "charts", "B_travail.svg"),
+  bg_col = pw_bg_color
   )
 
-patchwork
-
-dev.off()
-
-CairoPDF(here("Output", "charts", "B_travail.pdf"),
-    height = 11.7,
-    width = 8.3,
-    bg = pw_bg_color)
-    
-patchwork
-
-dev.off()
 
 
 ```

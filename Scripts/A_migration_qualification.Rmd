@@ -517,44 +517,11 @@ edu_chart3
 
 patchwork <- (edu_chart_1a + edu_chart2_a) / edu_chart3
 
-svglite::svglite(
-  filename = here("Output", "charts", "A_education.svg"),
-  height = 11.7,
-  width = 8.3,
-  fix_text_size = F,
-  standalone = TRUE,
-  bg = pw_bg_color,
-  # system_fonts = list(
-  #   RobotoSlab = "RobotoSlab",
-  #   RobotoSlabLight = "RobotoSlabLight"
-  # )
-  )
-patchwork 
-dev.off()
-
-patchwork
-# If that works, try ggsave with ragg
-ggsave(
-  here("Output", "charts", "A_education.svg"),
+mms_export_vector(
   plot = patchwork,
-  device = svglite::svglite,
-  width = 8.3,
-  height = 11.7,
-  bg = pw_bg_color
-)
-
- §####################  continue here ------------- !!!!!!!!!
-
-
-
-CairoPDF(here("Output", "charts", "A_education.pdf"),
-    height = 11.7,
-    width = 8.3,
-    bg = pw_bg_color)
-    
-patchwork
-
-dev.off()
+  filepath = here("Output", "charts", "A_education.svg"),
+  bg_col = pw_bg_color
+  )
 
 
 ```

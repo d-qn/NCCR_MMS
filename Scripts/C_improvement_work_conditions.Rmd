@@ -509,33 +509,16 @@ iwc_4 <- wcond_mig4y_df %>%
 
 ```{r patch}
 
-
 patchwork <- (iwc_1a /iwc_3/iwc_4) +
    plot_layout(heights = c(1.7, 1,1.3)) | iwc_2 
 patchwork
 
 
-svglite::svglite(
-  filename = here("Output", "charts", "C_work_improvement.svg"),
-  height = 11.7,
-  width = 8.3,
-  fix_text_size = T,
-  bg = pw_bg_color,
-  system_fonts = list(RobotoSlab = "RobotoSlab", 
-                      RobotoSlabLight = "RobotoSlabLight")
+mms_export_vector(
+  plot = patchwork,
+  filepath = here("Output", "charts", "C_work_improvement.svg"),
+  bg_col = pw_bg_color
   )
-
-patchwork
-dev.off()
-
-CairoPDF(here("Output", "charts", "C_work_improvement.pdf"),
-    height = 11.7,
-    width = 8.3,
-    bg = pw_bg_color)
-    
-patchwork
-
-dev.off()
 
 
 ```

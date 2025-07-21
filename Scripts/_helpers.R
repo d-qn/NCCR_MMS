@@ -7,7 +7,8 @@ library(hrbrthemes)
 library(skimr)
 library(systemfonts)
 library(Cairo)
-library(marquee)
+library(ragg)
+#library(marquee)
 library(ggforce)
 
 Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
@@ -16,9 +17,9 @@ hrbrthemes::update_geom_font_defaults()
 options(scipen=999)
 options(dplyr.summarise.inform = FALSE)
 
-library(paletteer)
+#library(paletteer)
+#library(stevethemes)
 library(colorspace)
-library(stevethemes)
 library(patchwork)
 library(ggtext)
 library(waffle)
@@ -61,34 +62,15 @@ migy2yearIntervals <- tibble(
   )
 
 
-# https://projects.susielu.com/viz-palette?colors=%5B%22#66b8d4%22,%22%23f7d777%22,%22%23d1ab75%22,%22%23d97053%22,%22%238fd176%22,%22%23198f58%22,%22%236a7aaa%22,%22%230050b5%22,%22%236d5288%22,%22%23d17393%22,%22%23eca53a%22,%22%2354aa9f%22,%22%23b1b1b1%22%5D&backgroundColor=%22white%22&fontColor=%22black%22&mode=%22normal%22
-# pays2col <- tibble(
-#   pays = c("France", "Allemagne", "Espagne", "Autriche", "Italie", "Portugal",
-#            "Autre UE/AELE",
-#            "Autre Europe",
-#            "Autre OCDE",
-#            "Asie",
-#            "Amerique latine",
-#            "Afrique",
-#            "Autres pays"),
-#   
-#   color = c("#66b8d4","#f7d777","#d1ab75","#d97053",
-#             "#8fd176","#198f58","#6a7aaa","#0050b5",
-#             "#6d5288","#d17393","#eca53a","#855541",
-#             "#b1b1b1")
-# )
-
 ### VIZ SETTINGS ###
-# library(showtext)
-# 
-# ## Load the font from the system ##
-# font_add("roboto_slab", 
-#          regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-VariableFont_wght.ttf",
-#          bold = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-ExtraBold.ttf")
-# 
-# font_add("robot_slab_light", regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-Light.ttf")
-# showtext_auto()
+library(showtext)
 
+## Load the font from the system ##
+font_add("RobotoSlab",
+         regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-VariableFont_wght.ttf",
+         bold = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-ExtraBold.ttf")
+
+font_add("RobotoSlabLight", regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-Light.ttf")
 
 library(systemfonts)
 # Register your font with systemfonts
@@ -104,7 +86,53 @@ register_font(
   )
 
 
+### export as vector files 
 
+mms_export_vector <- function(
+    plot, 
+    filepath, 
+    height = 11.7,
+    width = 8.3, 
+    bg_col ="ffffff"
+)  {
+
+  #browser()
+  filepath_vec <- str_replace(filepath, "\\.svg$", "_vec.svg")
+  filepath_pdf <- str_replace(filepath, "\\.svg$", ".pdf")
+    
+  # 1. vectorized fonts
+  showtext_auto(TRUE)
+  svglite::svglite(
+    filename = filepath_vec,
+    height = height,
+    width = width,
+    fix_text_size = F,
+    bg = bg_col
+  )
+  print(plot)
+  dev.off()
+  showtext_auto(F)
+    
+  # 2. ggsave
+  ggsave(
+    filename = filepath,
+    plot = plot,
+    device = svglite::svglite,
+    width = width,
+    height = height,
+    bg = bg_col,
+    scaling = 1,
+    fix_text_size = FALSE
+  )
+  
+  # 3. pdf
+  # CairoPDF(filepath_pdf,
+  #          height = height,
+  #          width = width,
+  #          bg = bg_col)
+  # print(plot)
+  # dev.off()
+}
 
 ### New ggplot2 theme
 
