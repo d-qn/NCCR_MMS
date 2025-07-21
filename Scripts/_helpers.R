@@ -79,23 +79,38 @@ migy2yearIntervals <- tibble(
 # )
 
 ### VIZ SETTINGS ###
-library(showtext)
+# library(showtext)
+# 
+# ## Load the font from the system ##
+# font_add("roboto_slab", 
+#          regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-VariableFont_wght.ttf",
+#          bold = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-ExtraBold.ttf")
+# 
+# font_add("robot_slab_light", regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-Light.ttf")
+# showtext_auto()
 
-## Load the font from the system ##
-font_add("roboto_slab", 
-         regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-VariableFont_wght.ttf",
-         bold = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-ExtraBold.ttf")
 
-font_add("robot_slab_light", regular = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-Light.ttf")
+library(systemfonts)
+# Register your font with systemfonts
+register_font(
+  name = "RobotoSlab",
+  plain = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-VariableFont_wght.ttf",
+  bold = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-ExtraBold.ttf"
+)
 
-showtext_auto()
+register_font(
+  name = "RobotoSlabLight",
+  plain = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-Light.ttf"
+  )
+
+
 
 
 ### New ggplot2 theme
 
 mms_base_size <- 12
-mms_base_family <- "roboto_slab"
-mms_subtitle_family <- "robot_slab_light"
+mms_base_family <- "RobotoSlab"
+mms_subtitle_family <- "RobotoSlabLight"
 mms_plot_title_size <- 13
 mms_subtitle_size <- 11
 mms_plot_title_color <- "#262428"  #"#665c70"
@@ -136,8 +151,8 @@ mms_txtbox_plot.subtitle <- function(nrow_txt = 1) element_textbox_simple(
 
 theme_mms <- function(
     base_size = mms_base_size, 
-    base_family = "roboto_slab", 
-    subtitle_family = "robot_slab_light",
+    base_family = mms_base_family, 
+    subtitle_family = mms_subtitle_family,
     mms_plot_title = mms_txtbox_plot.title(),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(),
     plot_title_size = mms_plot_title_size,

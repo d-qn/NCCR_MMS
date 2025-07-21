@@ -357,7 +357,7 @@ iwc_2 <- wcond5_p_df %>%
     aes(x = country, y = y,
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 5,
+    size = 4,
     hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
     family = mms_base_family#, fontface = "bold"
   ) +
@@ -520,7 +520,9 @@ svglite::svglite(
   height = 11.7,
   width = 8.3,
   fix_text_size = T,
-  bg = pw_bg_color
+  bg = pw_bg_color,
+  system_fonts = list(RobotoSlab = "RobotoSlab", 
+                      RobotoSlabLight = "RobotoSlabLight")
   )
 
 patchwork
