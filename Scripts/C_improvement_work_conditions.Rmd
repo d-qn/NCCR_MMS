@@ -336,6 +336,79 @@ wcond5_labels_df <- wcond5_p_df %>%
     labels = gsub(" ", "<br>", as.character(country))
   )
 
+wcond3_labels_df <- wcond3_p_df %>%
+  mutate(wcond3 = trimws(wcond3)) %>%  # enlever espaces inutiles
+  group_by(country) %>%
+  summarise(
+    total_amelioration = sum(share[wcond3 == "Improved"]),
+    total_deterioration = sum(share[wcond3 == "Deteriorated"])
+  ) %>%
+  mutate(
+    total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, 1), "%</span>"),
+    total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
+    country = factor(country, levels = rev(sort(unique(wcond3_p_df$country))))  # ordre pour coord_flip()
+  ) %>% 
+  mutate(
+    y = 0.005,
+    # Insert line breaks between words
+    labels = gsub(" ", "<br>", as.character(country))
+  )
+
+iwc_2_wcond3 <- wcond3_p_df %>% 
+  arrange(desc(country)) %>% 
+  ggplot(aes(x = country, y = share)) +
+  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill") +
+  coord_flip(clip = "off") +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  theme_mms(
+    grid="X", axis=F
+  ) + 
+  theme(
+    legend.position = "none",
+    axis.text.y = element_blank(),
+    panel.grid.major = element_blank(),
+    axis.text.x = element_text(size = 13, hjust = 0.35)
+  ) +
+ scale_y_continuous(
+    name = "", expand = c(0.1, 0),
+    labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
+    breaks = c(0.5),
+    position = "right"
+  ) +
+  scale_x_discrete(expand = c(0, 0), name = "") +
+  labs(
+    title = "Improvement in professional situation varies by country of origin",
+    subtitle = "In 2024, with migration, the professional situation is: "
+  ) +
+  geom_hline(
+    yintercept = 0.5, 
+    linetype = "dashed", 
+    color = "white", 
+    linewidth = 0.3
+  ) +
+  geom_richtext(
+    data = wcond3_labels_df,
+    aes(x = country, y = -0.02, label = total_amelioration_lbl),
+    hjust = 1, label.color = NA, size = 4#,
+ #   fontface = "bold"
+  ) +
+  geom_richtext(
+    data = wcond3_labels_df,
+    aes(x = country, y = 1.02, label = total_deterioration_lbl),
+    hjust = 0, fill = NA, label.color = NA, size = 4
+  ) +
+  geom_richtext(
+    data = wcond3_labels_df,
+    aes(x = country, y = y,
+        label = labels),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 4,
+    hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
+        family = mms_base_family#, fontface = "bold"
+  )
+iwc_2_wcond3
+
+
 iwc_2 <- wcond5_p_df %>% 
   arrange(desc(country)) %>% 
   ggplot(aes(x = country, y = share)) +
@@ -397,7 +470,7 @@ iwc_2 <- wcond5_p_df %>%
            family = mms_base_family, fontface = "bold",
            color = nccr_divergent_orange_green()[1]) 
   
-iwc_2
+#iwc_2
 
 ```
 
