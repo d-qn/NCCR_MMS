@@ -376,7 +376,7 @@ edu3_pays_df <- edu3_pays %>%
   arrange(year, desc(share_w)) %>% 
    left_join(
     pays2col,
-    by = c("type" = "pays")
+    by = c("type" = "country")
   ) %>% mutate(
     type = fct_reorder(type, share_w, .fun = max, .desc = T)
   ) 
@@ -395,7 +395,7 @@ edu3_pays_df_sub <- edu3_pays_df %>%
   ) %>% 
   left_join(
     pays2col,
-    by = c("type" = "pays")
+    by = c("type" = "country")
   ) %>%
   mutate(
     type = fct_reorder(type, share_w, .desc = T)
@@ -517,18 +517,35 @@ edu_chart3
 
 patchwork <- (edu_chart_1a + edu_chart2_a) / edu_chart3
 
-
 svglite::svglite(
   filename = here("Output", "charts", "A_education.svg"),
   height = 11.7,
   width = 8.3,
   fix_text_size = F,
   standalone = TRUE,
-  bg = pw_bg_color
+  bg = pw_bg_color,
+  # system_fonts = list(
+  #   RobotoSlab = "RobotoSlab",
+  #   RobotoSlabLight = "RobotoSlabLight"
+  # )
   )
 patchwork 
-
 dev.off()
+
+patchwork
+# If that works, try ggsave with ragg
+ggsave(
+  here("Output", "charts", "A_education.svg"),
+  plot = patchwork,
+  device = svglite::svglite,
+  width = 8.3,
+  height = 11.7,
+  bg = pw_bg_color
+)
+
+ §####################  continue here ------------- !!!!!!!!!
+
+
 
 CairoPDF(here("Output", "charts", "A_education.pdf"),
     height = 11.7,
