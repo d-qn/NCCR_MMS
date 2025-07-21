@@ -144,11 +144,36 @@ wcond5_p_df <- c_df %>%
   select(-tot_weight) %>% 
   group_by(country) %>% 
   mutate (
-    am_tot = sum(share[grepl("améliorée", wcond5)], na.rm = TRUE)
+    am_tot = sum(share[which(wcond5 %in% wcond_codes$wcond5[c(1,2)])], na.rm = TRUE)
   ) %>% 
   ungroup() %>% 
   mutate(
-    country = fct_reorder(country, am_tot, .fun = mean)
+    country = fct_reorder(country, am_tot)
+  )
+
+wcond3_p_df <- c_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(wcond3)) %>% 
+  group_by(country, wcond3) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(country) %>%
+  mutate(
+    n_pays = sum(n, na.rm = TRUE),
+    tot_weight = sum(weight, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup() %>% 
+  select(-tot_weight) %>% 
+  group_by(country) %>% 
+  mutate (
+    am_tot = sum(share[which(wcond3 %in% wcond_codes$wcond3[1])], na.rm = TRUE)
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    country = fct_reorder(country, am_tot)
   )
 
 
@@ -250,13 +275,15 @@ iwc_1 <- wcond5_df %>%
                      breaks = c(25,50,75))+
   scale_fill_manual(values = nccr_divergent_orange_green()[c(1,3,5,7,9)]) +
   labs(
-    title = str_c(
-      "Une majorité de personnes connaissent une ",
-      " <span style='color:",
-                  nccr_bi_colors[12], 
-                  ";'>amélioration</span> ",
-      " de leur situation professionnelle avec la migration"),
-    subtitle="Avec la migration, la situation professionnelle s'est:")
+    title = 
+      str_c(
+        "A majority of people experience an ",
+        "<span style='color:",
+        nccr_bi_colors[12], 
+        ";'>improvement</span> ",
+        "in their professional situation with migration"
+      ),
+    subtitle="With migration, the professional situation is:")
 
 #wcond_area
 annot_df <- tibble(
@@ -332,8 +359,8 @@ iwc_2 <- wcond5_p_df %>%
   ) +
   scale_x_discrete(expand = c(0, 0), name = "") +
   labs(
-    title = "L’amélioration de la situation professionnelle varie selon le pays d'origine",
-    subtitle = "En 2024 avec la migration, la situation professionnelle a connu une: "
+    title = "Improvement in professional situation varies by country of origin",
+    subtitle = "In 2024, with migration, the professional situation is: "
   ) +
   geom_hline(
     yintercept = 0.5, 
@@ -457,8 +484,8 @@ iwc_3 <- wcond_sa_df %>%
   ) +
   scale_x_discrete(expand = c(0, 0), name = "", drop = TRUE) +
   labs(
-    title = "L’amélioration de la situation professionnelle varie selon le sexe et l'âge",
-    subtitle = "En 2024 avec la migration, la situation professionnelle a connu une: "
+    title = "Professional improvement varies by gender and age",
+    subtitle = "In 2024, with migration, the professional situation is: "
   )
 iwc_3
 
@@ -509,8 +536,9 @@ iwc_4 <- wcond_mig4y_df %>%
 
 ```{r patch}
 
-patchwork <- (iwc_1a /iwc_3/iwc_4) +
-   plot_layout(heights = c(1.7, 1,1.3)) | iwc_2 
+patchwork <- ((iwc_1a /iwc_3/iwc_4) +
+  plot_layout(heights = c(1.7, 1,1.3)) | iwc_2) +
+  plot_layout(widths = c(1.1,1))
 patchwork
 
 
