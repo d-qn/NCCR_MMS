@@ -256,9 +256,9 @@ wcond_mig4y_df <- c_df %>%
 iwc_1 <- wcond5_df %>% 
  # arrange(wcond5) %>%
   ggplot(aes(x = year, y = share, group = wcond5)) +
-  geom_area(aes(fill = wcond5), alpha = 0.96) + 
+  geom_area(aes(fill = wcond5), alpha = 1) + 
   theme_mms(
-    grid="XY", axis=F,
+    grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 0)
   ) + 
@@ -354,25 +354,12 @@ wcond3_labels_df <- wcond3_p_df %>%
     labels = gsub(" ", "<br>", as.character(country))
   )
 
-wcond3_p_df %<>% 
-  left_join(pays2col) %>% 
-  mutate(
-    country = fct_reorder(country, share, max, .desc = F),
-    color = ifelse(
-      wcond3 == "Deteriorated", nccr_divergent_orange_green()[1],
-      color),
-    color = ifelse(
-      wcond3 == "Unchanged", nccr_divergent_orange_green()[5],
-      color)
-  ) 
-  
-
 iwc_2 <- wcond3_p_df %>% 
+  arrange(desc(country)) %>%
   ggplot(aes(x = country, y = share)) +
-  geom_bar(aes( fill = color, group = wcond3), stat = "identity", position = "fill") +
+  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill") +
   coord_flip(clip = "off") +
-  scale_fill_identity() +
-  #scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -543,12 +530,12 @@ iwc_3 <- wcond_sa_df %>%
   ggplot(aes(x = factor(var), y = share)) +
   facet_wrap(~varname, ncol = 1, scales = "free_y") +
   geom_bar(aes(fill = wcond3), stat = "identity", position = "fill") +
-    geom_hline(
-    yintercept = 0.5, 
-    linetype = "dashed", 
-    color = "white", 
-    linewidth = 0.3
-  ) +
+  #   geom_hline(
+  #   yintercept = 0.5, 
+  #   linetype = "dashed", 
+  #   color = "white", 
+  #   linewidth = 0.3
+  # ) +
   geom_richtext(data = wcond_sa_labels, 
                 aes(x = var, y = total_amelioration / 100, 
                     label = total_amelioration_lbl),
@@ -569,33 +556,35 @@ iwc_3 <- wcond_sa_df %>%
                 hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
                 family = mms_base_family#, fontface = "bold"
   ) +
-  coord_flip() +
+  coord_flip(clip = "on") +
   scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
   theme_mms(
-    grid="X", axis=F,
+    grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     panel.grid.major = element_blank(),
-    axis.text.x = element_text(size = 13, hjust = 0.35),
+    #axis.text.x = element_text(size = 13, hjust = 0.35),
+    #axis.ticks.y = element_blank(),
     legend.position = "none",
     axis.text.y = element_blank(),
-    panel.spacing.y = unit(0.7, "cm"),  # reduce space between facets
+    panel.spacing.y = unit(.4, "cm"),  # reduce space between facets
     strip.text = element_text(hjust = 0),# 0 = left, 0.5 = center, 1 = right
-    theme(aspect.ratio = 0.4)  # Makes height 50% of width
+    theme(aspect.ratio = 0.7)  # Makes height 50% of width
   ) +
   scale_y_continuous(
-    name = "", expand = c(0.06, 0),
+    name = "", expand = c(0.07, 0),
     labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
-    breaks = c(0.5),
+    breaks = NULL,
     position = "right"
   ) +
   scale_x_discrete(expand = c(0, 0), name = "", drop = TRUE) +
   labs(
     title = "Professional improvement varies by gender and age",
     subtitle = "In 2024, with migration, the professional situation is: "
-  )
+  ) #+ debug_theme
+
 iwc_3
 
 ```
@@ -619,7 +608,9 @@ iwc_4 <- wcond_mig4y_df %>%
     family = mms_base_family
   ) +
   theme_mms(
-    grid="", axis=F
+    grid="", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     legend.position = "none",
@@ -652,7 +643,7 @@ patchwork
 
 patchwork <- ((iwc_1a /iwc_4) +
   plot_layout(heights = c(1.3,1)) | (iwc_2/iwc_3) +
-    plot_layout(heights = c(3,1))) +
+    plot_layout(heights = c(3,1),  widths = 1, ncol = 1, guides = "collect")) +
   plot_layout(widths = c(1,1))
 patchwork
 

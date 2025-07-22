@@ -136,6 +136,15 @@ mms_export_vector <- function(
 
 ### New ggplot2 theme
 
+
+# Temporarily add borders to see the actual plot areas
+debug_theme <- theme(
+  plot.margin = margin(5.5, 5.5, 5.5, 5.5, "pt"),
+  plot.background = element_rect(colour = "red", fill = NA),
+  panel.background = element_rect(colour = "blue", fill = NA)
+)
+
+
 mms_base_size <- 12
 mms_base_family <- "RobotoSlab"
 mms_subtitle_family <- "RobotoSlabLight"
