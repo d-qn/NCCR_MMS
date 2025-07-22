@@ -259,8 +259,8 @@ iwc_1 <- wcond5_df %>%
   geom_area(aes(fill = wcond5), alpha = 0.96) + 
   theme_mms(
     grid="XY", axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 0)
   ) + 
   theme(
     legend.position = "none",
@@ -283,7 +283,7 @@ iwc_1 <- wcond5_df %>%
         ";'>improvement</span> ",
         "in their professional situation with migration"
       ),
-    subtitle="With migration, the professional situation is:")
+    subtitle="With migration, the professional situation was:")
 
 #wcond_area
 annot_df <- tibble(
@@ -308,7 +308,7 @@ iwc_1a <- iwc_1 +
                 #fontface = "bold",
                 family = mms_base_family
   ) +
-  scale_size_continuous(range = c(3, 6), guide = "none") 
+  scale_size_continuous(range = c(2, 6), guide = "none") 
 iwc_1a
 
 ```
@@ -354,14 +354,29 @@ wcond3_labels_df <- wcond3_p_df %>%
     labels = gsub(" ", "<br>", as.character(country))
   )
 
+wcond3_p_df %<>% 
+  left_join(pays2col) %>% 
+  mutate(
+    country = fct_reorder(country, share, max, .desc = F),
+    color = ifelse(
+      wcond3 == "Deteriorated", nccr_divergent_orange_green()[1],
+      color),
+    color = ifelse(
+      wcond3 == "Unchanged", nccr_divergent_orange_green()[5],
+      color)
+  ) 
+  
+
 iwc_2 <- wcond3_p_df %>% 
-  arrange(desc(country)) %>% 
   ggplot(aes(x = country, y = share)) +
-  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill") +
+  geom_bar(aes( fill = color, group = wcond3), stat = "identity", position = "fill") +
   coord_flip(clip = "off") +
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  scale_fill_identity() +
+  #scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
   theme_mms(
-    grid="X", axis=F
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     legend.position = "none",
@@ -378,7 +393,7 @@ iwc_2 <- wcond3_p_df %>%
   scale_x_discrete(expand = c(0, 0), name = "") +
   labs(
     title = "Improvement in professional situation varies by country of origin",
-    subtitle = "In 2024, with migration, the professional situation is: "
+    subtitle = "In 2024, with migration, the professional situation was: "
   ) +
   geom_hline(
     yintercept = 0.5, 
@@ -405,10 +420,20 @@ iwc_2 <- wcond3_p_df %>%
     aes(x = country, y = y,
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 4,
+    size = 3.5,
     hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
     family = mms_base_family#, fontface = "bold"
-  )
+  ) +
+  annotate("text", x = nlevels(wcond3_p_df$country), y = 0,
+           label = "Improved", vjust = -3, hjust = 0, 
+           size = 3,
+           family = mms_base_family, fontface = "bold",
+           color = nccr_divergent_orange_green()[9]) +
+  annotate("text", x = nlevels(wcond3_p_df$country), y = 1,
+           label = "Deteriorated", vjust = -3, hjust = 1, 
+           size = 3,
+           family = mms_base_family, fontface = "bold",
+           color = nccr_divergent_orange_green()[1])
 iwc_2
 
 
@@ -500,7 +525,7 @@ wcond_sa_labels <- wcond_sa_df %>%
     total_deterioration = share[wcond3 == "Deteriorated"]
   ) %>% 
   mutate(
-    total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, 1), "%</span>"),
+    total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, 1), "%</span>"),
     total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
     var = fct_reorder(var, total_amelioration, .fun = mean)
   ) %>% 
@@ -525,35 +550,43 @@ iwc_3 <- wcond_sa_df %>%
     linewidth = 0.3
   ) +
   geom_richtext(data = wcond_sa_labels, 
-                aes(x = var, y = -0.07, label = total_amelioration_lbl),
-                hjust = 1,  label.color = NA, size = 5#,
+                aes(x = var, y = total_amelioration / 100, 
+                    label = total_amelioration_lbl),
+                fill = NA, family = mms_base_family,
+                hjust = 1,  label.color = NA, size = 3#,
     #  fontface = "bold"
   ) +
   geom_richtext(data = wcond_sa_labels, 
-                aes(x = var, y = 1.01, label = total_deterioration_lbl),
-                hjust = 0, fill = NA, label.color = NA, size = 5) +
+                aes(x = var, y = 1, 
+                    label = total_deterioration_lbl),
+                hjust = 0, fill = NA, label.color = NA, size = 3,
+                family = mms_base_family) +
   geom_richtext(data = wcond_sa_labels,
                 aes(x = var, y = y,
                     label = labels),
                 fill = NA, label.color = NA,# remove background and outline,
-                size = 5,
+                size = 4,
                 hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
                 family = mms_base_family#, fontface = "bold"
   ) +
   coord_flip() +
   scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
   theme_mms(
-    grid="X", axis=F
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     panel.grid.major = element_blank(),
     axis.text.x = element_text(size = 13, hjust = 0.35),
     legend.position = "none",
     axis.text.y = element_blank(),
-    panel.spacing.y = unit(0.7, "cm")  # reduce space between facets
+    panel.spacing.y = unit(0.7, "cm"),  # reduce space between facets
+    strip.text = element_text(hjust = 0),# 0 = left, 0.5 = center, 1 = right
+    theme(aspect.ratio = 0.4)  # Makes height 50% of width
   ) +
   scale_y_continuous(
-    name = "", expand = c(0.07, 0.07),
+    name = "", expand = c(0.06, 0),
     labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
     breaks = c(0.5),
     position = "right"
