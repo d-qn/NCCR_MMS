@@ -252,6 +252,8 @@ wcond_mig4y_df <- c_df %>%
 
 ### VIZ
 
+#### 1. main ####
+
 ```{r main chart}
 iwc_1 <- wcond5_df %>% 
  # arrange(wcond5) %>%
@@ -260,7 +262,7 @@ iwc_1 <- wcond5_df %>%
   theme_mms(
     grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 0)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     legend.position = "none",
@@ -316,6 +318,7 @@ iwc_1a
 # https://stackoverflow.com/questions/49161918/plot-divergent-stacked-bar-chart-with-ggplot2
 # https://rfortherestofus.com/2021/10/diverging-bar-chart
 
+#### 2. divergent ####
 ```{r 2 divergent stacked bars}
 
 wcond5_labels_df <- wcond5_p_df %>%
@@ -359,7 +362,7 @@ iwc_2 <- wcond3_p_df %>%
   ggplot(aes(x = country, y = share)) +
   geom_bar(aes( fill = wcond3), stat = "identity", position = "fill") +
   coord_flip(clip = "off") +
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -420,7 +423,8 @@ iwc_2 <- wcond3_p_df %>%
            label = "Deteriorated", vjust = -3, hjust = 1, 
            size = 3,
            family = mms_base_family, fontface = "bold",
-           color = nccr_divergent_orange_green()[1])
+           color = nccr_divergent_orange_green()[1]) #+debug_theme
+
 iwc_2
 
 
@@ -489,7 +493,7 @@ iwc_2
 
 ```
 
-
+#### 3. divergent ####
 ```{r 3 sexe & age}
 wcond_sa_df <- bind_rows(
   wcond_sexe_df %>% 
@@ -528,7 +532,9 @@ wcond_sa_labels <- wcond_sa_df %>%
 iwc_3 <- wcond_sa_df %>% 
   # drop empty levels 
   ggplot(aes(x = factor(var), y = share)) +
-  facet_wrap(~varname, ncol = 1, scales = "free_y") +
+  # Replace facet_wrap with facet_grid
+  facet_wrap(~varname, ncol = 1) +  # Remove scales = "free_y"
+  #facet_grid(rows = vars(varname), scales = "free_y", space = "free_y", switch = "y") + 
   geom_bar(aes(fill = wcond3), stat = "identity", position = "fill") +
   #   geom_hline(
   #   yintercept = 0.5, 
@@ -557,24 +563,27 @@ iwc_3 <- wcond_sa_df %>%
                 family = mms_base_family#, fontface = "bold"
   ) +
   coord_flip(clip = "on") +
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
   theme_mms(
     grid=F, axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     panel.grid.major = element_blank(),
-    #axis.text.x = element_text(size = 13, hjust = 0.35),
-    #axis.ticks.y = element_blank(),
     legend.position = "none",
     axis.text.y = element_blank(),
-    panel.spacing.y = unit(.4, "cm"),  # reduce space between facets
-    strip.text = element_text(hjust = 0),# 0 = left, 0.5 = center, 1 = right
-    theme(aspect.ratio = 0.7)  # Makes height 50% of width
+    #panel.spacing = unit(-50, "cm"),
+    panel.spacing.y = unit(15, "pt"),  # reduce space between facets
+    strip.text = element_text(angle = 0, hjust = 0),# 0 = left, 0.5 = center, 1 = right
+    theme(aspect.ratio = 0.5),  # Makes height 50% of width
+    #strip.text = element_blank(),  # Hide facet labels
+    strip.background = element_blank(),
+    #strip.placement = "outside",  # Place strip outside of axis
+   # strip.text.y.left = element_text(angle = 0, hjust = 0)  # Keep text horizontal
   ) +
   scale_y_continuous(
-    name = "", expand = c(0.07, 0),
+    name = "", expand = c(0.08, 0),
     labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
     breaks = NULL,
     position = "right"
@@ -582,13 +591,14 @@ iwc_3 <- wcond_sa_df %>%
   scale_x_discrete(expand = c(0, 0), name = "", drop = TRUE) +
   labs(
     title = "Professional improvement varies by gender and age",
-    subtitle = "In 2024, with migration, the professional situation is: "
+    subtitle = "In 2024, with migration, the professional situation was: "
   ) #+ debug_theme
 
 iwc_3
 
 ```
 
+#### 4. migration years ####
 
 ```{r migation year group}
 
@@ -609,7 +619,7 @@ iwc_4 <- wcond_mig4y_df %>%
   ) +
   theme_mms(
     grid="", axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
@@ -625,14 +635,17 @@ iwc_4 <- wcond_mig4y_df %>%
                      labels = function(x) paste0(x, "%")#,
                     # breaks = c(25,50,75)
                     )+
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,5,9)]) +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
    labs(
     title = "Long-established residents report more improvements in their professional situation",
     subtitle = "Labor market outcomes in 2024 vs. pre-migration status, by years since arrival"
   )
 
+iwc_4
+
 ```
 
+### Patch
 
 ```{r patch}
 
@@ -642,9 +655,9 @@ patchwork <- ((iwc_1a /iwc_4) +
 patchwork
 
 patchwork <- ((iwc_1a /iwc_4) +
-  plot_layout(heights = c(1.3,1)) | (iwc_2/iwc_3) +
+  plot_layout(heights = c(3,1), widths = 1, ncol = 1, guides = "collect") | (iwc_2/iwc_3) +
     plot_layout(heights = c(3,1),  widths = 1, ncol = 1, guides = "collect")) +
-  plot_layout(widths = c(1,1))
+  plot_layout(widths = c(1,1), guides = "collect")
 patchwork
 
 
