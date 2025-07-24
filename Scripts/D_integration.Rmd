@@ -1,0 +1,30 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("Scripts/_helpers.R")
+run_n_check <- T
+```
+
+
+```{r wrangle}
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
+c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes E38.csv"))
+
+
+data_all <- mms_df  %>% 
+  ### subset !!!
+  select(
+    A1, A6, B1, B9, D1, E38, year, weight, everything()
+  ) %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  left_join(c2t_D1) %>% 
+  left_join(c2t_E38)
+```
