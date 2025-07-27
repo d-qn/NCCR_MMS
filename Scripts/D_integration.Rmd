@@ -199,3 +199,167 @@ p_ints_1 <- ints_df %>%
 
 p_ints_1
 ```
+
+
+#### 2.
+```{r 2}
+
+p_ints_2 <- ints_migy_df %>% 
+  filter(groupe_job_edu == "Yes") %>% 
+  ggplot(aes(x = mig_4y, y = share, group = 1)) +
+  geom_line(aes(linewidth  = n_y), 
+            color =nccr_categorical()[11],
+            alpha = 0.2, lineend = "round")  +
+  geom_point(
+    aes(size = n_y), alpha = 1,
+    color = nccr_categorical()[11]
+  ) +
+  theme_mms(grid="Y",
+            axis = T,
+            mms_txtbox_plot.title(nrow_txt = 2),
+            mms_txtbox_plot.subtitle(nrow_txt = 3)#,
+            #plot_margin = margin(15, 20, 50, 10)
+            
+  ) + 
+  theme(
+    legend.position = c(0.85, 0.9),
+    legend.key.height = unit(0.7, "lines"),
+    #legend.spacing.y = unit(0.01, "lines"),
+    legend.text = element_text(size = 8, 
+                               color = mms_legend_base_col), # Reduce legend text size
+    legend.title = element_text(size = 10, 
+                                color = mms_legend_base_col, 
+                                face = "bold", 
+                                hjust =0.5) # Reduce legend title size
+  ) +
+  guides(
+    size = guide_legend(
+      override.aes = list(
+        color = mms_legend_base_col,  # This makes the legend points grey
+        fill = mms_legend_base_col    # Just in case the theme uses fill
+      )
+    )
+  )+
+  scale_y_continuous(expand = c(0.047,0.012), 
+                     name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    x = "", y = "",
+    subtitle = "Share of people who consider their education is suited to their job, by migration year intervals",
+    title = "Early migrants report a better skill match for their jobs",
+    size = "n",
+    linewidth = "n"
+  )
+
+p_ints_2
+```
+
+
+#### 3. 
+```{r 3}
+
+ints_pays_ordered <- ints_pays_df %>% 
+  filter(groupe_job_edu == "Yes") %>% 
+  mutate(
+    country = factor(country) %>% fct_reorder(share, .desc = T)
+  ) %>% 
+  arrange(country) %>% 
+  .$country %>% as.character()
+
+ints2mekko_df <- mms_mekko_wrangler(
+  ints_pays_df %>% 
+    mutate(
+      country = factor(country, levels = ints_pays_ordered),
+      groupe_job_edu = factor(groupe_job_edu),
+    ) %>% 
+    mutate(groupe_job_edu = fct_rev(groupe_job_edu)) %>% 
+    arrange(country, groupe_job_edu),
+  var1 = "groupe_job_edu", 
+  var2 = "country", 
+  varv = "share", 
+  tot_n = "n_y"
+) %>% 
+  left_join(pays2col) %>% 
+  mutate(
+    color = ifelse(groupe_job_edu == "No", "white", color)
+  ) 
+
+p_ints_3 <- ints2mekko_df %>%   
+  ggplot() +
+  geom_rect(
+    aes(xmin = xmin, xmax = xmax, 
+        ymin = ymin, ymax = ymax,
+        fill = color),
+    colour = "white", 
+    size = 1, alpha = 1) +
+  scale_fill_identity() +
+  theme_mms(
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) + 
+  theme(
+    legend.position = "none",
+    plot.margin = mms_plot_margin
+  ) + 
+  scale_x_continuous(name = "", expand = c(0,0), position = "top",
+                     labels = function(x) paste0(x, "%"),
+                     breaks = NULL) +
+  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+
+#p_ints_3
+
+
+ints_pays_labels <- ints2mekko_df %>%
+  filter(groupe_job_edu == "Yes") %>%
+  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
+  select(country, xmin, y, yRange) %>%
+  ungroup() %>% 
+  mutate(
+    # Insert line breaks between words
+    labels = country#gsub(" ", "<br>", country)
+  ) %>% 
+  # weird fix
+  mutate(
+    labels = ifelse(labels == "Other countries",
+                    "", labels)
+  )
+
+ints_value_labels <- ints2mekko_df %>% 
+  filter(groupe_job_edu == "Yes") %>% 
+  select(country, groupe_job_edu, xmin, xmax, ymin, ymax, share) %>%
+  mutate(
+    x = xmax,
+    y = ymax - 0.01,
+    label = paste0(round(share, 1), "%"),
+    hjust = ifelse(groupe_job_edu == "Yes", 1.05, -0.05)
+  ) 
+
+p_ints_3a <- p_ints_3 +
+   geom_richtext(
+    data = ints_pays_labels,
+    aes(x = xmin + 0.01, y = y, 
+        label = labels),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 4,
+    hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
+    family = mms_base_family
+  ) +
+  geom_richtext(
+    data = ints_value_labels,
+    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
+    fill = NA, label.color = NA,# remove background and outline,
+    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95, colour = "white",
+    family = mms_base_family
+   ) 
+  #+ labs(
+  #   title = str_c("Citizens from <span style='color:", col_voisin, ";'>neighboring countries</span> are more likely to arrive in Switzerland with a job"),
+  #   subtitle = str_c("Job secured before moving to Switzerland, by country of origin in 2024"),
+  #   caption = str_c("Bar height is proportional to sample size (n), total respondents: ",#,
+  #                   fpp2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ")
+  #   )
+  # )
+
+  p_ints_3a
+
+```
