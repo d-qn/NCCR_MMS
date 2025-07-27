@@ -179,7 +179,7 @@ p_ints_1 <- ints_df %>%
    aes(ymax=ymax, ymin=ymin, xmax=4.5, xmin=3, fill=groupe_job_edu)) +
   geom_rect(color = "white") +
   geom_label(
-    x=3.9, aes(y=label_pos, label=label), size=2,
+    x=3.9, aes(y=label_pos, label=label), size=2.5,
     fill = NA, label.size = 0, 
     color = "white", 
     family = mms_base_family) +
@@ -245,12 +245,12 @@ p_ints_2 <- ints_migy_df %>%
   theme_mms(grid="Y",
             axis = T,
             mms_txtbox_plot.title(nrow_txt = 4),
-            mms_txtbox_plot.subtitle(nrow_txt = 3)#,
+            mms_txtbox_plot.subtitle(nrow_txt = 4)#,
             #plot_margin = margin(15, 20, 50, 10)
             
   ) + 
   theme(
-    legend.position = c(0.85, 0.9),
+    legend.position = c(0.82, 0.7),
     legend.key.height = unit(0.7, "lines"),
     #legend.spacing.y = unit(0.01, "lines"),
     legend.text = element_text(size = 8, 
@@ -324,7 +324,7 @@ p_ints_3 <- ints2mekko_df %>%
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) + 
   theme(
     legend.position = "none",
@@ -444,9 +444,9 @@ p_ints_4
 ```{r patch}
 
 patchwork <- ((p_ints_1 /p_ints_2/p_ints_4) +
-  plot_layout(heights = c(1,1.1,1), widths = 1, ncol = 1, guides = "collect") | (p_ints_3a) +
-    plot_layout(heights = c(1),  widths = 1, ncol = 1, guides = "collect")) +
-  plot_layout(widths = c(1,1.2), guides = "collect")
+  plot_layout(heights = c(1,1.1,1), widths = 1, ncol = 1) | (p_ints_3a) +
+    plot_layout(heights = c(1),  widths = 1, ncol = 1)) +
+  plot_layout(widths = c(1,1.2))
 patchwork
 
 
