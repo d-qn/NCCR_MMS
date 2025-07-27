@@ -365,6 +365,7 @@ pays2col <- tibble(
   color = c(nccr_sequential_blue()[3],
             nccr_sequential_blue()[4],
             nccr_sequential_blue()[5],
+            
             nccr_sequential_blue()[6],
             nccr_sequential_blue()[7],
             nccr_sequential_blue()[8],
@@ -372,7 +373,7 @@ pays2col <- tibble(
             nccr_sequential_blue()[1],
             nccr_sequential_blue()[2],
             
-            nccr_sequential_cyan()[5],
+            nccr_bi_colors[12],
             
             nccr_bi_colors[7],
             nccr_bi_colors[1],
