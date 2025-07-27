@@ -142,13 +142,16 @@ if(run_n_check) {
 
 #### 1. 
 ```{r main chart}
+# Create a data frame for the year labels to avoid overplotting
+year_labels <- distinct(ints_df, year)
+
 # faceted pie donut chart by year
-ints_df %>% 
+p_ints_1 <- ints_df %>% 
  ggplot(
    aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=groupe_job_edu)) +
   geom_rect(color = "white") +
   geom_label(
-    x=3.5, aes(y=label_pos, label=label), size=3,
+    x=3.5, aes(y=label_pos, label=label), size=2.5,
     fill = NA, label.size = 0, 
     color = "white", 
     family = mms_base_family) +
@@ -168,41 +171,31 @@ ints_df %>%
     legend.position = "none",
        #panel.spacing = unit(-50, "cm"),
     panel.spacing.y = unit(-10, "pt"),  # reduce space between facets
-    strip.text = element_text(angle = 0, hjust = 0.5,
-                              # remove margin
-                              margin = margin(b = 0, t = 10))# 0 = left,
+    # strip.text = element_text(angle = 0, hjust = 0.5,
+    #                           # remove margin
+    #                           margin = margin(b = 0, t = 10))# 0 = left,
+    # This removes the default facet titles (the grey strips)
+    strip.text = element_blank(),
+    strip.background = element_blank()
   ) +
   scale_fill_manual(values = nccr_categorical()[c(7,11)]) +
   scale_y_continuous(name = "", expand = c(0, 0)) +
   scale_x_continuous(name = "", expand = c(0, 0), limits = c(2, 4)) +
   labs(
     title = "Most people consider their education suited to their job, with little change over time",
-    subtitle = "Share of people who consider their education suited to their job, by year since 2018"
+    subtitle = str_c("Share of people who consider their education",
+                     "<span style='color:", nccr_categorical()[11], "'> 'is suited' </span> vs. ", 
+                     "<span style='color:", nccr_categorical()[7], "'> 'not suited' </span>",
+    " to their job, by year since 2018")
+  ) +
+  # place the year inside the donut in the middle and remove facet text title
+  geom_text(
+    data = year_labels, # Use a dedicated data frame with one row per year
+    aes(x = 2, y = 0, label = year), # Position text at the center
+    inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
+    size = 4,
+    family = mms_base_family
   )
 
-
-
-
-
-# ints_df %>% 
-#   filter(year >= 2018) %>% 
-#   ggplot(aes(x = "", y = share, fill = groupe_job_edu)) +
-#   geom_bar(stat = "identity", width = 1, color = "white") +
-#   coord_polar(theta = "y") +
-#   facet_wrap(~year) +
-#   labs(
-#     title = "Part des groupes d'emploi-études dans la population active",
-#     subtitle = "Années depuis 2018",
-#     fill = "Groupe emploi-études"
-#   ) +
-#   #theme_void() +
-#   theme_mms(
-#     grid=F, 
-#     axis=F,
-#     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-#     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
-#   )
-
-
-
+p_ints_1
 ```
