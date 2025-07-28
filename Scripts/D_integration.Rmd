@@ -179,7 +179,7 @@ p_ints_1 <- ints_df %>%
    aes(ymax=ymax, ymin=ymin, xmax=4.5, xmin=3, fill=groupe_job_edu)) +
   geom_rect(color = "white") +
   geom_label(
-    x=3.9, aes(y=label_pos, label=label), size=2.5,
+    x=3.7, aes(y=label_pos, label=label), size=2.5,
     fill = NA, label.size = 0, 
     color = "white", 
     family = mms_base_family) +
@@ -191,7 +191,7 @@ p_ints_1 <- ints_df %>%
     grid=F, 
     axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   theme(
     axis.text.x = element_blank(),
@@ -214,7 +214,7 @@ p_ints_1 <- ints_df %>%
     subtitle = str_c("Share of people who consider their education",
                      "<span style='color:", nccr_categorical()[11], "'> 'is suited' </span> vs. ", 
                      "<span style='color:", nccr_categorical()[7], "'> 'not suited' </span>",
-    " to their job, by year since 2018")
+    " to their job")
   ) +
   # place the year inside the donut in the middle and remove facet text title
   geom_text(
@@ -399,7 +399,7 @@ p_ints_4 <- ints_sexe_df %>%
   geom_col(aes(fill = sexe)) +
   geom_richtext(aes(label = sexe, y = 1),
                 fill = NA, label.color = NA,# remove background and outline,
-                size = 5, alpha = 1,
+                size = 4, alpha = 1,
                 #fontface = "bold",
                 family = mms_base_family,
                 vjust = 0, color = "white") +
@@ -408,8 +408,8 @@ p_ints_4 <- ints_sexe_df %>%
             family = mms_base_family, size =3) +
   theme_mms(grid=F,
             axis = F,
-            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
-            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   coord_cartesian(clip = "off") +
   theme(
@@ -444,7 +444,7 @@ p_ints_4
 ```{r patch}
 
 patchwork <- ((p_ints_1 /p_ints_2/p_ints_4) +
-  plot_layout(heights = c(1,1.1,1), widths = 1, ncol = 1) | (p_ints_3a) +
+  plot_layout(heights = c(1,1,1), widths = 1, ncol = 1) | (p_ints_3a) +
     plot_layout(heights = c(1),  widths = 1, ncol = 1)) +
   plot_layout(widths = c(1,1.2))
 patchwork
