@@ -348,7 +348,7 @@ wcond3_labels_df <- wcond3_p_df %>%
   ) %>%
   mutate(
     total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, 1), "%</span>"),
-    total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
+    total_deterioration_lbl = paste0("<span style='color:#ede1de;'>", round(total_deterioration, 1), "</span>"),
     country = factor(country, levels = rev(sort(unique(wcond3_p_df$country))))  # ordre pour coord_flip()
   ) %>% 
   mutate(
@@ -376,8 +376,7 @@ iwc_2 <- wcond3_p_df %>%
   ) +
  scale_y_continuous(
     name = "", expand = c(0, 0),
-    labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
-    breaks = c(0.5),
+    breaks = NULL,
     position = "right"
   ) +
   scale_x_discrete(expand = c(0, 0), name = "") +
@@ -385,25 +384,25 @@ iwc_2 <- wcond3_p_df %>%
     title = "Improvement in professional situation varies by country of origin",
     subtitle = "In 2024, with migration, the professional situation was: "
   ) +
-  geom_hline(
-    yintercept = 0.5, 
-    linetype = "dashed", 
-    color = "white", 
-    linewidth = 0.3
-  ) +
+  # geom_hline(
+  #   yintercept = 0.5, 
+  #   linetype = "dashed", 
+  #   color = "white", 
+  #   linewidth = 0.3
+  # ) +
   geom_richtext(
     data = wcond3_labels_df,
     aes(x = country, y = total_amelioration/100,
         label = total_amelioration_lbl),
     fill = NA,
     family = mms_base_family,
-    hjust = 1, label.color = NA, size = 3
+    hjust = 1, label.color = NA, size = 2.5
   ) +
   geom_richtext(
     data = wcond3_labels_df,
-    aes(x = country, y = 1.001, label = total_deterioration_lbl),
+    aes(x = country, y = 1.005, label = total_deterioration_lbl),
     family = mms_base_family,
-    hjust = 0, fill = NA, label.color = NA, size = 3
+    hjust = 1, fill = NA, label.color = NA, size = 2.5
   ) +
   geom_richtext(
     data = wcond3_labels_df,
@@ -517,7 +516,7 @@ wcond_sa_labels <- wcond_sa_df %>%
   ) %>% 
   mutate(
     total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, 1), "%</span>"),
-    total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, 1), "%</span>"),
+    total_deterioration_lbl = paste0("<span style='color:#ede1de;'>", round(total_deterioration, 1), "</span>"),
     var = fct_reorder(var, total_amelioration, .fun = mean)
   ) %>% 
   mutate(
@@ -546,19 +545,19 @@ iwc_3 <- wcond_sa_df %>%
                 aes(x = var, y = total_amelioration / 100, 
                     label = total_amelioration_lbl),
                 fill = NA, family = mms_base_family,
-                hjust = 1,  label.color = NA, size = 3#,
+                hjust = 1,  label.color = NA, size = 2.5#,
     #  fontface = "bold"
   ) +
   geom_richtext(data = wcond_sa_labels, 
-                aes(x = var, y = 1, 
+                aes(x = var, y = 1.005, 
                     label = total_deterioration_lbl),
-                hjust = 0, fill = NA, label.color = NA, size = 3,
+                hjust = 1, fill = NA, label.color = NA, size = 2.5,
                 family = mms_base_family) +
   geom_richtext(data = wcond_sa_labels,
                 aes(x = var, y = y,
                     label = labels),
                 fill = NA, label.color = NA,# remove background and outline,
-                size = 4,
+                size = 3.5,
                 hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
                 family = mms_base_family#, fontface = "bold"
   ) +
@@ -583,8 +582,8 @@ iwc_3 <- wcond_sa_df %>%
    # strip.text.y.left = element_text(angle = 0, hjust = 0)  # Keep text horizontal
   ) +
   scale_y_continuous(
-    name = "", expand = c(0.08, 0),
-    labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
+    name = "", expand = c(0, 0),
+   # labels = function(x) paste0(x * 100, "%"),  # share est entre 0 et 1 ici
     breaks = NULL,
     position = "right"
   ) +

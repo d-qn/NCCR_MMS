@@ -1,0 +1,169 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r wrangle}
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+#mms_encode_yes_no_code
+
+b8 <- mms_load_data(F) %>% 
+  select(B8_3, B8_4, B8_11)
+
+
+data_all <- bind_cols(mms_df, b8)  %>% 
+  left_join(c2t_A1) %>% 
+  ### subset !!!
+  left_join(c2t_B1) 
+
+e_df <- data_all %>% 
+  select(year:country, B9) %>% 
+  mutate(
+    famr = ifelse(B8_3 == 1 | B8_4 == 1 | B8_11 == 1, "yes", "no")
+  ) %>% 
+  mutate(
+    famr = ifelse(is.na(famr), "no", famr)
+  )
+```
+
+```{r wrangle & check}
+fam_sexe_df <- e_df %>% 
+  filter(year > 2016) %>% 
+  filter(!is.na(famr)) %>% 
+  filter(!is.na(sexe)) %>% 
+  group_by(year, sexe, famr) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(year,sexe) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  select(year, famr, sexe, share, n_y,n, weight) %>% 
+  filter(famr == "yes") %>% 
+  select(-famr, -n, -weight)
+  
+  
+# fam_tog_df <- fam_sexe_df %>% 
+#   group_by(year) %>% 
+#   reframe(
+#     sexe = 'ensemble',
+#     share = sum(share) / n(),
+#     n_y = sum(n_y)
+#   )
+#   
+  
+fam_tog_df <- tibble(
+  year = c(2024, 2022, 2020, 2018),
+  sexe = "together",
+  share = c(44.6, 44.3, 41.2, 38.9),
+  n_y = c(6969, 7205, 7390, 7736)
+)  %>%
+  arrange(desc(year))
+
+fam_sexe_df <- bind_rows(fam_sexe_df, fam_tog_df) 
+
+
+if(run_n_check) {
+  fam_sexe_df %>%
+    select(year, n_y, sexe, share) %>%
+    pivot_wider(
+      names_from = sexe,
+      values_from = c(share, n_y)
+    )
+}
+
+fam_pays_df <- e_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(famr)) %>% 
+  filter(!is.na(pays)) %>% 
+  group_by(pays, famr) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(pays) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup() %>% 
+  select(pays, famr, share, n_y,n, weight) %>% 
+  filter(famr == "yes") %>% 
+  select(-famr, -n, -weight)
+
+
+if(run_n_check) fam_pays_df
+
+```
+
+### VIZ
+
+# 1. main line chart
+
+```{r 1}
+
+size_r <- c(2, 4)
+
+fam_sexe_df %>% 
+  ggplot(aes(x = year, y = share, group = sexe)) +
+  geom_line(aes(color=sexe, linewidth = n_y),
+            alpha = 0.2) +
+  geom_textline(
+    aes(label = sexe, color = sexe), size = 4, 
+    vjust = -0.3,
+    linewidth = 0, family = mms_base_family) +
+  geom_point(aes(size=n_y, color = sexe)) +
+  scale_size_continuous(range = size_r) +
+  scale_linewidth_continuous(range = size_r) +
+  theme_mms(
+    grid="Y", axis=T
+  ) +
+  scale_color_manual(values = nccr_bi_colors[c(2,4,14)]) +
+  scale_x_continuous(
+    name = "", expand = c(0.05,0.05)
+  ) +
+  scale_y_continuous(name = "", 
+                     n.breaks = 10,
+                     labels = function(x) paste0(x, "%"),
+                     expand = c(0.05,0.05)
+  ) +
+  theme(
+    legend.position = c(0.89, 0.07),
+    legend.key.height = unit(0.7, "lines"),
+    legend.text = element_text(
+      size = 8, 
+      color = mms_legend_base_col), # Reduce legend text size
+    legend.title = element_text(
+      size = 10, 
+      color = mms_legend_base_col, 
+      face = "bold", 
+      hjust =0.5)
+  ) +
+  guides(
+    color = "none",
+    size = guide_legend(
+      override.aes = list(
+        color = mms_legend_base_col,  # This makes the legend points grey
+        fill = mms_legend_base_col    # Just in case the theme uses fill
+      )
+    )
+  ) +
+  labs(
+    size = "n", linewidth = "n"
+  )
+
+
+```

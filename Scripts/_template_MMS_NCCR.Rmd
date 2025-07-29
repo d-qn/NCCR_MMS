@@ -12,10 +12,14 @@ run_n_check <- T
 
 
 ```{r wrangle}
+# gender
 c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
-c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes B1.csv"))
+# education
 c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
-c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes E38.csv"))
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+# qualification for the job
+c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - E38.csv"))
 
 
 data_all <- mms_df  %>% 
