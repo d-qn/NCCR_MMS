@@ -89,20 +89,21 @@ fam_pays_df <- e_df %>%
   filter(year == 2024) %>% 
   filter(!is.na(famr)) %>% 
   filter(!is.na(pays)) %>% 
-  group_by(pays, famr) %>% 
+  group_by(country, famr) %>% 
   reframe(
     n = n(),
     weight = sum(weight, na.rm = TRUE)
   ) %>% 
-  group_by(pays) %>% 
+  group_by(country) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
     share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
   ) %>% 
   ungroup() %>% 
-  select(pays, famr, share, n_y,n, weight) %>% 
-  filter(famr == "yes") %>% 
-  select(-famr, -n, -weight)
+  select(country, famr, share, n_y,n, weight) %>% 
+  #filter(famr == "yes") %>% 
+  #select(-famr, -n, -weight) %>% 
+  filter(country != "Other countries")
 
 
 if(run_n_check) fam_pays_df
@@ -117,7 +118,7 @@ if(run_n_check) fam_pays_df
 
 size_r <- c(2, 4)
 
-fam_sexe_df %>% 
+famr_1 <- fam_sexe_df %>% 
   ggplot(aes(x = year, y = share, group = sexe)) +
   geom_line(aes(color=sexe, linewidth = n_y),
             alpha = 0.2) +
@@ -129,7 +130,9 @@ fam_sexe_df %>%
   scale_size_continuous(range = size_r) +
   scale_linewidth_continuous(range = size_r) +
   theme_mms(
-    grid="Y", axis=T
+    grid="Y", axis=T,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) +
   scale_color_manual(values = nccr_bi_colors[c(2,4,14)]) +
   scale_x_continuous(
@@ -141,7 +144,7 @@ fam_sexe_df %>%
                      expand = c(0.05,0.05)
   ) +
   theme(
-    legend.position = c(0.89, 0.07),
+    legend.position = c(0.89, 0.08),
     legend.key.height = unit(0.7, "lines"),
     legend.text = element_text(
       size = 8, 
@@ -162,7 +165,121 @@ fam_sexe_df %>%
     )
   ) +
   labs(
+    title = "Increase in the share of people reporting family-related reasons for moving to Switzerland",
+    subtitle = "Share of people reporting family-related reasons for moving to Switzerland, by survey year",
     size = "n", linewidth = "n"
+  )
+
+famr_1
+```
+
+
+#### 2 country mekko chart
+```{r 2}
+fam_pays_ordered <- fam_pays_df %>% 
+  filter(famr == "yes") %>% 
+  mutate(
+    country = factor(country) %>% 
+      fct_reorder(share, .desc = T)
+  ) %>% 
+  arrange(country) %>% 
+  .$country %>% as.character()
+
+fam2mekko_df <- mms_mekko_wrangler(
+  fam_pays_df %>% 
+    mutate(
+      country = factor(country, levels = fam_pays_ordered),
+      pays = factor(country),
+      famr = factor(famr, levels = c("yes", "no"))
+    ) %>% 
+    arrange(country, famr),
+  var1 = "famr", 
+  var2 = "country", 
+  varv = "share", 
+  tot_n = "n_y"
+) %>% 
+  left_join(pays2col) %>% 
+  filter(famr != "no")
+
+
+famr_2 <- fam2mekko_df %>%   
+  ggplot() +
+  geom_rect(
+    aes(xmin = xmin, xmax = xmax, 
+        ymin = ymin, ymax = ymax,
+        fill = color),
+    colour = "white", 
+    size = 1, alpha = 1) +
+  scale_fill_identity() +
+  theme_mms(
+    grid="F", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+  ) + 
+  theme(
+    legend.position = "none"
+  ) + 
+  scale_x_continuous(name = "", expand = c(0,0), position = "top",
+                     labels = function(x) paste0(x, "%"),
+                     breaks = NULL) +
+  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+
+famr_pays_labels <- fam2mekko_df %>%
+  filter(famr == "yes") %>%
+  mutate(y = ymax - 0.007, yRange = (ymax - ymin)* 100) %>%
+  select(country, xmin, y, yRange) %>%
+  ungroup() %>% 
+  mutate(
+    # Insert line breaks between words
+    labels = country#gsub(" ", "<br>", country)
+  ) 
+
+famr_value_labels <- fam2mekko_df %>% 
+  filter(famr == "yes") %>% 
+  select(country, famr, xmin, xmax, ymin, ymax, share) %>%
+  mutate(
+    x = xmax,
+    y = ymax - 0.01,
+    label = paste0(round(share, 1), "%"),
+    hjust = ifelse(famr == "yes", 1.05, -0.05)
+  ) 
+
+famr_2a <- famr_2 +
+   geom_richtext(
+    data = famr_pays_labels,
+    aes(x = xmin + 0.01, y = y, 
+        label = labels),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 4,
+    hjust = 0, nudge_x = 0.5, vjust = 1, colour = "white",
+    family = mms_base_family
+  ) +
+  geom_richtext(
+    data = famr_value_labels,
+    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
+    fill = NA, label.color = NA,# remove background and outline,
+    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95, colour = "white",
+    family = mms_base_family
+   ) + 
+  labs(
+    title = str_c("Family-related migration more common among non-EU Europeans, Africans, and Latin Americans"),
+    subtitle = str_c("Share of people reporting they came to Switzerland for family reunification, by country of origin in 2024"),
+    caption = str_c("<br>Bar height is proportional to sample size (n), total respondents: ",fam2mekko_df$n_y %>% sum()%>% prettyNum(big.mark = " ")
+    )
+  )
+
+famr_2a
+```
+
+
+```{r patch}
+patchwork <- famr_1 + famr_2a 
+patchwork
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = here("Output", "charts", "E_family_reunification.svg"),
+  bg_col = pw_bg_color
   )
 
 

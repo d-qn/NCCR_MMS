@@ -295,6 +295,7 @@ ints_pays_ordered <- ints_pays_df %>%
 
 ints2mekko_df <- mms_mekko_wrangler(
   ints_pays_df %>% 
+    filter(country != "Other countries") %>% 
     mutate(
       country = factor(country, levels = ints_pays_ordered),
       groupe_job_edu = factor(groupe_job_edu),
@@ -321,7 +322,7 @@ p_ints_3 <- ints2mekko_df %>%
     size = 1, alpha = 1) +
   scale_fill_identity() +
   theme_mms(
-    grid="X", axis=F,
+    grid="F", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) + 
