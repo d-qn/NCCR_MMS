@@ -6,12 +6,12 @@ output: html_document
 ---
 
 ```{r setup & load data, include=FALSE}
-source("Scripts/_helpers.R")
+source("_helpers.R")
 run_n_check <- T
 ```
 
 
-```{r wrangle}
+```{r load}
 # gender
 c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
 # education
@@ -31,4 +31,43 @@ data_all <- mms_df  %>%
   left_join(c2t_B1) %>% 
   left_join(c2t_D1) %>% 
   left_join(c2t_E38)
+```
+
+
+```{r wrangle & check}
+
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
 ```
