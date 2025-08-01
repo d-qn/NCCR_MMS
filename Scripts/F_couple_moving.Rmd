@@ -1,0 +1,398 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# gender
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+
+data_all <- mms_df  %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  mutate(
+    migy = mms_encode_migration_year(A6,year)
+  ) %>% 
+  left_join(
+    migy2yearIntervals) %>% 
+  mutate(
+    mar = case_when(
+      B9 == 1 ~ T,
+      B9 == 2 ~ F,
+      T ~ NA
+    ),
+    b10 = case_when(
+      B10 == 1 ~ "Partner already in Switzerland",
+      B10 == 2 ~ "Moved together",
+      B10 == 3 ~ "Partner moved before",
+      B10 == 4 ~ "Partner moved after",
+      B10 == 5 ~ "Partner has not moved yet",
+      T ~ NA
+    )
+  )
+
+f_df <- data_all %>% 
+  select(year:b10)
+  
+```
+
+
+```{r wrangle & check}
+coum2y_df <- f_df %>% 
+  filter(!is.na(mig_2y)) %>% 
+  filter(!is.na(mar)) %>% 
+  group_by(mig_2y, mar) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T),
+  ) %>% 
+  group_by(mig_2y) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+
+coum4y_df <- f_df %>% 
+  filter(!is.na(mig_4y)) %>% 
+  filter(!is.na(mar)) %>% 
+  group_by(mig_4y, mar) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T),
+  ) %>% 
+  group_by(mig_4y) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+
+
+if(run_n_check) {
+  coum2y_df %>% 
+    select(mig_2y, n_y, mar, share) %>%
+    pivot_wider(
+      names_from = mar,
+      values_from = share
+    ) 
+  
+  coum4y_df %>% 
+    select(mig_4y, n_y, mar, share) %>%
+    pivot_wider(
+      names_from = mar,
+      values_from = share
+    ) 
+}
+
+coum_p_df <- f_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(country)) %>% 
+  filter(!is.na(mar)) %>% 
+  group_by(country, mar) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T),
+  ) %>% 
+  group_by(country) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+  
+if(run_n_check) {
+  coum_p_df %>% 
+    select(country, n_y, mar, share) %>%
+    pivot_wider(
+      names_from = mar,
+      values_from = share
+    ) 
+}
+
+cou_ms_df <- f_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(b10)) %>% 
+  filter(!is.na(mig_4y)) %>% 
+  group_by(mig_4y, b10) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T),
+  ) %>% 
+  group_by(mig_4y) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+
+cou_msa_df <- f_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(b10)) %>% 
+  group_by(b10) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = T),
+  ) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+  ) %>% 
+  ungroup()
+  
+
+if(run_n_check) {
+  cou_ms_df %>% 
+    select(mig_4y, n_y, b10, share) %>%
+    pivot_wider(
+      names_from = b10,
+      values_from = share
+    )  
+  cou_msa_df
+}
+
+
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+annot_df <- tibble(
+  mig_4y = rep(3, 2),
+  value = c(53, 85),
+  txt = c("In couple", "Alone")
+)
+
+
+p_coum_1 <- coum4y_df %>% 
+  ggplot(aes(x = mig_4y, y = share, group = mar)) +
+  geom_area(aes(fill = mar), alpha = 1, show.legend = FALSE) + 
+  geom_point(data = coum4y_df %>% filter(mar == T),
+            aes(size = n_y),
+            color = "white"
+            ) +
+  geom_line(data = coum4y_df %>% filter(mar == T),
+             color = "white", linewidth = 1
+  ) +
+  theme_mms(
+    grid="XY", axis="XY",
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    legend.position = c(0.83, 0.08),
+    legend.key.height = unit(0.8, "lines"),
+    #legend.spacing.y = unit(0.01, "lines"),
+    legend.text = element_text(size = 8, 
+                               color = mms_legend_base_col), # Reduce legend text size
+    legend.title = element_text(size = 10, 
+                                color = mms_legend_base_col, 
+                                face = "bold", 
+                                hjust =0.5) # Reduce legend title size
+
+  ) +
+  guides(
+    size = guide_legend(
+      override.aes = list(
+        color = mms_legend_base_col,  # This makes the legend points grey
+        fill = mms_legend_base_col    # Just in case the theme uses fill
+      )
+    )
+  ) +
+   # remove any scale expansion
+  scale_x_discrete(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(25, 100, 25),
+                     labels = function(x) paste0(x, "%")) +
+  scale_fill_manual(values = nccr_categorical()[c(13, 2)]) +
+  scale_size_continuous(guide = guide_legend(), 
+                        breaks = scales::breaks_pretty(n = 4)) + # choose ~3 "pretty" breaks
+  labs(
+    title = "Recent migrants more often arrived as part of a couple than those in the early 2000s",
+    subtitle = "Share of migrants in a couple at time of arrival, by migration period",
+    #fill = "n",
+    size = "n",
+    color = "n"
+  ) +
+  geom_richtext(
+    data = annot_df, 
+    aes(x = mig_4y, y = value, label = txt, group = 1),
+    fill = NA, label.color = NA,# remove background and outline,
+    color = "white", size = 9,# fontface = "bold",
+    hjust = 0.5, family = mms_base_family
+  )
+
+  
+ p_coum_1 
+```
+
+#### 2. mekko  
+
+```{r 2}
+coum_p_ordered <- coum_p_df %>% 
+  filter(country != "Other countries") %>%
+  filter(mar == T) %>% 
+  mutate(
+    country = factor(country) %>% fct_reorder(share, .desc = T)
+  ) %>% 
+  arrange(country) %>% 
+  .$country %>% as.character()
+
+coum_p_labels <- coum2mekko_df %>%
+  filter(mar == "TRUE") %>%
+  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
+  select(country, xmin, y, yRange) %>%
+  ungroup() %>% 
+  mutate(
+    # Insert line breaks between words
+    labels = gsub(" ", "<br>", country)
+  )
+
+coum_value_labels <- coum2mekko_df %>% 
+  select(country, mar, xmin, xmax, ymin, ymax, share) %>%
+  mutate(
+    x = ifelse(mar == "TRUE", xmax, xmin),
+    y = ymax - 0.01,
+    label = paste0(round(share, 1), "%"),
+    hjust = ifelse(mar == "TRUE", 1.05, -0.05)
+  ) 
+
+
+coum2mekko_df <- mms_mekko_wrangler(
+  coum_p_df %>% 
+    filter(country != "Other countries") %>%
+    mutate(
+      country = factor(country, levels = coum_p_ordered),
+      mar = factor(mar, levels = c(T, F))
+    ) %>% arrange(country, mar),
+  var1 = "mar", 
+  var2 = "country", 
+  varv = "share", 
+  tot_n = "n_y"
+) %>% 
+  left_join(pays2col) %>% 
+  mutate(
+    color = ifelse(mar == "TRUE", color, nccr_bi_colors[13])
+  )
+
+
+
+
+p_coum_2 <- coum2mekko_df %>%   
+  ggplot() +
+  geom_rect(
+    aes(xmin = xmin, xmax = xmax, 
+        ymin = ymin, ymax = ymax,
+        fill = color),
+    colour = "white", #nccr_bi_colors[13]
+    size = 0.9, alpha = 1) +
+  theme_mms(
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) + 
+  theme(
+    legend.position = "none"
+  ) +
+  scale_fill_identity() +
+  #scale_fill_manual(values = fpp_col) +
+  geom_vline(xintercept = 50, linetype = "dashed",
+             linewidth = 0.5, color = nccr_bi_colors[13]) +
+  scale_x_continuous(name = "", expand = c(0,0), position = "top",
+                     labels = function(x) paste0(x, "%"),
+                     breaks = c(50)) +
+  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+    
+p_coum_2a <-  p_coum_2 +
+   geom_richtext(
+     data = coum_p_labels,
+     aes(x = xmin + 0.01, y = y, 
+         label = labels),
+     fill = NA, label.color = NA,# remove background and outline,
+     size = 3.5,
+     hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
+     family = mms_base_family
+   ) +
+   geom_richtext(
+     data = coum_value_labels,
+     aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
+     fill = NA, label.color = NA,# remove background and outline,
+     vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.9, colour = "white",
+     family = mms_base_family
+   ) +
+    annotate(
+    geom = "richtext",
+    x=92,y = 0.43, angle = -90, label = "alone",
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 8,
+    family = mms_base_family, #fontface = "bold", 
+    alpha = 0.5,
+    color = "white"
+  ) 
+
+p_coum_2a
+```
+
+#### 3. waffle
+
+```{r 3}
+
+p_coum_3 <- cou_msa_df %>% 
+  ggplot(
+    aes(fill = b10, values = share)
+  ) +
+  geom_waffle(
+    n_rows = 10,
+    size = 0.9, 
+    colour = "white",
+    flip = TRUE
+  ) +
+  theme_mms(
+    grid=FALSE, axis=F, 
+   # grid_col = "black",
+  ) + 
+  theme(
+    legend.position = "top",
+    axis.text.y = element_blank(),  # Hide y-axis text
+    axis.ticks.y = element_blank() , # Hide y-axis ticks
+    axis.text.x = element_blank(),  # Hide y-axis text
+    axis.ticks.x = element_blank() , # Hide y-axis ticks
+  ) +
+    #scale_fill_manual(values = c("#75b8d1", "#d18975", "#758bd1",  "#d1ab75"))  +
+  labs(
+    title = str_c("Migration en couple: un déplacement rarement conjoint (1 fois sur 3)"),
+    subtitle = "Parmi les personnes qui étaient en couple au moment de la migration"
+  ) + guides(fill = guide_legend(nrow = 2, title =""))
+
+p_coum_3
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```
