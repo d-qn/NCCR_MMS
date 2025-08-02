@@ -202,7 +202,7 @@ p_coum_1 <- coum4y_df %>%
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) +
   theme(
-    legend.position = c(0.83, 0.08),
+    legend.position = c(0.87, 0.1),
     legend.key.height = unit(0.8, "lines"),
     #legend.spacing.y = unit(0.01, "lines"),
     legend.text = element_text(size = 8, 
@@ -306,7 +306,7 @@ p_coum_2 <- coum2mekko_df %>%
   geom_rect(
     aes(xmin = xmin, xmax = xmax, 
         ymin = ymin, ymax = ymax,
-        fill = color),
+        fill = mar),
     colour = "white", #nccr_bi_colors[13]
     size = 0.9, alpha = 1) +
   theme_mms(
@@ -318,7 +318,7 @@ p_coum_2 <- coum2mekko_df %>%
     legend.position = "none"
   ) +
   scale_fill_identity() +
-  #scale_fill_manual(values = fpp_col) +
+  scale_fill_manual(values = nccr_categorical()[c(2, 13)]) +
   geom_vline(xintercept = 50, linetype = "dashed",
              linewidth = 0.5, color = nccr_bi_colors[13]) +
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
@@ -372,8 +372,10 @@ cou_msa_df %<>%
     x = c(5.5, 5.3, 5.2, 5.2, 7),
     y = c(2,5, 7, 9, 10),
     hjust = c(0.5, 0.5, 0.5, 0.5, 0.5),
-    label = str_c(b10, " <span style='font-size:12px;'>", share, "%</span>"),
-    color = nccr_bi_colors[c(10,12,6,8,14)]
+    color = nccr_bi_colors[c(10,12,6,8,14)],
+    label = str_c(
+      " <span style='color:",  color ,";'>",
+      b10, "</span> <span style='color:#878f92;'>", share, "%</span>"),
   )
 
 
@@ -388,32 +390,38 @@ p_coum_3 <- cou_msa_df %>%
   ) +
   theme_mms(
     grid=FALSE, axis=F, 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 1)
    # grid_col = "black",
   ) + 
   theme(
-    legend.position = "none", #"top",
+    legend.text = element_markdown(size = 12),  # Enables HTML/Markdown in legend labels
+    legend.position = "top",
+    legend.justification = c(0, 1), 
     axis.text.y = element_blank(),  # Hide y-axis text
     axis.ticks.y = element_blank() , # Hide y-axis ticks
     axis.text.x = element_blank(),  # Hide y-axis text
     axis.ticks.x = element_blank() , # Hide y-axis ticks
   ) +
-  scale_fill_manual(values = nccr_bi_colors[c(9,11,5,7,13)])  +
+  scale_fill_manual(
+    values = nccr_bi_colors[c(10,11,5,7,13)],
+    labels = cou_msa_df$label)  +
   #scale_color_manual(values = nccr_bi_colors[c(13,10,1,1,1,1)])  +
   labs(
     title = str_c("Migrating as a couple: only 1 in 3 move together"),
     subtitle = "Status at the time of migration, in 2024"
   ) + 
-  #guides(fill = guide_legend(nrow = 2, title ="")) +
-  geom_richtext(
-    aes(x = x, y = y, label = label, hjust = hjust),
-    #fill = nccr_bi_colors[13], 
-    label.color = NA,# remove background and outline,
-    size = 3.5, 
-    colour = "black",
-    family = mms_base_family,
-    alpha = 0.85
-  ) +
-  scale_color_identity() +
+  guides(fill = guide_legend(ncol = 1, title ="")) +
+  # geom_richtext(
+  #   aes(x = x, y = y, label = label, hjust = hjust, fill = b10),
+  #   #fill = nccr_bi_colors[13], 
+  #   #label.color = NA,# remove background and outline,
+  #   size = 4, 
+  #   colour = "white",
+  #   family = mms_base_family,
+  #   alpha = 1
+  # ) +
+  # scale_color_identity() +
   scale_x_continuous(name = "", expand = c(0,0)) +
   scale_y_continuous(name = "", expand = c(0,0))
 
@@ -424,7 +432,7 @@ p_coum_3
 
 ```{r patch}
 patchwork <- (p_coum_1 / p_coum_3) + 
-  plot_layout(heights = c(1, 1.2)) | 
+  plot_layout(heights = c(1, 1.1)) | 
   p_coum_2a 
 
 patchwork
