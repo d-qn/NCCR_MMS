@@ -20,14 +20,14 @@ c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
 b102f <- tibble(
   B10 = c(1, 2, 3, 4, 5),
   b10 = c("Partner already in Switzerland", 
-          "Moved together", 
-          "Partner moved before", 
+          "Partner moved before", ## hack swap 2 & 3
+           "Moved together",  ## hack swap 2 & 3
           "Partner moved after", 
           "Partner has not moved yet")
   )
 b102f %<>% 
   mutate(
-    b10 = factor(b10, levels = b102f$b10[c(2,1, 3, 4, 5)])
+    b10 = factor(b10, levels = b102f$b10[c(3,1,2, 4, 5)]) #b102f$b10[c(2,1, 3, 4, 5)])
   )
 
 data_all <- mms_df  %>% 
@@ -413,7 +413,7 @@ p_coum_3 <- cou_msa_df %>%
   #scale_color_manual(values = nccr_bi_colors[c(13,10,1,1,1,1)])  +
   labs(
     title = str_c(
-      "Migrating as a couple: only 1 in 3 ",
+      "Migrating as a couple: only 1 in 5 ",
       '<span style="color:', nccr_categorical()[2], ';">move together</span>'),
     subtitle = "Status at the time of migration, in 2024"
   ) + 
