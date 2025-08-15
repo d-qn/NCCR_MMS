@@ -282,7 +282,7 @@ p_ints_2
 ```
 
 
-#### 3. 
+#### 3. by country
 ```{r 3}
 
 ints_pays_ordered <- ints_pays_df %>% 
@@ -378,7 +378,7 @@ p_ints_3a <- p_ints_3 +
     vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95, colour = "white",
     family = mms_base_family
    ) + labs(
-    title = str_c("Migrants from Germany and France tend to be high-skilled"),
+    title = str_c("Migrants from Germany and France are more likely to consider their education suited to their job"),
     subtitle = str_c("Share of people who consider their education is suited to their job in 2024, by country of origin"),
     caption = str_c("<br>Bar height is proportional to sample size (n), total respondents: ",ints2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ")
     )
@@ -408,7 +408,7 @@ p_ints_4 <- ints_sexe_df %>%
             family = mms_base_family, size =3) +
   theme_mms(grid=F,
             axis = F,
-            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   coord_cartesian(clip = "off") +
@@ -431,7 +431,7 @@ p_ints_4 <- ints_sexe_df %>%
   scale_color_manual(values = nccr_bi_colors[c(2,4)]) +
   labs(
     title = str_c(
-      "Men migrants tend to be more high-skilled"),
+      "Men migrants more often view their education well-suited to their job"),
     subtitle = str_c(
       "Share of people who consider their education is suited to their job in 2024, by gender")
  )
