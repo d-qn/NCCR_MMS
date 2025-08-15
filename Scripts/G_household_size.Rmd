@@ -1,0 +1,146 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# gender
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+data_all <- mms_df  %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  mutate(
+    hh3 = case_when(
+      F1 == 1 ~ "1 person",
+      F1 == 2 ~ "2 people",
+      F1 >= 3 ~ "3+ people",
+      TRUE ~ NA
+    )
+  )
+
+g_df <- data_all %>% 
+  select(year:hh3)
+```
+
+
+```{r wrangle & check}
+hh_y_df <- g_df %>% 
+  filter(!is.na(hh3)) %>% 
+  filter(!is.na(year)) %>% 
+  group_by(year, hh3) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup()
+
+if(run_n_check) {
+  hh_y_df %>% 
+    select(year, hh3, share, n_y) %>%
+    pivot_wider(
+      names_from = hh3,
+      values_from = share
+    ) 
+}
+
+
+hh_g_df <- g_df %>% 
+  filter(year == 2024) %>%
+  filter(!is.na(hh3)) %>% 
+  filter(!is.na(sexe)) %>% 
+  group_by(sexe, hh3) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(sexe) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup()
+
+if(run_n_check) {
+  hh_g_df %>% 
+    select(sexe, hh3, share, n_y) %>%
+    pivot_wider(
+      names_from = hh3,
+      values_from = share
+    )
+}
+
+hh_c_df <- g_df %>% 
+  filter(year == 2024) %>%
+  filter(!is.na(hh3)) %>% 
+  filter(!is.na(country)) %>% 
+  group_by(country, hh3) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(country) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup()
+
+if(run_n_check) {
+  hh_c_df %>% 
+    select(country, hh3, share, n_y) %>%
+    pivot_wider(
+      names_from = hh3,
+      values_from = share
+    ) 
+}
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```
