@@ -117,13 +117,60 @@ if(run_n_check) {
 
 #### 1. main  chart
 
-```{r 1}
+```{r 1 }
 
+hh_y_labels <- tibble(
+  year = c(2016, 2016, 2016),
+  share = c(1,45, 77),
+  label = rev(c("1 person", "2 people", "3+ people"))
+)
+
+
+p_hh_1 <- hh_y_df %>% 
+  ggplot(aes(x = factor(year), y = share, fill = hh3)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(share, 1), "%")), size = 3, position = position_stack(vjust = 0.9),
+            family = mms_base_family, color = "white") +
+  geom_richtext(
+    data = hh_y_labels,
+    aes(x = factor(year), y = share, label = label),
+    size = 6, 
+   # color = "white",
+    angle = 90,
+    fill = NA, label.color = NA, family = mms_base_family,
+    vjust = 1, hjust = 0, nudge_x = 0.1
+  ) +
+  theme_mms(
+    grid="", axis="X",
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 1),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 1)
+  ) + 
+  theme(
+    legend.position = "none",
+    axis.text.y = element_blank()
+  ) +
+  # remove any scale expansion
+  scale_x_discrete(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                    # breaks = seq(25, 100, 25),
+                     labels = function(x) paste0(x, "%")) +
+  scale_fill_manual(values = nccr_categorical()[c(13, 3, 4)]) +
+  labs(
+    title = str_c("Over half of households have ", 
+                    '<span style="color:', nccr_categorical()[4], ';">three or more members'),
+    subtitle = "Number of household members"
+  )
+
+
+
+p_hh_1
 ```
 
-#### 2.   
+#### 2. by gender   
 
 ```{r 2}
+
 
 ```
 
