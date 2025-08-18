@@ -258,50 +258,6 @@ nccr_categorical <- function() {
   return(nccr_bi_colors)
 }
 
-# Function to get all 31 colors from style guide
-# nccr_all_colors <- function() {
-#   colors <- c(
-#     # Gender category
-#     "#CC66CC",    # Female: C=0, M=50, Y=0, K=20
-#     "#994D99",    # Male: C=0, M=50, Y=0, K=40
-#     "#B359B3",    # Base: C=0, M=50, Y=0, K=30
-#     # Education category
-#     "#80FFFF",    # None: C=50, M=0, Y=0, K=0
-#     "#6CD9D9",    # Secondary I: C=50, M=0, Y=0, K=15
-#     "#59B3B3",    # Secondary II: C=50, M=0, Y=0, K=30
-#     "#468C8C",    # Tertiary: C=50, M=0, Y=0, K=45
-#     # Migration category
-#     "#D9D936",    # Professional only: C=0, M=0, Y=75, K=15
-#     "#B3B32D",    # Family only: C=0, M=0, Y=75, K=30
-#     "#8C8C23",    # Family+professional: C=0, M=0, Y=75, K=45
-#     "#66661A",    # Other reasons: C=0, M=0, Y=75, K=60
-#     # Age category
-#     "#E67373",    # 24-40 light: C=0, M=50, Y=50, K=10
-#     "#CC6666",    # Base: C=0, M=50, Y=50, K=20
-#     "#B35959",    # 24-40 dark: C=0, M=50, Y=50, K=30
-#     # Arrival category
-#     "#9999FF",    # 2020-2024: C=40, M=40, Y=0, K=0
-#     "#7A7ACC",    # 2015-2019: C=40, M=40, Y=0, K=20
-#     "#6363A6",    # 2010-2014: C=40, M=40, Y=0, K=35
-#     "#4D4D80",    # 2006-2009: C=40, M=40, Y=0, K=50
-#     "#7ACCCC",    # Base: C=40, M=0, Y=0, K=20
-#     # Countries category
-#     "#59B359",    # Other Europe: C=50, M=0, Y=50, K=30
-#     "#7DB37D",    # Italy: C=30, M=0, Y=30, K=30
-#     "#66CC66",    # Other OECD: C=50, M=0, Y=50, K=20
-#     "#4D994D",    # Other EU/EFTA: C=50, M=0, Y=50, K=40
-#     "#6B996B",    # Austria: C=30, M=0, Y=30, K=40
-#     "#80FF80",    # Africa: C=50, M=0, Y=50, K=0
-#     "#408040",    # Germany: C=50, M=0, Y=50, K=50
-#     "#598059",    # Portugal: C=30, M=0, Y=30, K=50
-#     "#8AE68A",    # Latin America: C=40, M=0, Y=40, K=10
-#     "#336633",    # France: C=50, M=0, Y=50, K=60
-#     "#476647",    # Spain: C=30, M=0, Y=30, K=60
-#     "#A1E6A1"     # Asia: C=30, M=0, Y=30, K=10
-#   )
-#   return(colors)
-# }
-
 # =============================================================================
 # CATEGORICAL COLOR SCALE (12 colors)
 # =============================================================================
@@ -323,9 +279,9 @@ scale_fill_nccr_categorical <- function(order = 1:14, ...) {
 show_nccr_categorical_numbers <- function() {
   colors <- nccr_categorical()
   par(mar = c(3, 1, 2, 1))
-  barplot(rep(1, 12), col = colors, 
+  barplot(rep(1, 14), col = colors, 
           main = "NCCR Categorical Colors with Numbers", 
-          names.arg = 1:12, axes = FALSE)
+          names.arg = 1:14, axes = FALSE)
   par(mar = c(5, 4, 4, 2))
 }
 
@@ -481,10 +437,10 @@ show_nccr_palettes <- function() {
   
   # Sequential Education-based
   barplot(rep(1, 14), col = nccr_sequential_cyan(), 
-          main = "NCCR Sequential Education-based", axes = FALSE)
+          main = "nccr_sequential_cyan", axes = FALSE)
   
   barplot(rep(1, 14), col = nccr_sequential_blue(), 
-          main = "NCCR Sequential Education-based", axes = FALSE)
+          main = "nccr_sequential_blue", axes = FALSE)
   
   # Sequential Migration-based
   barplot(rep(1, 14), col = nccr_sequential_yellow(), 
@@ -492,11 +448,11 @@ show_nccr_palettes <- function() {
   
   # Divergent Gender-Education
   barplot(rep(1, 9), col = nccr_divergent_orange_green(), 
-          main = "NCCR Divergent Gender-Education", axes = FALSE)
+          main = "nccr_divergent_orange_green", axes = FALSE)
   
   # Divergent Age-Countries
   barplot(rep(1, 14), col = nccr_divergent_orange_purple(), 
-          main = "NCCR Divergent Age-Countries", axes = FALSE)
+          main = "nccr_divergent_orange_purple", axes = FALSE)
   
   par(mfrow = c(1, 1))
 }
