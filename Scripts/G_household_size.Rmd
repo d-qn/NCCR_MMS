@@ -187,7 +187,7 @@ p_hh_2 <- hh_g_df %>%
  ggplot(aes(x = sexe, y = share, fill = hh3)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(y = share / 100, label = paste0(round(share), "%")), size = 3,
-            position = position_stack(vjust = 0.88), family =mms_base_family,
+            position = position_stack(vjust = 0.85), family =mms_base_family,
             color = "white") +
    geom_richtext(data = hh_g_labels, 
                  aes(x = as.numeric(sexe), y = share / 100, 
@@ -201,8 +201,8 @@ p_hh_2 <- hh_g_df %>%
   scale_fill_manual(values = nccr_categorical()[c(13, 3, 4)]) +
   theme_mms(
     grid="", axis="",
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 1),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 1)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     legend.position = "none",
@@ -216,7 +216,7 @@ p_hh_2 <- hh_g_df %>%
    labs(
     title = str_c("Men are more likely to live ", 
                     '<span style="color:', nccr_categorical()[14], ';">alone', "</span> than women"),
-    subtitle = "Number of household members"
+    subtitle = "Number of household members, by gender in 2024"
   )
 
 p_hh_2
@@ -266,7 +266,8 @@ hh_value_labels <- hh2mekko_df %>%
     x = xmin,
     y = ymax - 0.01,
     label = paste0(round(share, 1), "%"),
-    hjust = -0.05
+    hjust = -0.05,
+    color = ifelse(hh3 == "1 person", "black", "white")
   ) 
 
 
@@ -281,7 +282,7 @@ p_hh_3 <- hh2mekko_df %>%
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
     legend.position = "none",
@@ -302,7 +303,7 @@ p_hh_3 <- hh2mekko_df %>%
                      ) +
   scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
 
-p_hh_3 +
+p_hh_3a <- p_hh_3 +
   geom_richtext(
     data = hh_pays_labels,
     aes(x = xmax - 1, y = y, 
@@ -314,20 +315,39 @@ p_hh_3 +
   ) +
   geom_richtext(
     data = hh_value_labels,
-    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
+    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust, color = color),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.9, colour = "white",
+    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95,
     family = mms_base_family
-  ) 
+  ) +
+  scale_color_identity() +
+   labs(
+     title = str_c("Higher proportion of people <span style='color:", nccr_categorical()[14], ";'> living alone</span> among citizens of the European Union"),
+     subtitle = str_c("Number of household members, by country of origin in 2024"),
+     caption = str_c("Bar height is proportional to sample size (n), total respondents: ",#,
+                     hh2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ")
+   )
+   )
+
+
+p_hh_3a
 ```
 
 #### patch
 
-```{r patch}
+
+```{r patchwork}
+patchwork <- (p_hh_1 /p_hh_2) +
+   plot_layout(heights = c(1, 1)) | p_hh_3a 
+patchwork
+
+patchwork
+
+
 
 mms_export_vector(
   plot = patchwork,
-  filepath = #here("Output", "charts", ""),
+  filepath = here("Output", "charts", "G_household_size.svg"),
   bg_col = pw_bg_color
   )
 
