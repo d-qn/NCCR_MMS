@@ -20,14 +20,14 @@ c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
 b102f <- tibble(
   B10 = c(1, 2, 3, 4, 5),
   b10 = c("Partner already in Switzerland", 
-          "Partner moved before", ## hack swap 2 & 3
-           "Moved together",  ## hack swap 2 & 3
+          "Moved together",  
+          "Partner moved before",
           "Partner moved after", 
           "Partner has not moved yet")
   )
 b102f %<>% 
   mutate(
-    b10 = factor(b10, levels = b102f$b10[c(3,1,2, 4, 5)]) #b102f$b10[c(2,1, 3, 4, 5)])
+    b10 = factor(b10, levels = b102f$b10[c(2,1, 3, 4, 5)]) #b102f$b10[c(2,1, 3, 4, 5)])
   )
 
 data_all <- mms_df  %>% 
@@ -379,7 +379,7 @@ cou_msa_df %<>%
     color = nccr_bi_colors[c(2,12,6,8,14)],
     label = str_c(
       " <span style='color:",  color ,";'>",
-      b10, "</span>: <span style='color:#878f92;font-size:14px;'>", share, "%</span>"),
+      b10, "</span>: <span style='color:black;font-size:13px;'>", share, "%</span>"),
   )
 
 
@@ -413,8 +413,8 @@ p_coum_3 <- cou_msa_df %>%
   #scale_color_manual(values = nccr_bi_colors[c(13,10,1,1,1,1)])  +
   labs(
     title = str_c(
-      "Migrating as a couple: only 1 in 5 ",
-      '<span style="color:', nccr_categorical()[2], ';">move together</span>'),
+      "Migrating as a couple: only 1 in 3",
+      '<span style="color:', nccr_categorical()[2], ';"> move together</span>'),
     subtitle = "Status at the time of migration, in 2024"
   ) + 
   guides(fill = guide_legend(ncol = 1, title ="")) +

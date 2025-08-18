@@ -129,16 +129,19 @@ hh_y_labels <- tibble(
 p_hh_1 <- hh_y_df %>% 
   ggplot(aes(x = factor(year), y = share, fill = hh3)) +
   geom_col() +
-  geom_text(aes(label = paste0(round(share, 1), "%")), size = 3, position = position_stack(vjust = 0.9),
-            family = mms_base_family, color = "white") +
+  geom_text(
+    aes(label = paste0(round(share, 1), "%")), 
+    alpha = 0.8,
+    size = 3, position = position_stack(vjust = 0.9),
+    family = mms_base_family, color = "white") +
   geom_richtext(
     data = hh_y_labels,
     aes(x = factor(year), y = share, label = label),
     size = 6, 
-   # color = "white",
+    color = "white",
     angle = 90,
     fill = NA, label.color = NA, family = mms_base_family,
-    vjust = 1, hjust = 0, nudge_x = 0.1
+    vjust = 1, hjust = 0, nudge_x = 0
   ) +
   theme_mms(
     grid="", axis="X",
