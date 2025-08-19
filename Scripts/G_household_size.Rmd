@@ -265,10 +265,16 @@ hh_value_labels <- hh2mekko_df %>%
   mutate(
     x = xmin,
     y = ymax - 0.01,
-    label = paste0(round(share, 1), "%"),
+    label = paste0(round(share, 1), ifelse(hh3 == "3+ people", "%", "")),
     hjust = -0.05,
     color = ifelse(hh3 == "1 person", "black", "white")
   ) 
+
+hh_ph_labels <- tibble(
+  y = rep(0.64, 3),
+  share = c(7,34, 74),
+  label = c("1 person", "2 people", "3+ people")
+)
 
 
 p_hh_3 <- hh2mekko_df %>%   
@@ -281,19 +287,11 @@ p_hh_3 <- hh2mekko_df %>%
     size = 0.9, alpha = 1) +
   theme_mms(
     grid="X", axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
-    legend.position = "none",
-    plot.margin = mms_plot_margin
-    #axis.line.x = element_blank(),
-    # plot.margin = margin(
-    #   mms_plot_margin[1],
-
-    #   mms_plot_margin[3],
-    #   0
-    # )
+    legend.position = "none"
   ) + 
   scale_fill_manual(values = nccr_categorical()[c(13, 3, 4)]) +
   scale_x_continuous(name = "", expand = c(0,0), 
@@ -303,30 +301,40 @@ p_hh_3 <- hh2mekko_df %>%
                      ) +
   scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
 
+
 p_hh_3a <- p_hh_3 +
   geom_richtext(
     data = hh_pays_labels,
     aes(x = xmax - 1, y = y, 
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 5,
+    size = 4,
     hjust = 1, nudge_x = .5, vjust = 1, colour = "white",
     family = mms_base_family
   ) +
   geom_richtext(
     data = hh_value_labels,
-    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust, color = color),
+    aes(x = x - 0.005, y = ymin, label = label, hjust = hjust, color = color),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95,
+    vjust = 0, nudge_y = 0.002, size = 3, alpha = 0.95,
     family = mms_base_family
+  ) +
+  geom_richtext(
+    data = hh_ph_labels,
+    aes(x = share, y = y, label = label),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 6,
+    alpha = 0.4,
+    hjust = 0.5, nudge_x = 0.5, vjust = 1, colour = "white",
+    family = mms_base_family,
+    angle = 90
   ) +
   scale_color_identity() +
    labs(
      title = str_c("Higher proportion of people <span style='color:", nccr_categorical()[14], ";'> living alone</span> among citizens of the European Union"),
      subtitle = str_c("Number of household members, by country of origin in 2024"),
      caption = str_c("Bar height is proportional to sample size (n), total respondents: ",#,
-                     hh2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ")
-   )
+                     hh2mekko_df$n %>% sum()%>% prettyNum(big.mark = " "))
    )
 
 
