@@ -22,25 +22,96 @@ c3 <- mms_load_data(F) %>%
 
 c1_codes <- tibble(
  C1 = c(1, 2, 3, 4, 5, 6, 7),
- c1 = c("yes", "yes", "no", "no", "don't know", "yes", "no")
+ nat = c("yes", "yes", "no", "no", "don't know", "yes", "yes")
 )
 
-
-################## ---------------- to continue 
-
 data_all <- bind_cols(mms_df, c3)  %>%  
+  # hack in 2024 C1 column is named c1
+  mutate(
+    C1 = ifelse(year == 2024, c1, C1)
+  ) %>% 
   left_join(
     c1_codes, by = "C1"
   ) %>% 
   left_join(c2t_A1) %>% 
-  left_join(c2t_B1)
+  left_join(c2t_B1) %>% 
+  mutate_at(vars(C3_1:C3_9), ~ case_when(
+    . == 1 ~ "yes",
+    . == 2 ~ "no",
+    TRUE ~ NA_character_
+  )) %>% 
+  mutate(  
+    migy = mms_encode_migration_year(A6,year)
+  ) %>% 
+  left_join(
+    migy2yearIntervals
+  )
 
 h_df <- data_all %>% 
-  select(year:hh3)
+  select(year:mig_4y)
 ```
 
 
 ```{r wrangle & check}
+nati_y_df <- h_df %>% 
+  filter(year > 2016) %>% 
+  filter(!is.na(nat)) %>%
+  filter(!is.na(year)) %>%
+  group_by(year, nat) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() 
+
+  
+  
+if(run_n_check) {
+  nati_y_df %>% 
+    select(year, nat, share, n_y) %>%
+    pivot_wider(
+      names_from = nat,
+      values_from = share
+    )
+}
+
+
+
+nati_migy_df  <- h_df %>% 
+  group_by(mig_4y, nat) %>% 
+  summarise(
+    n = n(),
+    weight = sum(weight, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  group_by(mig_2y) %>% 
+  mutate(
+    share = weight/sum(weight),
+    n_y = sum(n, na.rm = T)
+  ) %>% 
+  arrange(desc(share)) %>% 
+  mutate(
+    share = round(share*100,1)
+  ) %>% 
+  select(-weight) %>% 
+  ungroup() %>% 
+  filter(!is.na(mig_2y) & !is.na(contrat))  %>% 
+  arrange(mig_2y, contrat)
+
+
+if(run_n_check) {
+  
+}
+
+
+if(run_n_check) {
+  
+}
 
 
 if(run_n_check) {
