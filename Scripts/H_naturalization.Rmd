@@ -81,36 +81,46 @@ if(run_n_check) {
 }
 
 
-
-nati_migy_df  <- h_df %>% 
-  group_by(mig_4y, nat) %>% 
-  summarise(
-    n = n(),
-    weight = sum(weight, na.rm = T)
-  ) %>% 
-  ungroup() %>% 
-  group_by(mig_2y) %>% 
-  mutate(
-    share = weight/sum(weight),
-    n_y = sum(n, na.rm = T)
-  ) %>% 
-  arrange(desc(share)) %>% 
-  mutate(
-    share = round(share*100,1)
-  ) %>% 
-  select(-weight) %>% 
-  ungroup() %>% 
-  filter(!is.na(mig_2y) & !is.na(contrat))  %>% 
-  arrange(mig_2y, contrat)
-
+### manual data 
+nati_migy_df  <- tibble(
+  yeari = rep(c("2010-2014", "2006-2009"), 5),
+  year = rep(c(2024, 2022, 2020, 2018, 2015), each = 2),
+  share = c(70.9, 78.2, 67.1, 74.3, 61.7, 68.7, 53.2, 62.1, 38.9, 45.3)
+)
 
 if(run_n_check) {
-  
+  nati_migy_df %>% 
+    select(year, yeari, share) %>% 
+    pivot_wider(
+      names_from = yeari,
+      values_from = share
+    )
 }
 
 
+nati_c_df <- h_df %>% 
+  filter(!is.na(nat)) %>% 
+  filter(!is.na(country)) %>% 
+  group_by(country, year, nat) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(country, year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  filter(nat == "yes")
+
 if(run_n_check) {
-  
+  nati_c_df %>% 
+    select(country, year, share) %>%
+    pivot_wider(
+      names_from = year,
+      values_from = share
+    )
 }
 
 
