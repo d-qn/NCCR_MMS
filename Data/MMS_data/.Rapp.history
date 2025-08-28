@@ -1,0 +1,9 @@
+load("/Users/duc-q.nguyen/SynologyDrive/Drive/NCCR_MMS/Data/MMS_data/duc2024.rdata")
+ls(
+ls()
+duc2024
+colnames(duc2024)
+duc2024$C1
+duc2024$C3
+duc2024$W24C3
+duc2024$W24C1
