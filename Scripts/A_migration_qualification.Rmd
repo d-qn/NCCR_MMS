@@ -230,9 +230,9 @@ edu_chart_1 <- edu_main %>%
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = str_c("Strong increase in ", 
-                  "<span style='color:#62836A'>highly skilled</span> migration"),
+                  "<span style='color:#6E6C88'>highly skilled</span> migration"),
     subtitle="Highest level of education attained") +
-  scale_fill_nccr_categorical(order = c(5,6,12))
+  scale_fill_nccr_categorical(order = c(5,6,10))
 
 
 annot_df <- tibble(
@@ -329,7 +329,7 @@ edu_chart2 <- edu_all_genre %>%
                      labels = function(x) paste0(x, "%"),
                      position = "right") +
   scale_colour_manual(
-    values=c(nccr_bi_colors[c(3,13,1)])) +
+    values=c(nccr_bi_colors[c(1,13,11)])) +
   # To hide the alpha legend as well:
   guides(color = "none", alpha = "none",
          size = guide_legend(override.aes = list(color = mms_legend_base_col))) +
@@ -349,10 +349,10 @@ edu_chart2 <- edu_all_genre %>%
 edu_chart2_a <- edu_chart2 +
   labs(
     title = str_c("<span style='color:",
-                  nccr_bi_colors[1], 
+                  nccr_bi_colors[11], 
                   ";'>Women</span> ",
     "migrants more qualified than <span style='color:", 
-    nccr_bi_colors[3], ";'>men"),
+    nccr_bi_colors[1], ";'>men"),
     subtitle = "Share with tertiary education, by gender")
 
 edu_chart2_a
@@ -433,6 +433,7 @@ arrow_txt <-
     label = c("2018", "2024")
   )
 
+pt_size <- 3
 
 edu_chart3 <- edu3_pays_df %>% 
   ggplot(aes(x=type, y=share_w)) +
@@ -451,20 +452,15 @@ edu_chart3 <- edu3_pays_df %>%
     color = nccr_bi_colors[13], size = 4,
     hjust = 1, vjust = 0.5
   ) +
-  # geom_hline(yintercept = share_tot_3$share_w[2],
-  #            linewidth = 1, color = "#898989", alpha = 0.5,
-  #            linetype = "dotted") +
-  # geom_hline(yintercept = share_tot_3$share_w[1],
-  #            linewidth = 1, linetype = "dotted", 
-  #            color = "#898989", alpha = 0.5) +
   geom_point(
     data = edu3_pays_df %>% 
       filter(year == 2024), 
-    aes(color = color, size = n, group = year),
-    alpha = 1, shape = 17) + 
+    aes(color = color, group = year),
+    alpha = 1, shape = 17, size = pt_size) + 
   geom_point(
     data = edu3_pays_df %>% filter(year == 2018),
-    aes(color = color, size = n, group = year), 
+    aes(color = color, group = year),
+    size = pt_size,
     alpha = 1, shape = 15, show.legend = F) + 
   geom_segment(
     data = edu3_pays_w,
