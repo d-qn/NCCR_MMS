@@ -162,11 +162,11 @@ if(run_n_check) {
 mig_job_1 <- mig4y_df %>% 
   filter(contrat == "Yes") %>%
   ggplot(aes(x = mig_4y, y = share, group = 1)) +
-  geom_line(aes(linewidth  = n_y), 
+  geom_line(linewidth = 2,
             color = nccr_bi_colors[9],
-            alpha = 0.2, lineend = "round" )  +
+            alpha = 0.4, lineend = "round" )  +
   geom_point(
-    aes(size = n_y), alpha = 1,
+    alpha = 1, size = 5,
     color = nccr_bi_colors[10]
   ) +
   theme_mms(grid="Y",
@@ -177,14 +177,7 @@ mig_job_1 <- mig4y_df %>%
 
   ) + 
   theme(
-    legend.position = c(0.85, 0.9),
-    legend.key.height = unit(0.7, "lines"),
-    #legend.spacing.y = unit(0.01, "lines"),
-    legend.text = element_text(size = 8, 
-                               color = mms_legend_base_col), # Reduce legend text size
-    legend.title = element_text(size = 10, 
-                                color = mms_legend_base_col, face = "bold", 
-                                hjust =0.5) # Reduce legend title size
+    legend.position = "none"
     ) +
   guides(
     size = guide_legend(
@@ -245,14 +238,14 @@ mig_job_2 <- fhf_df %>%
   scale_x_discrete(expand = c(0.4,0.1))+
   scale_y_continuous(expand = c(0,1.3), name = "", 
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_bi_colors[c(4,2)]) +
-  scale_color_manual(values = nccr_bi_colors[c(4,2)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(1,11)]) +
+  scale_color_manual(values = nccr_bi_colors[c(1, 11)]) +
    labs(
     x = "", y = "",
     subtitle = "Employment contract or job offer in Switzerland at the time of moving, by gender in 2024<br>",
     title = str_c("The employment contract, twice as common among <span style='color:", 
-    nccr_bi_colors[4], ";'>men</span> as among <span style='color:",
-                  nccr_bi_colors[2], 
+    nccr_bi_colors[1], ";'>men</span> as among <span style='color:",
+                  nccr_bi_colors[11], 
                   ";'>women</span><br>")# à l’arrivée en Suisse")
   )
 
