@@ -217,8 +217,8 @@ theme_mms <- function(
                                      color = mms_plot_line_color,
                                       linewidth = 0),
       plot.background = element_rect(fill = mms_plot_bg_color, 
-                                     color = mms_plot_line_color,
-                                     linewidth = 1),
+                                     color = NA, #mms_plot_line_color,
+                                     linewidth = 0),
       plot.margin = plot_margin,
       plot.caption = element_textbox_simple(
         hjust = 1,
