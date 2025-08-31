@@ -61,60 +61,65 @@
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 </g>
 <defs>
-  <clipPath id='cpNS40OHwzMDcuNjV8NS40OHw0NDkuNjg='>
-    <rect x='5.48' y='5.48' width='302.17' height='444.20' />
+  <clipPath id='cpNS40OHwzMDcuNjV8NS40OHw0NTQuODY='>
+    <rect x='5.48' y='5.48' width='302.17' height='449.38' />
   </clipPath>
 </defs>
-<g clip-path='url(#cpNS40OHwzMDcuNjV8NS40OHw0NDkuNjg=)'>
-<rect x='5.48' y='5.48' width='302.17' height='444.20' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
+<g clip-path='url(#cpNS40OHwzMDcuNjV8NS40OHw0NTQuODY=)'>
+<rect x='5.48' y='5.48' width='302.17' height='449.38' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 </g>
 <defs>
-  <clipPath id='cpNS40OHwzMDcuNjV8NDQ5LjY4fDgzNi45Mg=='>
-    <rect x='5.48' y='449.68' width='302.17' height='387.24' />
+  <clipPath id='cpNS40OHwzMDcuNjV8NDU0Ljg2fDgzNi45Mg=='>
+    <rect x='5.48' y='454.86' width='302.17' height='382.06' />
   </clipPath>
 </defs>
-<g clip-path='url(#cpNS40OHwzMDcuNjV8NDQ5LjY4fDgzNi45Mg==)'>
-<rect x='5.48' y='449.68' width='302.17' height='387.24' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
+<g clip-path='url(#cpNS40OHwzMDcuNjV8NDU0Ljg2fDgzNi45Mg==)'>
+<rect x='5.48' y='454.86' width='302.17' height='382.06' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 </g>
 <defs>
-  <clipPath id='cpNDcuNDR8Mjg3LjczfDExMi41MHwzNjYuMzI='>
-    <rect x='47.44' y='112.50' width='240.28' height='253.83' />
+  <clipPath id='cpNDcuNDR8Mjg3LjczfDExMi41MHwzNjEuMTQ='>
+    <rect x='47.44' y='112.50' width='240.28' height='248.64' />
   </clipPath>
 </defs>
-<g clip-path='url(#cpNDcuNDR8Mjg3LjczfDExMi41MHwzNjYuMzI=)'>
-<rect x='47.44' y='112.50' width='240.28' height='253.83' style='stroke-width: 0.00; stroke: #FFFFFF; fill: #FFFFFF;' />
-<polyline points='47.44,306.38 287.73,306.38 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='47.44,245.50 287.73,245.50 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='47.44,184.62 287.73,184.62 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='47.44,123.74 287.73,123.74 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='75.17,123.74 121.38,291.16 167.59,355.08 213.79,327.69 260.00,285.07 ' style='stroke-width: 4.27; stroke: #8884A6; stroke-opacity: 0.40;' />
-<circle cx='75.17' cy='123.74' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='121.38' cy='291.16' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='167.59' cy='355.08' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='213.79' cy='327.69' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='260.00' cy='285.07' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
+<g clip-path='url(#cpNDcuNDR8Mjg3LjczfDExMi41MHwzNjEuMTQ=)'>
+<rect x='47.44' y='112.50' width='240.28' height='248.64' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
+<polyline points='47.44,302.42 287.73,302.42 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='47.44,242.78 287.73,242.78 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='47.44,183.14 287.73,183.14 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='47.44,123.51 287.73,123.51 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='75.17,123.51 121.38,287.51 167.59,350.13 213.79,323.29 260.00,281.55 ' style='stroke-width: 4.27; stroke: #8884A6; stroke-opacity: 0.40;' />
+<circle cx='75.17' cy='123.51' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='121.38' cy='287.51' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='167.59' cy='350.13' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='213.79' cy='323.29' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='260.00' cy='281.55' r='5.69' style='stroke-width: 0.71; stroke: #6E6C88; fill: #6E6C88;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
-<polyline points='47.44,366.32 47.44,112.50 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
-<text x='35.60' y='309.79' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>48%</text>
-<text x='35.60' y='248.91' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>50%</text>
-<text x='35.60' y='188.03' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>52%</text>
-<text x='35.60' y='127.15' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>54%</text>
-<polyline points='47.44,366.32 287.73,366.32 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
-<text x='75.17' y='377.16' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2005</text>
-<text x='75.17' y='387.53' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2008</text>
-<text x='121.38' y='377.16' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2009</text>
-<text x='121.38' y='387.53' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2012</text>
-<text x='167.59' y='377.16' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2013</text>
-<text x='167.59' y='387.53' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2016</text>
-<text x='213.79' y='377.16' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2017</text>
-<text x='213.79' y='387.53' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2020</text>
-<text x='260.00' y='377.16' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2021</text>
-<text x='260.00' y='387.53' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2024</text>
+<polyline points='47.44,361.14 47.44,112.50 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
+<text x='35.60' y='305.83' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>48%</text>
+<text x='35.60' y='246.19' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>50%</text>
+<text x='35.60' y='186.56' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>52%</text>
+<text x='35.60' y='126.92' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>54%</text>
+<polyline points='47.44,361.14 287.73,361.14 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
+<text x='75.17' y='371.98' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2005</text>
+<text x='75.17' y='382.35' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>—</text>
+<text x='75.17' y='392.71' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2008</text>
+<text x='121.38' y='371.98' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2009</text>
+<text x='121.38' y='382.35' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>—</text>
+<text x='121.38' y='392.71' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2012</text>
+<text x='167.59' y='371.98' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2013</text>
+<text x='167.59' y='382.35' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>—</text>
+<text x='167.59' y='392.71' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2016</text>
+<text x='213.79' y='371.98' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2017</text>
+<text x='213.79' y='382.35' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>—</text>
+<text x='213.79' y='392.71' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2020</text>
+<text x='260.00' y='371.98' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2021</text>
+<text x='260.00' y='382.35' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>—</text>
+<text x='260.00' y='392.71' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2024</text>
 <text x='30.39' y='76.22' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>Employment</text>
 <text x='100.57' y='76.22' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>contract</text>
 <text x='146.53' y='76.22' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>or</text>
@@ -138,40 +143,40 @@
 <text x='141.01' y='38.08' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>a</text>
 <text x='151.55' y='38.08' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>work</text>
 <text x='187.77' y='38.08' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>contract</text>
-<rect x='47.44' y='563.82' width='240.28' height='253.83' style='stroke-width: 0.00; stroke: #FFFFFF; fill: #FFFFFF;' />
-<rect x='53.45' y='568.98' width='108.13' height='243.50' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B47B94;' />
-<rect x='173.59' y='682.19' width='108.13' height='130.29' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #80AF8A;' />
-<text x='92.29' y='801.87' style='font-size: 14.23px;fill: #FFFFFF; font-family: "Roboto Slab";'>Men</text>
-<text x='201.15' y='801.87' style='font-size: 14.23px;fill: #FFFFFF; font-family: "Roboto Slab";'>Women</text>
-<text x='107.51' y='586.67' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>61,3%</text>
-<text x='227.66' y='699.88' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>32,8%</text>
-<text x='30.39' y='515.84' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>Employment</text>
-<text x='100.57' y='515.84' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>contract</text>
-<text x='146.53' y='515.84' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>or</text>
-<text x='159.88' y='515.84' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>job</text>
-<text x='177.62' y='515.84' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>offer</text>
-<text x='204.46' y='515.84' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>in</text>
-<text x='30.39' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>Switzerland</text>
-<text x='95.97' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>at</text>
-<text x='108.71' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>the</text>
-<text x='128.11' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>time</text>
-<text x='154.58' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>of</text>
-<text x='167.24' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>moving,</text>
-<text x='212.21' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>by</text>
-<text x='227.49' y='531.18' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>gender</text>
-<text x='30.39' y='546.52' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>in</text>
-<text x='43.84' y='546.52' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>2024</text>
-<text x='30.39' y='457.03' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>The</text>
-<text x='57.47' y='457.03' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>employment</text>
-<text x='139.25' y='457.03' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>contract,</text>
-<text x='197.62' y='457.03' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>twice</text>
-<text x='235.02' y='457.03' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>as</text>
-<text x='30.39' y='473.86' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>common</text>
-<text x='87.59' y='473.86' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>among</text>
-<text x='133.50' y='473.86' style='font-size: 13.00px; font-weight: 800;fill: #B47B94; font-family: "Roboto Slab";'>men</text>
-<text x='163.85' y='473.86' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>as</text>
-<text x='180.97' y='473.86' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>among</text>
-<text x='30.39' y='490.70' style='font-size: 13.00px; font-weight: 800;fill: #80AF8A; font-family: "Roboto Slab";'>women</text>
+<rect x='47.44' y='569.00' width='240.28' height='248.64' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
+<rect x='53.45' y='574.06' width='108.13' height='238.52' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #8C6074;' />
+<rect x='173.59' y='684.95' width='108.13' height='127.63' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #678E6F;' />
+<text x='92.29' y='802.06' style='font-size: 14.23px;fill: #FFFFFF; font-family: "Roboto Slab";'>Men</text>
+<text x='201.15' y='802.06' style='font-size: 14.23px;fill: #FFFFFF; font-family: "Roboto Slab";'>Women</text>
+<text x='107.51' y='591.75' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>61,3%</text>
+<text x='227.66' y='702.65' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>32,8%</text>
+<text x='30.39' y='521.02' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>Employment</text>
+<text x='100.57' y='521.02' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>contract</text>
+<text x='146.53' y='521.02' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>or</text>
+<text x='159.88' y='521.02' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>job</text>
+<text x='177.62' y='521.02' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>offer</text>
+<text x='204.46' y='521.02' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>in</text>
+<text x='30.39' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>Switzerland</text>
+<text x='95.97' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>at</text>
+<text x='108.71' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>the</text>
+<text x='128.11' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>time</text>
+<text x='154.58' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>of</text>
+<text x='167.24' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>moving,</text>
+<text x='212.21' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>by</text>
+<text x='227.49' y='536.37' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>gender</text>
+<text x='30.39' y='551.71' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>in</text>
+<text x='43.84' y='551.71' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>2024</text>
+<text x='30.39' y='462.21' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>The</text>
+<text x='57.47' y='462.21' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>employment</text>
+<text x='139.25' y='462.21' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>contract,</text>
+<text x='197.62' y='462.21' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>twice</text>
+<text x='235.02' y='462.21' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>as</text>
+<text x='30.39' y='479.05' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>common</text>
+<text x='87.59' y='479.05' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>among</text>
+<text x='133.50' y='479.05' style='font-size: 13.00px; font-weight: 800;fill: #8C6074; font-family: "Roboto Slab";'>men</text>
+<text x='163.85' y='479.05' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>as</text>
+<text x='180.97' y='479.05' style='font-size: 13.00px; font-weight: 800;fill: #262428; font-family: "Roboto Slab";'>among</text>
+<text x='30.39' y='495.88' style='font-size: 13.00px; font-weight: 800;fill: #678E6F; font-family: "Roboto Slab";'>women</text>
 </g>
 <defs>
   <clipPath id='cpMzMxLjkxfDU3Mi4yMHwxMTIuNTB8ODE3LjY0'>
@@ -179,7 +184,7 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMzMxLjkxfDU3Mi4yMHwxMTIuNTB8ODE3LjY0)'>
-<rect x='331.91' y='112.50' width='240.28' height='705.14' style='stroke-width: 0.00; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='331.91' y='112.50' width='240.28' height='705.14' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
 <rect x='331.91' y='112.50' width='177.81' height='58.76' style='stroke-width: 4.27; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #6D6C7F;' />
 <rect x='509.72' y='112.50' width='62.47' height='58.76' style='stroke-width: 4.27; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #C2C0D4;' />
 <rect x='331.91' y='171.26' width='171.08' height='58.76' style='stroke-width: 4.27; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #6D6C7F;' />

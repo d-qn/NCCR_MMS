@@ -319,7 +319,7 @@ edu_chart2 <- edu_all_genre %>%
                      labels = function(x) paste0(x, "%"),
                      position = "right") +
   scale_colour_manual(
-    values=c(nccr_bi_colors[c(1,13,11)])) +
+    values=c(nccr_bi_colors[c(2,13,12)])) +
   # To hide the alpha legend as well:
   guides(color = "none", alpha = "none",
          size = guide_legend(override.aes = list(color = mms_legend_base_col))) +
@@ -339,10 +339,10 @@ edu_chart2 <- edu_all_genre %>%
 edu_chart2_a <- edu_chart2 +
   labs(
     title = str_c("<span style='color:",
-                  nccr_bi_colors[11], 
+                  nccr_bi_colors[12], 
                   ";'>Women</span> ",
     "migrants more qualified than <span style='color:", 
-    nccr_bi_colors[1], ";'>men"),
+    nccr_bi_colors[2], ";'>men"),
     subtitle = "Share with tertiary education, by gender")
 
 edu_chart2_a

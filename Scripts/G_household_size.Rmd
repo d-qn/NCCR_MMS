@@ -241,6 +241,7 @@ hh2mekko_df <- mms_mekko_wrangler(
     mutate(
       country = factor(country, levels = hh_pays_ordered),
       hh3 = factor(hh3), 
+      n_y = 1,
     ) %>% arrange(country, hh3),
   var1 = "hh3", 
   var2 = "country", 
@@ -271,8 +272,8 @@ hh_value_labels <- hh2mekko_df %>%
   ) 
 
 hh_ph_labels <- tibble(
-  y = rep(0.64, 3),
-  share = c(7,34, 74),
+  y = rep(0.52, 3),
+  share = c(7,34, 68),
   label = c("1 person", "2 people", "3+ people")
 )
 
@@ -284,7 +285,7 @@ p_hh_3 <- hh2mekko_df %>%
         ymin = ymin, ymax = ymax,
         fill = hh3),
     colour = "white", #nccr_bi_colors[13]
-    size = 0.9, alpha = 1) +
+    size = 1, alpha = 1) +
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -331,10 +332,8 @@ p_hh_3a <- p_hh_3 +
   ) +
   scale_color_identity() +
    labs(
-     title = str_c("Higher proportion of people <span style='color:", nccr_categorical()[14], ";'> living alone</span> among citizens of the European Union"),
-     subtitle = str_c("Number of household members, by country of origin in 2024"),
-     caption = str_c("Bar height is proportional to sample size (n), total respondents: ",#,
-                     hh2mekko_df$n %>% sum()%>% prettyNum(big.mark = " "))
+     title = str_c("Higher proportion of people <span style='color:", nccr_categorical()[14], ";'>living alone</span> among citizens of the European Union"),
+     subtitle = str_c("Number of household members, by country of origin in 2024")
    )
 
 

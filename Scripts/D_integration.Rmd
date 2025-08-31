@@ -234,11 +234,11 @@ p_ints_1
 p_ints_2 <- ints_migy_df %>% 
   filter(groupe_job_edu == "Yes") %>% 
   ggplot(aes(x = mig_4y, y = share, group = 1)) +
-  geom_line(aes(linewidth  = n_y), 
+  geom_line(linewidth = 2,
             color =nccr_categorical()[11],
-            alpha = 0.2, lineend = "round")  +
+            alpha = 0.3, lineend = "round")  +
   geom_point(
-    aes(size = n_y), alpha = 1,
+    size = 4, alpha = 1,
     color = nccr_categorical()[11]
   ) +
   theme_mms(grid="Y",
@@ -248,17 +248,6 @@ p_ints_2 <- ints_migy_df %>%
             #plot_margin = margin(15, 20, 50, 10)
             
   ) + 
-  theme(
-    legend.position = c(0.82, 0.7),
-    legend.key.height = unit(0.7, "lines"),
-    #legend.spacing.y = unit(0.01, "lines"),
-    legend.text = element_text(size = 8, 
-                               color = mms_legend_base_col), # Reduce legend text size
-    legend.title = element_text(size = 10, 
-                                color = mms_legend_base_col, 
-                                face = "bold", 
-                                hjust =0.5) # Reduce legend title size
-  ) +
   guides(
     size = guide_legend(
       override.aes = list(
@@ -273,9 +262,7 @@ p_ints_2 <- ints_migy_df %>%
   labs(
     x = "", y = "",
     subtitle = "Share of people who consider their education is suited to their job, by migration year intervals",
-    title = "Early migrants report a better skill match for their jobs<br>",
-    size = "n",
-    linewidth = "n"
+    title = "Early migrants report a better skill match for their jobs<br>"
   )
 
 p_ints_2
@@ -299,6 +286,7 @@ ints2mekko_df <- mms_mekko_wrangler(
     mutate(
       country = factor(country, levels = ints_pays_ordered),
       groupe_job_edu = factor(groupe_job_edu),
+      n_y = 1
     ) %>% 
     mutate(groupe_job_edu = fct_rev(groupe_job_edu)) %>% 
     arrange(country, groupe_job_edu),
@@ -319,16 +307,12 @@ p_ints_3 <- ints2mekko_df %>%
         ymin = ymin, ymax = ymax,
         fill = color),
     colour = "white", 
-    size = 1, alpha = 1) +
+    size = 2, alpha = 1) +
   scale_fill_identity() +
   theme_mms(
-    grid="F", axis=F,
+    grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
-  ) + 
-  theme(
-    legend.position = "none",
-    plot.margin = mms_plot_margin
   ) + 
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
                      labels = function(x) paste0(x, "%"),
@@ -379,9 +363,7 @@ p_ints_3a <- p_ints_3 +
     family = mms_base_family
    ) + labs(
     title = str_c("Migrants from Germany and France are more likely to consider their education suited to their job"),
-    subtitle = str_c("Share of people who consider their education is suited to their job in 2024, by country of origin"),
-    caption = str_c("<br>Bar height is proportional to sample size (n), total respondents: ",ints2mekko_df$n %>% sum()%>% prettyNum(big.mark = " ")
-    )
+    subtitle = str_c("Share of people who consider their education is suited to their job in 2024, by country of origin")
   )
 
   p_ints_3a
@@ -427,11 +409,13 @@ p_ints_4 <- ints_sexe_df %>%
   scale_x_discrete(expand = c(0.4,0.1))+
   scale_y_continuous(expand = c(0,1.3), name = "",
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_bi_colors[c(2,4)]) +
-  scale_color_manual(values = nccr_bi_colors[c(2,4)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(12,2)]) +
+  scale_color_manual(values = nccr_bi_colors[c(12,2)]) +
   labs(
     title = str_c(
-      "Men migrants more often view their education well-suited to their job"),
+      "<span style='color:", 
+    nccr_bi_colors[2], ";'>Men </span>", 
+      "migrants more often view their education well-suited to their job"),
     subtitle = str_c(
       "Share of people who consider their education is suited to their job in 2024, by gender")
  )

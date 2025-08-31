@@ -120,13 +120,16 @@ size_r <- c(2, 4)
 
 famr_1 <- fam_sexe_df %>% 
   ggplot(aes(x = year, y = share, group = sexe)) +
-  geom_line(aes(color=sexe, linewidth = n_y),
-            alpha = 0.2) +
+  geom_line(aes(color=sexe),
+             linewidth = 2,
+            alpha = 0.3) +
   geom_textline(
     aes(label = sexe, color = sexe), size = 4, 
     vjust = -0.3,
     linewidth = 0, family = mms_base_family) +
-  geom_point(aes(size=n_y, color = sexe)) +
+  geom_point(aes(
+    color = sexe),
+    size = 4) +
   scale_size_continuous(range = size_r) +
   scale_linewidth_continuous(range = size_r) +
   theme_mms(
@@ -134,7 +137,7 @@ famr_1 <- fam_sexe_df %>%
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) +
-  scale_color_manual(values = nccr_bi_colors[c(2,4,14)]) +
+  scale_color_manual(values = nccr_bi_colors[c(12,2,14)]) +
   scale_x_continuous(
     name = "", expand = c(0.05,0.05)
   ) +
@@ -190,7 +193,8 @@ fam2mekko_df <- mms_mekko_wrangler(
     mutate(
       country = factor(country, levels = fam_pays_ordered),
       pays = factor(country),
-      famr = factor(famr, levels = c("yes", "no"))
+      famr = factor(famr, levels = c("yes", "no")),
+      n_y = 1,
     ) %>% 
     arrange(country, famr),
   var1 = "famr", 
@@ -209,10 +213,10 @@ famr_2 <- fam2mekko_df %>%
         ymin = ymin, ymax = ymax,
         fill = color),
     colour = "white", 
-    size = 1, alpha = 1) +
+    size = 2, alpha = 1) +
   scale_fill_identity() +
   theme_mms(
-    grid="F", axis=F,
+    grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) + 
@@ -263,9 +267,7 @@ famr_2a <- famr_2 +
    ) + 
   labs(
     title = str_c("Family-related migration more common among non-EU Europeans, Africans, and Latin Americans"),
-    subtitle = str_c("Share of people reporting they came to Switzerland for family reunification, by country of origin in 2024"),
-    caption = str_c("<br>Bar height is proportional to sample size (n), total respondents: ",fam2mekko_df$n_y %>% sum()%>% prettyNum(big.mark = " ")
-    )
+    subtitle = str_c("Share of people reporting they came to Switzerland for family reunification, by country of origin in 2024")
   )
 
 famr_2a

@@ -238,14 +238,14 @@ mig_job_2 <- fhf_df %>%
   scale_x_discrete(expand = c(0.4,0.1))+
   scale_y_continuous(expand = c(0,1.3), name = "", 
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_bi_colors[c(1,11)]) +
-  scale_color_manual(values = nccr_bi_colors[c(1, 11)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(2,12)]) +
+  scale_color_manual(values = nccr_bi_colors[c(2, 12)]) +
    labs(
     x = "", y = "",
     subtitle = "Employment contract or job offer in Switzerland at the time of moving, by gender in 2024<br>",
     title = str_c("The employment contract, twice as common among <span style='color:", 
-    nccr_bi_colors[1], ";'>men</span> as among <span style='color:",
-                  nccr_bi_colors[11], 
+    nccr_bi_colors[2], ";'>men</span> as among <span style='color:",
+                  nccr_bi_colors[12], 
                   ";'>women</span><br>")# à l’arrivée en Suisse")
   )
 

@@ -57,8 +57,8 @@ migy2yearIntervals <- tibble(
   mig_4y = rep(seq(2005,2024, 4), each = 4)
 ) %>% 
   mutate(
-    mig_2y = str_c(mig_2y,"\n", mig_2y+1) %>% as.factor(),
-    mig_4y = str_c(mig_4y,"\n", mig_4y+3) %>% as.factor()
+    mig_2y = str_c(mig_2y,"\n—\n", mig_2y+1) %>% as.factor(),
+    mig_4y = str_c(mig_4y,"\n—\n", mig_4y+3) %>% as.factor()
   )
 
 
@@ -214,7 +214,7 @@ theme_mms <- function(
       axis.text.x = element_text(color = mms_axis_tick_txt_color),
       axis.text.y = element_text(color = mms_axis_tick_txt_color),
       panel.background = element_rect(fill = mms_plot_bg_color, 
-                                     color = mms_plot_line_color,
+                                     color = NA, #mms_plot_line_color,
                                       linewidth = 0),
       plot.background = element_rect(fill = mms_plot_bg_color, 
                                      color = NA, #mms_plot_line_color,
