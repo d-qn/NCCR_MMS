@@ -1,5 +1,5 @@
 ---
-title: "MMS_NCCR_template"
+title: "Increasing share of people reporting family-related migration"
 author: "Duc-Quang Nguyen"
 date: "2025-05-10"
 output: html_document
@@ -116,8 +116,6 @@ if(run_n_check) fam_pays_df
 
 ```{r 1}
 
-size_r <- c(2, 4)
-
 famr_1 <- fam_sexe_df %>% 
   ggplot(aes(x = year, y = share, group = sexe)) +
   geom_line(aes(color=sexe),
@@ -130,8 +128,6 @@ famr_1 <- fam_sexe_df %>%
   geom_point(aes(
     color = sexe),
     size = 4) +
-  scale_size_continuous(range = size_r) +
-  scale_linewidth_continuous(range = size_r) +
   theme_mms(
     grid="Y", axis=T,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -146,27 +142,7 @@ famr_1 <- fam_sexe_df %>%
                      labels = function(x) paste0(x, "%"),
                      expand = c(0.05,0.05)
   ) +
-  theme(
-    legend.position = c(0.89, 0.08),
-    legend.key.height = unit(0.7, "lines"),
-    legend.text = element_text(
-      size = 8, 
-      color = mms_legend_base_col), # Reduce legend text size
-    legend.title = element_text(
-      size = 10, 
-      color = mms_legend_base_col, 
-      face = "bold", 
-      hjust =0.5)
-  ) +
-  guides(
-    color = "none",
-    size = guide_legend(
-      override.aes = list(
-        color = mms_legend_base_col,  # This makes the legend points grey
-        fill = mms_legend_base_col    # Just in case the theme uses fill
-      )
-    )
-  ) +
+  guides(color = "none") +
   labs(
     title = "Increase in the share of people reporting family-related reasons for moving to Switzerland",
     subtitle = "Share of people reporting family-related reasons for moving to Switzerland, by survey year",

@@ -1,5 +1,5 @@
 ---
-title: "MMS_NCCR_template"
+title: "Structural integration is better among certain groups"
 author: "Duc-Quang Nguyen"
 date: "2025-05-10"
 output: html_document

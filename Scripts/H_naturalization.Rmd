@@ -1,5 +1,5 @@
 ---
-title: "MMS_NCCR_template"
+title: "More than half of migrants are interested in naturalization"
 author: "Duc-Quang Nguyen"
 date: "2025-05-10"
 output: html_document
@@ -83,8 +83,8 @@ if(run_n_check) {
 
 ### manual data 
 nati_migy_df  <- tibble(
-  yeari = rep(c("2010-2014", "2006-2009"), 5),
-  year = rep(c(2024, 2022, 2020, 2018, 2015), each = 2),
+  yeari = rep(c("2010—2014", "2006—2009"), 5),
+  year = as.integer(rep(c(2024, 2022, 2020, 2018, 2016), each = 2)),
   share = c(70.9, 78.2, 67.1, 74.3, 61.7, 68.7, 53.2, 62.1, 38.9, 45.3)
 )
 
@@ -123,9 +123,55 @@ if(run_n_check) {
     )
 }
 
+nati_cr_df1 <- h_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(country)) %>% 
+  filter(!is.na(C3_4) | !is.na(C3_5)) %>% 
+  group_by(C3_4, country) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(country) %>%
+  reframe(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100,
+    val = C3_4
+  ) %>% 
+  filter(val == "yes") %>% 
+  mutate(C3 = "C3_4") %>% 
+  select(-val)
+  
+nati_cr_df2 <- h_df %>% 
+  filter(year == 2024) %>% 
+  filter(!is.na(country)) %>% 
+  filter(!is.na(C3_4) | !is.na(C3_5)) %>% 
+  group_by(C3_5, country) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(country) %>%
+  reframe(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100,
+    val = C3_5
+  ) %>% 
+  filter(val == "yes") %>% 
+  mutate(C3 = "C3_5") %>% 
+  select(-val)
+
+nati_cr_df <- bind_rows(nati_cr_df1, nati_cr_df2) 
+
 
 if(run_n_check) {
-  
+  nati_cr_df %>% 
+    select(country, C3, share, n_y) %>%
+    pivot_wider(
+      names_from = C3,
+      values_from = c(share, n_y)
+    ) %>%
+    arrange(desc(share_C3_4))
 }
 ```
 
@@ -136,13 +182,102 @@ if(run_n_check) {
 #### 1. main  chart
 
 ```{r 1}
+p_nati_1 <- nati_y_df %>% 
+  ggplot(aes(x = year, y = share, group = nat)) +
+  geom_area(aes(fill = nat), alpha = 1) + 
+  theme_mms(grid="XY", axis="xy", 
+                 grid_col =  scales::alpha("lightgrey", 0.6),
+                 base_size = mms_base_size,
+                 mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+                 plot_title_size = mms_plot_title_size,
+                 subtitle_size = mms_subtitle_size,
+                 plot_margin = mms_plot_margin_l
+  )  + 
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = NA),  # transparent
+        panel.ontop = TRUE
+  ) +
+  # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2016, 2024, 2)) +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    title = str_c("The share of people ", 
+                  "<span style='color:#678E6F'>interested in naturalization</span> is gradually increasing"),
+    subtitle="Do you plan to apply for Swiss naturalization in the future?") +
+  scale_fill_nccr_categorical(order = c(7,13,11))
+
+
+annot_df <- tibble(
+  year = rep(2021, 3),
+  share_w = c(27, 69, 90),
+  txt = c("Yes", "Don't know", "No")
+)
+
+
+p_nati_1a  <-p_nati_1  +
+  geom_richtext(data = annot_df, aes(
+    x = year, y = share_w, label = txt, group = 1),
+    fill = NA, label.color = NA,# remove background and outline,
+    color = "white", size = 6, alpha = 1,
+    #fontface = "bold",
+    hjust = 0.5, family = mms_base_family
+  )
+p_nati_1a
 
 ```
 
-#### 2.   
+#### 2. Line charts
 
 ```{r 2}
 
+nati_migyw_df<- nati_migy_df %>% 
+  pivot_wider(
+    names_from = yeari,
+    values_from = share
+  ) %>% 
+  mutate(group = 1)
+
+p_nati_2 <- nati_migy_df %>% 
+  ggplot(aes(x = year)) +
+  geom_ribbon(
+    data = nati_migyw_df,
+    aes(ymin = `2010—2014`, ymax = `2006—2009`, x = year),
+    alpha = 0.2, fill = nccr_bi_colors[12]
+  ) +
+  geom_line(aes(y = share, color=yeari),
+            linewidth = 2,
+            alpha = 0.5) +
+  geom_textline(
+    aes(y = share, label = yeari, color = yeari), size = 5, 
+    vjust = -0.2,
+    linewidth = 0, family = mms_base_family) +
+  geom_point(aes(
+    y = share,
+    color = yeari),
+    size = 4) +
+  theme_mms(
+    grid="Y", axis=T,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+  ) +
+  scale_color_manual(values = nccr_bi_colors[c(12,2)]) +
+  scale_x_continuous(
+    name = "", expand = c(0.05,0.05)
+  ) +
+  scale_y_continuous(name = "", 
+                     n.breaks = 10,
+                     labels = function(x) paste0(x, "%"),
+                     expand = c(0.05,0.05)
+  ) +
+  guides(color = "none") +
+  labs(
+    title = "A steady increase over time spent in Switzerland",
+    subtitle = "Share of people intending to naturalize, by arrival cohort"
+  )
+
+p_nati_2
 ```
 
 #### 3.

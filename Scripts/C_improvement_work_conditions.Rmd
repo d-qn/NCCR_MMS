@@ -1,5 +1,5 @@
 ---
-title: "La migration conduit généralement à une amélioration des conditions de travail"
+title: "Migration generally leads to an improvement in working conditions"
 author: "Duc-Quang Nguyen"
 date: "2025-05-10"
 output: html_document
