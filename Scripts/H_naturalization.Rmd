@@ -88,6 +88,34 @@ nati_migy_df  <- tibble(
   share = c(70.9, 78.2, 67.1, 74.3, 61.7, 68.7, 53.2, 62.1, 38.9, 45.3)
 )
 
+nati_migy_df <- h_df %>% 
+  filter(!is.na(nat)) %>%
+  filter(!is.na(year)) %>%
+  filter( 
+    (migy >= 2010 & migy <= 2014) |
+      (migy >= 2006 & migy <= 2009)  
+  ) %>% 
+  mutate(
+    yeari = case_when(
+      migy >= 2010 & migy <= 2014 ~ "2010—2014",
+      migy >= 2006 & migy <= 2009 ~ "2006—2009",
+      TRUE ~ NA_character_
+    )
+  ) %>% 
+  group_by(year, yeari, nat) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year, yeari) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  filter(nat == "yes") %>% 
+  select(-nat)
+
 if(run_n_check) {
   nati_migy_df %>% 
     select(year, yeari, share) %>% 
