@@ -25,6 +25,7 @@ library(ggtext)
 library(waffle)
 library(directlabels)
 library(geomtextpath)
+library(gghighlight)
 
 
 ### Load & wrangle ###

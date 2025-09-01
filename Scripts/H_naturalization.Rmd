@@ -82,11 +82,11 @@ if(run_n_check) {
 
 
 ### manual data 
-nati_migy_df  <- tibble(
-  yeari = rep(c("2010—2014", "2006—2009"), 5),
-  year = as.integer(rep(c(2024, 2022, 2020, 2018, 2016), each = 2)),
-  share = c(70.9, 78.2, 67.1, 74.3, 61.7, 68.7, 53.2, 62.1, 38.9, 45.3)
-)
+# nati_migy_df  <- tibble(
+#   yeari = rep(c("2010—2014", "2006—2009"), 5),
+#   year = as.integer(rep(c(2024, 2022, 2020, 2018, 2016), each = 2)),
+#   share = c(70.9, 78.2, 67.1, 74.3, 61.7, 68.7, 53.2, 62.1, 38.9, 45.3)
+# )
 
 nati_migy_df <- h_df %>% 
   filter(!is.na(nat)) %>%
@@ -140,7 +140,9 @@ nati_c_df <- h_df %>%
     share = weight/sum(weight, na.rm = TRUE)*100
   ) %>% 
   ungroup() %>% 
-  filter(nat == "yes")
+  filter(nat == "yes") %>% 
+  left_join(pays2col) %>% 
+  filter(country != "Other countries") 
 
 if(run_n_check) {
   nati_c_df %>% 
@@ -260,7 +262,7 @@ p_nati_1a
 
 ```{r 2}
 
-nati_migyw_df<- nati_migy_df %>% 
+nati_migyw_df <- nati_migy_df %>% 
   pivot_wider(
     names_from = yeari,
     values_from = share
@@ -308,9 +310,77 @@ p_nati_2 <- nati_migy_df %>%
 p_nati_2
 ```
 
-#### 3.
+#### 3. small multiples country chart
 
 ```{r 3}
+nati_c_df %<>% 
+  mutate(
+    country_styled = str_c(
+      "<span style='color:", color, "'>", country, "</span>"
+    ) %>% factor %>% fct_reorder(share, .fun = max, .desc = TRUE)
+  )
+
+fl_points <- nati_c_df %>%
+  group_by(country_styled) %>%
+  slice(c(1,5)) %>% 
+  ungroup()
+
+l_points <- nati_c_df %>%
+  group_by(country_styled) %>%
+  slice(c(5)) %>% 
+  ungroup()
+
+
+
+p_nati_3 <- nati_c_df %>% 
+  ggplot(aes(x = year, y = share, colour = color)) +
+  geom_line(alpha = 0.9, show.legend = FALSE, linewidth = 1.4) +
+  geom_point(
+    data  = fl_points, size = 3
+  ) +
+  gghighlight(
+    use_direct_label = F,
+     unhighlighted_params = list(linewidth = .3, alpha = 0.5, size = 0)
+  ) +
+  ggrepel::geom_text_repel(
+    data = fl_points,
+    aes(label = paste0(round(share, 1), "%")),
+    size = 4,
+    nudge_y = -7,
+    direction = "y",
+    hjust = 0,
+    segment.color = NA,
+    family = mms_base_family
+  ) +
+  facet_wrap(~country_styled, ncol = 3) +
+  theme_mms(grid=F, axis="X", 
+                 grid_col =  scales::alpha("lightgrey", 0.6),
+                 base_size = mms_base_size,
+                 mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+                 plot_title_size = mms_plot_title_size,
+                 subtitle_size = mms_subtitle_size,
+                 plot_margin = mms_plot_margin_l
+  )  + 
+  theme(
+    axis.text.y = element_blank(),
+    panel.background = element_rect(fill = NA),  # transparent
+    panel.ontop = TRUE,
+    strip.text = element_markdown(size = 14,
+                                  margin = margin(b = -1))
+  ) +
+  # remove any scale expansion
+  scale_x_continuous(expand = c(0.05,0.05), name = "", breaks = seq(2016, 2024, 2)) +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0.02,0.02), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "More than half of migrants from most countries are interested in naturalization",
+    subtitle="Share of people reporting interest in naturalization, by country of origin"
+  ) +
+  scale_color_identity()
+
+p_nati_3
+
 ```
 
 #### patch
