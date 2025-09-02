@@ -219,7 +219,7 @@ p_nati_1 <- nati_y_df %>%
   theme_mms(grid="XY", axis="xy", 
                  grid_col =  scales::alpha("lightgrey", 0.6),
                  base_size = mms_base_size,
-                 mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+                 mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
                 mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   )  + 
   theme(legend.position = "none",
@@ -262,6 +262,7 @@ p_nati_1a
 ```{r 2}
 
 nati_migyw_df <- nati_migy_df %>% 
+  select(yeari, year, share) %>%
   pivot_wider(
     names_from = yeari,
     values_from = share
@@ -329,6 +330,12 @@ l_points <- nati_c_df %>%
   slice(c(5)) %>% 
   ungroup()
 
+# Create the data frame for the labels
+year_label_df <- tibble(
+  x = c(2016, 2024),
+  label = c(2016, 2024),
+  hjust = c(0, 1) # 0 for left-align, 1 for right-align
+)
 
 
 p_nati_3 <- nati_c_df %>% 
@@ -345,35 +352,40 @@ p_nati_3 <- nati_c_df %>%
     data = fl_points,
     aes(label = paste0(round(share, 0), "%")),
     size = 3,
-    nudge_y = -12,
+    nudge_y = -10,
     direction = "y",
     hjust = 0,
     segment.color = NA,
     family = mms_base_family
   ) +
+  #  # Add the custom labels using the new data frame
+  # geom_text(
+  #   data = year_label_df,
+  #   aes(x = x, y = -Inf, label = label, hjust = hjust),
+  #   vjust = 1, # Nudge text down, below the plot panel
+  #   inherit.aes = FALSE
+  # ) +
   facet_wrap(~country_styled, ncol = 4) +
-  theme_mms(grid=F, axis="X", 
+  theme_mms(grid=F, axis=F, 
             grid_col =  scales::alpha("lightgrey", 0.6),
-            base_size = mms_base_size,
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   )  + 
   theme(
+    axis.text.x = element_blank(),
     axis.text.y = element_blank(),
-    panel.background = element_rect(fill = NA),  # transparent
-    panel.ontop = TRUE,
     panel.spacing = unit(1, "lines"),
-    strip.text = element_markdown(size = 11,
-                                  margin = margin(b = -1))
+    strip.text = element_markdown(size = 9,
+                                  margin = margin(b = 0))
   ) +
   # remove any scale expansion
-  scale_x_continuous(expand = c(0.05,0.05), name = "", breaks = c(2016, 2024)) +
+  scale_x_continuous(expand = c(0.05,0.05), name = "") +
   # have y scale not start at 0, add unit % 
   scale_y_continuous(expand = c(0.02,0.02), name = "", 
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = "Interest in naturalization varies by country of origin",
-    subtitle = "Share of people intending to naturalize, by country of origin"
+    subtitle = "Share of people intending to naturalize, by country of origin from 2016 until 2024"
   ) +
   scale_color_identity()
 
@@ -398,7 +410,7 @@ nati_cr_labels <- nati_cr_df %>%
     c3_4 = -share[which(C3 == "C3_4")],
     c3_5 = share[which(C3 == "C3_5")],
     # Insert line breaks between words
-    labels = gsub(" ", "<br>", as.character(country))
+    labels =  as.character(country) #gsub(" ", "<br>", as.character(country))
   )
 
 # mirror column plot
@@ -433,7 +445,7 @@ p_nati_4 <- nati_cr_df %>%
     aes(x = country, y = y-0.1, 
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
-    size = 3,
+    size = 3.5,
     hjust = 1, nudge_x = 0, vjust = 0.5, colour = "white",
     family = mms_base_family
    ) +
@@ -442,7 +454,7 @@ p_nati_4 <- nati_cr_df %>%
     aes(x = country, y = c3_4, label = paste0(abs(round(c3_4)), "%"),
         hjust = 0),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 0, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
+    vjust = 0.5, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
     family = mms_base_family
   ) +
   geom_richtext(
@@ -450,16 +462,16 @@ p_nati_4 <- nati_cr_df %>%
     aes(x = country, y = c3_5, label = paste0(abs(round(c3_5)), "%"),
         hjust = 1),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 0, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
+    vjust = 0.5, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
     family = mms_base_family
   ) +
   annotate("text", x = nlevels(nati_cr_df$country), y = 0,
-           label = "Improved professional opportunities", vjust = -4, hjust = 0, 
+           label = "Improved professional\nopportunities", vjust = -1, hjust = 0, 
            size = 3,
            family = mms_base_family, fontface = "bold",
            color = nccr_bi_colors[10]) +
   annotate("text", x = nlevels(nati_cr_df$country), y = -27,
-           label = "Sense of belonging", vjust = -4, hjust = 1, 
+           label = "\nSense of belonging", vjust = -1, hjust = 1, 
            size = 3,
            family = mms_base_family, fontface = "bold",
            color = nccr_bi_colors[2]) +
@@ -488,7 +500,7 @@ p_nati_4
 patchwork <- ((p_nati_1a /p_nati_2) +
   plot_layout(heights = c(1,1), widths = 1, ncol = 1) | (p_nati_3/p_nati_4) +
     plot_layout(heights = c(1.5,1),  widths = 1, ncol = 1)) +
-  plot_layout(widths = c(1,1.7))
+  plot_layout(widths = c(1,1.8))
 patchwork
 
 
