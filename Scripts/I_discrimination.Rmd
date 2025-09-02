@@ -1,0 +1,218 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+H9 <- mms_load_data(F) %>% 
+  select(H9_1, H9_2, H9_3,
+         H9_4, H9_5, H9_6, 
+         H9_7, H9_8, H9_9)
+
+
+# 1.      during education and work
+# 2.      in shops, in public and/or during leisure activities
+# 3.      in healthcare and care
+# 4.      by public authorities
+# 5.      on the Internet
+# 6.      in another situation or by other persons
+# 7.      during the search for a job
+# 8.      when applying for an apartment
+# -9.      No answer
+
+# 1.      Never
+# 2.      Rarely
+# 3.      Sometimes
+# 4.      Frequently
+
+data_all <- bind_cols(mms_df, H9)  %>%  
+  mutate(
+    h7 = case_when(
+      H7 == "1" ~ "Never",
+      H7 == "2" ~ "Rarely",
+      H7 == "3" ~ "Sometimes",
+      H7 == "4" ~ "Frequently",
+      TRUE ~ NA)
+  ) %>% 
+  left_join(c2t_B1) 
+
+i_df <- data_all %>% 
+  select(year:country) 
+  
+ h9_names <- tibble(
+   h9 = c("H9_1", "H9_2", "H9_3", 
+   "H9_4", "H9_5", "H9_6",
+   "H9_7", "H9_8"), #, "H9_9"),
+   descr = c(
+     "during education and work",
+     "in shops, in public and/or during leisure activities",
+     "in healthcare and care",
+     "by public authorities",
+     "on the internet",
+     "in another situation or by other persons",
+     "during the search for a job",
+     "when applying for an apartment"
+   ),
+  short_descr = c(
+    "education & work",
+    "public activitiese",
+    "healthcare & care",
+    "public authorities",
+    "internet",
+    "other situations",
+    "search for a job",
+    "applying for an apartment")
+  )
+
+    
+```
+
+
+```{r wrangle & check}
+disy_df <- i_df %>% 
+  filter(year >= 2018) %>% 
+  filter(!is.na(h7)) %>%
+  group_by(year, h7) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() 
+
+if(run_n_check) {
+  disy_df %>% 
+    select(year, h7, share, n_y) %>%
+    pivot_wider(
+      names_from = h7,
+      values_from = share
+    )
+}
+
+ii_df  <- i_df %>% 
+  filter(year >= 2024) %>% 
+  select(year, weight, country, H9_1:H9_8)
+
+# Calculate the weighted share, including -7 in the total
+disr_df  <- ii_df %>%
+  # 1. Reshape the 8 columns into a long format (same as before)
+  pivot_longer(
+    cols = H9_1:H9_8,
+    names_to = "question",
+    values_to = "response"
+  ) %>%
+  
+  #filter(response %in% c(1,2,-7)) %>%
+  
+  # 2. Group by each original question column
+  group_by(question) %>%
+  # 3. Calculate the weighted share of '1's
+  summarise(
+    n = n(),
+    # Numerator: Sum of weights only where the response is 1 (this is unchanged)
+    sum_weight_of_1 = sum(weight[response == 1], na.rm = TRUE),
+    
+    # Denominator: Total sum of weights for ALL responses (1, 2, and -7)
+    total_weight = sum(weight, na.rm = TRUE),
+    
+    # Final calculation
+    weighted_share = (sum_weight_of_1 / total_weight) * 100
+  ) %>%
+  
+  # Optional: Arrange the results for clarity
+  arrange(question)
+
+if(run_n_check) {
+  disr_df
+}
+
+## compute the weighted average also by country
+disrc_df  <- ii_df %>%
+  # 1. Reshape the 8 columns into a long format (same as before)
+  pivot_longer(
+    cols = H9_1:H9_8,
+    names_to = "question",
+    values_to = "response"
+  ) %>%
+  
+  #filter(response %in% c(1,2,-7)) %>%
+  
+  # 2. Group by each original question column and country
+  group_by(country, question) %>%
+  # 3. Calculate the weighted share of '1's
+  summarise(
+    n = n(),
+    # Numerator: Sum of weights only where the response is 1 (this is unchanged)
+    sum_weight_of_1 = sum(weight[response == 1], na.rm = TRUE),
+    
+    # Denominator: Total sum of weights for ALL responses (1, 2, and -7)
+    total_weight = sum(weight, na.rm = TRUE),
+    
+    # Final calculation
+    weighted_share = (sum_weight_of_1 / total_weight) * 100
+  ) %>%
+  ungroup %>% 
+  filter(!is.na(country)) %>% 
+  mutate(
+    country = fct_reorder(country, weighted_share, .fun = mean)
+  )
+  
+if(run_n_check) {
+  disrc_df %>% 
+    select(country, question, weighted_share) %>%
+    pivot_wider(
+      names_from = question,
+      values_from = weighted_share
+    )
+}
+
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```
