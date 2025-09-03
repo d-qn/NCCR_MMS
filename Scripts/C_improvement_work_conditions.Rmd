@@ -260,7 +260,8 @@ iwc_1 <- wcond5_df %>%
   ggplot(aes(x = year, y = share, group = wcond5)) +
   geom_area(aes(fill = wcond5), alpha = 1) + 
   theme_mms(
-    grid=F, axis=F,
+    grid="XY", axis="xy", 
+    grid_col =  scales::alpha("lightgrey", 0.6),
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 

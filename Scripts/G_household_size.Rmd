@@ -143,7 +143,8 @@ p_hh_1 <- hh_y_df %>%
     vjust = 1, hjust = 1, nudge_x = 0.5
   ) +
   theme_mms(
-    grid="Y", axis="XY",
+    grid="XY", axis="xy", 
+    grid_col =  scales::alpha("lightgrey", 0.6),
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 1),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 1)
   ) + 
@@ -151,8 +152,8 @@ p_hh_1 <- hh_y_df %>%
     legend.position = "none",
     panel.ontop = TRUE,
     panel.background = element_rect(fill = NA),
-    panel.grid.major.y = element_line(color = "white",
-                                      linetype = "dashed", linewidth = 0.2) # Make grid lines more visible
+    # panel.grid.major.y = element_line(color = "white",
+    #                                   linetype = "dashed", linewidth = 0.2) # Make grid lines more visible
    # axis.text.y = element_blank()
   ) +
   # remove any scale expansion

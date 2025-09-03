@@ -99,10 +99,15 @@
 <text x='178.85' y='120.70' style='font-size: 19.92px;fill: #FFFFFF; font-family: "Roboto Slab";'>1</text>
 <text x='192.00' y='120.70' style='font-size: 19.92px;fill: #FFFFFF; font-family: "Roboto Slab";'>person</text>
 <rect x='51.48' y='87.44' width='238.27' height='310.04' style='stroke-width: 0.00; stroke: none;' />
-<polyline points='51.48,319.97 289.74,319.97 ' style='stroke-width: 0.43; stroke: #FFFFFF; stroke-dasharray: 4.00,4.00; stroke-linecap: butt;' />
-<polyline points='51.48,242.46 289.74,242.46 ' style='stroke-width: 0.43; stroke: #FFFFFF; stroke-dasharray: 4.00,4.00; stroke-linecap: butt;' />
-<polyline points='51.48,164.95 289.74,164.95 ' style='stroke-width: 0.43; stroke: #FFFFFF; stroke-dasharray: 4.00,4.00; stroke-linecap: butt;' />
-<polyline points='51.48,87.44 289.74,87.44 ' style='stroke-width: 0.43; stroke: #FFFFFF; stroke-dasharray: 4.00,4.00; stroke-linecap: butt;' />
+<polyline points='51.48,319.97 289.74,319.97 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='51.48,242.46 289.74,242.46 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='51.48,164.95 289.74,164.95 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='51.48,87.44 289.74,87.44 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='51.71,397.48 51.71,87.44 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='111.16,397.48 111.16,87.44 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='170.61,397.48 170.61,87.44 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='230.06,397.48 230.06,87.44 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='289.50,397.48 289.50,87.44 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <polyline points='51.48,397.48 51.48,87.44 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />

@@ -96,11 +96,21 @@
 <text x='94.84' y='422.37' style='font-size: 17.07px;fill: #FFFFFF; font-family: "Roboto Slab";'>Significantly</text>
 <text x='203.31' y='422.37' style='font-size: 17.07px;fill: #FFFFFF; font-family: "Roboto Slab";'>improved</text>
 <rect x='47.12' y='115.59' width='240.45' height='414.28' style='stroke-width: 0.00; stroke: none;' />
+<polyline points='47.12,426.40 287.56,426.40 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='47.12,322.93 287.56,322.93 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='47.12,219.47 287.56,219.47 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='47.36,529.86 47.36,115.59 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='107.35,529.86 107.35,115.59 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='167.34,529.86 167.34,115.59 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='227.33,529.86 227.33,115.59 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='287.32,529.86 287.32,115.59 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
+<polyline points='47.12,529.86 47.12,115.59 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
 <text x='35.44' y='429.81' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>25%</text>
 <text x='35.44' y='326.34' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>50%</text>
 <text x='35.44' y='222.88' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>75%</text>
+<polyline points='47.12,529.86 287.56,529.86 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
 <text x='47.36' y='540.70' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2016</text>
 <text x='107.35' y='540.70' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2018</text>
 <text x='167.34' y='540.70' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2020</text>

@@ -217,10 +217,10 @@ p_nati_1 <- nati_y_df %>%
   ggplot(aes(x = year, y = share, group = nat)) +
   geom_area(aes(fill = nat), alpha = 1) + 
   theme_mms(grid="XY", axis="xy", 
-                 grid_col =  scales::alpha("lightgrey", 0.6),
-                 base_size = mms_base_size,
-                 mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-                mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+            grid_col =  scales::alpha("lightgrey", 0.6),
+            base_size = mms_base_size,
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   )  + 
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
@@ -369,14 +369,16 @@ p_nati_3 <- nati_c_df %>%
   theme_mms(grid=F, axis=F, 
             grid_col =  scales::alpha("lightgrey", 0.6),
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
-            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   )  + 
   theme(
     axis.text.x = element_blank(),
     axis.text.y = element_blank(),
-    panel.spacing = unit(1, "lines"),
+    panel.spacing.x = unit(0, "lines"),
+    panel.spacing.y = unit(1, "lines"),
     strip.text = element_markdown(size = 9,
-                                  margin = margin(b = 0))
+                                  hjust = 0.5,
+                                  margin = margin(b = 0, t = 1))
   ) +
   # remove any scale expansion
   scale_x_continuous(expand = c(0.05,0.05), name = "") +
