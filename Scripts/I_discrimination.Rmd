@@ -66,7 +66,7 @@ i_df <- data_all %>%
    ),
   short_descr = c(
     "education & work",
-    "public activitiese",
+    "public activities",
     "healthcare & care",
     "public authorities",
     "internet",
@@ -93,7 +93,10 @@ disy_df <- i_df %>%
     n_y = sum(n, na.rm = TRUE),
     share = weight/sum(weight, na.rm = TRUE)*100
   ) %>%
-  ungroup() 
+  ungroup() %>% 
+  mutate(
+    h7 = factor(h7, levels = rev(c("Never", "Rarely", "Sometimes", "Frequently")))
+  )
 
 if(run_n_check) {
   disy_df %>% 
@@ -135,7 +138,8 @@ disr_df  <- ii_df %>%
   ) %>%
   
   # Optional: Arrange the results for clarity
-  arrange(question)
+  arrange(question) %>% 
+  left_join(h9_names, by = c("question" = "h9")) 
 
 if(run_n_check) {
   disr_df
@@ -168,9 +172,11 @@ disrc_df  <- ii_df %>%
   ) %>%
   ungroup %>% 
   filter(!is.na(country)) %>% 
+  filter(country != "Other countries") %>% 
   mutate(
     country = fct_reorder(country, weighted_share, .fun = mean)
-  )
+  ) %>% 
+  left_join(h9_names, by = c("question" = "h9")) 
   
 if(run_n_check) {
   disrc_df %>% 
@@ -190,18 +196,191 @@ if(run_n_check) {
 #### 1. main  chart
 
 ```{r 1}
+p_dis_1 <- disy_df %>% 
+  ggplot(aes(x = year, y = share, group = h7)) +
+  geom_area(aes(fill = h7), alpha = 1) +
+  theme_mms(grid="XY", axis="xy", 
+            grid_col =  scales::alpha("lightgrey", 0.6),
+            base_size = mms_base_size,
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+  )  +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = NA),  # transparent
+        panel.ontop = TRUE
+  ) +
+  # remove any scale expansion  
+  scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2018, 2024, 2)) +
+  # have y scale not start at 0, add unit %
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    title = str_c("Discrimination rates remain stable, affecting over half of respondents"),
+    subtitle="Experiences of prejudice or discrimination in the last 24 months") +
+  scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
 
+ annot_df <- tibble(
+   year = rep(2021, 4),
+   share_w = c(27, 62, 86, 97.5),
+   txt = c("Never", "Rarely", "Sometimes", "Frequently")
+ )   
+p_dis_1a <- p_dis_1  +
+   geom_richtext(data = annot_df, aes(
+     x = year, y = share_w, label = txt, group = 1),
+     fill = NA, label.color = NA,# remove background and outline,
+     color = "white", size = 5, alpha = 1,
+     #fontface = "bold",
+     hjust = 0.5, family = mms_base_family
+   )
+p_dis_1a
 ```
 
 #### 2.   
 
 ```{r 2}
 
+disr_df %<>% 
+  mutate(
+    # Reorder the 'descr' factor by the 'weighted_share' value for a clean look
+    descr_ordered = fct_reorder(descr, weighted_share),
+    # Wrap the long text labels to a specific width
+    descr_wrapped = str_wrap(descr_ordered, width = 35)
+  ) %>% 
+  arrange(descr_ordered)
+
+
+disr_df %>% 
+  ggplot(aes(x = weighted_share, y = descr_ordered)) +
+  # Create the horizontal "stick" of the lollipop
+  geom_segment(
+    aes(x = 0, xend = weighted_share, 
+        y = descr_ordered, yend = descr_ordered),
+    color = nccr_bi_colors[7],
+    linewidth = 1,
+    alpha = 0.7
+  ) +
+  # Create the "candy" dot at the end
+  geom_point(
+    color = nccr_bi_colors[8], # Using one of your nccr_bi_colors
+    size = 4,
+    alpha = 0.9
+  ) +
+  # Add the numeric value as a text label next to the dot
+  geom_text(
+    aes(label = paste0(round(weighted_share, 0), "%")),
+    hjust = -0.4, # Position the text slightly to the right of the point
+    size = 3,
+    nudge_x = 0.1,
+    color = nccr_bi_colors[14],
+    family = mms_base_family,
+    #alpha = 0.7
+  ) +
+  geom_text(
+    aes(x = 0,
+        y = descr_ordered,
+        label = descr_ordered),
+    hjust = 0,
+    vjust = 0,
+    size = 4,
+    nudge_x = 0.1,
+    nudge_y = 0.15,
+    #color = "black",
+    family = mms_base_family
+  ) +
+  # Customize labels and theme
+  labs(
+    title = "Discrimination is more frequent in public life than in institutional settings",
+    subtitle = "Discrimination incidents in the last 24 months",
+    #x = "Share of Respondents (%)",
+    y = ""
+  ) +
+  # Ensure the x-axis starts at 0 and add some padding for the text labels
+  scale_x_continuous(
+    limits = c(0, max(disr_df$weighted_share) * 1.1),
+    expand = c(0, 0),
+    breaks = NULL,
+    name = ""
+  ) +
+  theme_mms(
+    grid = F, axis = "Y",
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    panel.grid.major.y = element_blank(), # Remove horizontal grid lines for a cleaner look
+    panel.grid.minor.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+
+
 ```
 
 #### 3.
 
 ```{r 3}
+
+
+
+# Determine the order of countries based on their single highest value
+country_order <- disrc_df %>%
+  group_by(country) %>%
+  summarise(max_share = max(weighted_share, na.rm = TRUE)) %>%
+  arrange(max_share) %>% # Arrange from low to high for correct factor ordering
+  pull(country)
+
+# Determine the order of descr (columns) by their average value across all countries
+descr_order <- disrc_df %>%
+  group_by(short_descr) %>%
+  summarise(avg_share = mean(weighted_share, na.rm = TRUE)) %>%
+  arrange(desc(avg_share)) %>% 
+  pull(short_descr)
+
+
+# Prepare the data for plotting
+disrc_df %<>%
+  mutate(
+    # Apply the new order to the country factor
+    country = factor(country, levels = country_order),
+     # Apply the column order
+    short_descr = factor(short_descr, levels = descr_order),
+    # Create a clean label for the text
+    share_label = round(weighted_share, 0)
+  )
+
+# Create the heatmap plot
+disrc_df %>% 
+ggplot(aes(x = short_descr, y = country, fill = weighted_share)) +
+  
+  # Add the heatmap tiles
+  geom_tile(color = "white", linewidth = 0.7) +
+  
+  # Add the text labels inside the tiles
+  geom_text(aes(label = share_label), color = "black", size = 3.5) +
+  
+  # Customize the color gradient
+  scale_fill_gradient(low = "#e6f5ff", high = "#004c99", name = "Weighted Share (%)") +
+  
+  # Clean up the theme and labels
+  labs(
+    title = "Frequency of Discrimination by Situation and Country",
+    x = "Situation",
+    y = ""
+  ) +
+  theme_mms(
+    #grid = F, axis = "xy",
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    # Rotate x-axis labels to prevent overlap
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    panel.grid = element_blank(), # Remove grid lines for a cleaner look
+    legend.position = "none"
+  )
+
+
 ```
 
 #### patch
