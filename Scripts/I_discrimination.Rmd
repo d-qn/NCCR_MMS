@@ -218,7 +218,7 @@ p_dis_1 <- disy_df %>%
     title = str_c("Discrimination rates remain stable, affecting over half of respondents"),
     subtitle="Experiences of prejudice or discrimination in the last 24 months") +
  # scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
-  scale_fill_manual(values = c(darken(nccr_bi_colors[8], 0.3), darken(nccr_bi_colors[8], 0),
+  scale_fill_manual(values = c(darken(nccr_bi_colors[8], 0.2), darken(nccr_bi_colors[8], 0),
                                lighten(nccr_bi_colors[7], 0), nccr_bi_colors[13]))
 
  annot_df <- tibble(
@@ -283,7 +283,7 @@ p_dis_2 <- disr_df %>%
         label = descr_ordered),
     hjust = 0,
     vjust = 0,
-    size = 3.5,
+    size = 3,
     nudge_x = 0.1,
     nudge_y = 0.25,
     #color = "black",
@@ -305,7 +305,7 @@ p_dis_2 <- disr_df %>%
   ) +
   theme_mms(
     grid = F, axis = "Y",
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) +
   theme(
@@ -415,7 +415,7 @@ p_dis_3
 patchwork <- (p_dis_1a | p_dis_2) /
   (p_dis_3) +
   # Add a single plot_layout() to control the relative heights of the rows
-  plot_layout(heights = c(1, 1.1))
+  plot_layout(heights = c(1, 1))
 
 
 patchwork
