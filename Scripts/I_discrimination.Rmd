@@ -201,7 +201,7 @@ p_dis_1 <- disy_df %>%
   geom_area(aes(fill = h7), alpha = 1) +
   theme_mms(grid="XY", axis="xy", 
             grid_col =  scales::alpha("lightgrey", 0.6),
-            base_size = mms_base_size,
+            plot_margin = mms_plot_margin_l,
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   )  +
@@ -217,7 +217,9 @@ p_dis_1 <- disy_df %>%
   labs(
     title = str_c("Discrimination rates remain stable, affecting over half of respondents"),
     subtitle="Experiences of prejudice or discrimination in the last 24 months") +
-  scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
+ # scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
+  scale_fill_manual(values = c(darken(nccr_bi_colors[8], 0.3), darken(nccr_bi_colors[8], 0),
+                               lighten(nccr_bi_colors[7], 0), nccr_bi_colors[13]))
 
  annot_df <- tibble(
    year = rep(2021, 4),
@@ -228,7 +230,7 @@ p_dis_1a <- p_dis_1  +
    geom_richtext(data = annot_df, aes(
      x = year, y = share_w, label = txt, group = 1),
      fill = NA, label.color = NA,# remove background and outline,
-     color = "white", size = 5, alpha = 1,
+     color = "white", size = 3, alpha = 1,
      #fontface = "bold",
      hjust = 0.5, family = mms_base_family
    )
@@ -249,7 +251,7 @@ disr_df %<>%
   arrange(descr_ordered)
 
 
-disr_df %>% 
+p_dis_2 <- disr_df %>% 
   ggplot(aes(x = weighted_share, y = descr_ordered)) +
   # Create the horizontal "stick" of the lollipop
   geom_segment(
@@ -281,9 +283,9 @@ disr_df %>%
         label = descr_ordered),
     hjust = 0,
     vjust = 0,
-    size = 4,
+    size = 3.5,
     nudge_x = 0.1,
-    nudge_y = 0.15,
+    nudge_y = 0.25,
     #color = "black",
     family = mms_base_family
   ) +
@@ -303,7 +305,7 @@ disr_df %>%
   ) +
   theme_mms(
     grid = F, axis = "Y",
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) +
   theme(
@@ -313,7 +315,7 @@ disr_df %>%
     axis.text.y = element_blank()
   )
 
-
+p_dis_2
 
 ```
 
@@ -329,6 +331,10 @@ country_order <- disrc_df %>%
   summarise(max_share = max(weighted_share, na.rm = TRUE)) %>%
   arrange(max_share) %>% # Arrange from low to high for correct factor ordering
   pull(country)
+
+# Find the midpoint of the data range to use as a threshold
+midpoint <- mean(range(disrc_df$weighted_share))
+
 
 # Determine the order of descr (columns) by their average value across all countries
 descr_order <- disrc_df %>%
@@ -346,40 +352,48 @@ disrc_df %<>%
      # Apply the column order
     short_descr = factor(short_descr, levels = descr_order),
     # Create a clean label for the text
-    share_label = round(weighted_share, 0)
+    share_label = round(weighted_share, 1),
+    text_color = if_else(weighted_share >= midpoint, "white", "black")
   )
 
 # Create the heatmap plot
-disrc_df %>% 
-ggplot(aes(x = short_descr, y = country, fill = weighted_share)) +
-  
+p_dis_3 <- disrc_df %>% 
+  ggplot(aes(
+    x = short_descr, y = country, fill = weighted_share)) +
   # Add the heatmap tiles
   geom_tile(color = "white", linewidth = 0.7) +
   
   # Add the text labels inside the tiles
-  geom_text(aes(label = share_label), color = "black", size = 3.5) +
+  geom_text(aes(label = share_label, color = text_color), 
+            size = 3.5) +
   
   # Customize the color gradient
-  scale_fill_gradient(low = "#e6f5ff", high = "#004c99", name = "Weighted Share (%)") +
+  scale_fill_gradient(low = "#ece3df", high = "#814731", name = "Weighted Share (%)") +
   
   # Clean up the theme and labels
   labs(
-    title = "Frequency of Discrimination by Situation and Country",
-    x = "Situation",
+    title = "Discrimination in public life primarily affects non-Europeans, while at work or school it is more widespread",
+    subtitle = "Share of all respondents who reported discrimination in the past 24 months",
+    x = "",
     y = ""
   ) +
   theme_mms(
-    #grid = F, axis = "xy",
+    grid = F, axis = F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 1)
   ) +
   theme(
     # Rotate x-axis labels to prevent overlap
-    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-    panel.grid = element_blank(), # Remove grid lines for a cleaner look
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(
+      angle = 45, hjust = 0, vjust = 0, size = 10),
+    axis.text.y = element_text(size = 10, hjust = 1),
     legend.position = "none"
-  )
+  ) +
+  scale_x_discrete(position = "top")+
+  scale_color_identity() 
 
+p_dis_3
 
 ```
 
@@ -387,9 +401,30 @@ ggplot(aes(x = short_descr, y = country, fill = weighted_share)) +
 
 ```{r patch}
 
+# patchwork <- ((p_nati_1a /p_nati_2) +
+#   plot_layout(heights = c(1,1), widths = 1, ncol = 1) | (p_nati_3/p_nati_4) +
+#     plot_layout(heights = c(1.5,1),  widths = 1, ncol = 1)) +
+#   plot_layout(widths = c(1,1.7))
+
+# patchwork <- (p_dis_1a / p_dis_2) +
+#   plot_layout(heights = c(1,1), widths = 1, ncol = 1) | 
+#   (p_dis_3) +
+#   plot_layout(widths = c(1,1.5))
+
+
+patchwork <- (p_dis_1a | p_dis_2) /
+  (p_dis_3) +
+  # Add a single plot_layout() to control the relative heights of the rows
+  plot_layout(heights = c(1, 1.1))
+
+
+patchwork
+
+
+
 mms_export_vector(
   plot = patchwork,
-  filepath = #here("Output", "charts", ""),
+  filepath = here("Output", "charts", "I_discrimination.svg"),
   bg_col = pw_bg_color
   )
 
