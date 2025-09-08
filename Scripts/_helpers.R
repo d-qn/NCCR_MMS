@@ -8,6 +8,7 @@ library(skimr)
 library(systemfonts)
 library(Cairo)
 library(ragg)
+library(cowplot)
 #library(marquee)
 library(ggforce)
 

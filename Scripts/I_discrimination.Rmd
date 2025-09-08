@@ -201,18 +201,21 @@ p_dis_1 <- disy_df %>%
   geom_area(aes(fill = h7), alpha = 1) +
   theme_mms(grid="XY", axis="xy", 
             grid_col =  scales::alpha("lightgrey", 0.6),
-            plot_margin = mms_plot_margin_l,
-            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+          #  plot_margin = mms_plot_margin_l,
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   )  +
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
-        panel.ontop = TRUE
+        panel.ontop = TRUE,
+      #  plot.margin = margin(l = -150,  r = 50, unit = "pt") # hack !!!!!!!!!!!!!!!!!!!!
+      #  plot.title.position = "panel"
   ) +
   # remove any scale expansion  
   scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2018, 2024, 2)) +
   # have y scale not start at 0, add unit %
   scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = str_c("Discrimination rates remain stable, affecting over half of respondents"),
@@ -223,7 +226,7 @@ p_dis_1 <- disy_df %>%
 
  annot_df <- tibble(
    year = rep(2021, 4),
-   share_w = c(27, 62, 86, 97.5),
+   share_w = c(27, 62, 86, 98.8),
    txt = c("Never", "Rarely", "Sometimes", "Frequently")
  )   
 p_dis_1a <- p_dis_1  +
@@ -312,7 +315,8 @@ p_dis_2 <- disr_df %>%
     panel.grid.major.y = element_blank(), # Remove horizontal grid lines for a cleaner look
     panel.grid.minor.x = element_blank(),
     axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
+    axis.text.y = element_blank(),
+  #  plot.title.position = "panel"
   )
 
 p_dis_2
@@ -386,9 +390,10 @@ p_dis_3 <- disrc_df %>%
     # Rotate x-axis labels to prevent overlap
     axis.ticks.x = element_blank(),
     axis.text.x = element_text(
-      angle = 45, hjust = 0, vjust = 0, size = 10),
-    axis.text.y = element_text(size = 10, hjust = 1),
-    legend.position = "none"
+      angle = 45, hjust = 0, vjust = 0, size = 11),
+    axis.text.y = element_text(size = 11, hjust = 1),
+    legend.position = "none",
+   # plot.title.position = "panel"
   ) +
   scale_x_discrete(position = "top")+
   scale_color_identity() 
@@ -401,23 +406,31 @@ p_dis_3
 
 ```{r patch}
 
-# patchwork <- ((p_nati_1a /p_nati_2) +
-#   plot_layout(heights = c(1,1), widths = 1, ncol = 1) | (p_nati_3/p_nati_4) +
-#     plot_layout(heights = c(1.5,1),  widths = 1, ncol = 1)) +
-#   plot_layout(widths = c(1,1.7))
 
-# patchwork <- (p_dis_1a / p_dis_2) +
-#   plot_layout(heights = c(1,1), widths = 1, ncol = 1) | 
-#   (p_dis_3) +
-#   plot_layout(widths = c(1,1.5))
+# top_row <- p_dis_1a + p_dis_2 + plot_layout(widths = c(1, 1.5))
+# patchwork <- top_row / p_dis_3 + plot_layout(heights = c(1, 1.1))
+# patchwork
 
+# (Make sure p_dis_1a, p_dis_2, p_dis_3 and cowplot are loaded)
 
-patchwork <- (p_dis_1a | p_dis_2) /
-  (p_dis_3) +
-  # Add a single plot_layout() to control the relative heights of the rows
+# 1. Use cowplot to align the top-row plots (same as before)
+aligned_plots <- cowplot::align_plots(
+  p_dis_1a, 
+  p_dis_2,
+  align = 'v', # Align vertically
+  axis = 'l'   # Match the left axes
+)
+
+# 2. Rebuild the top row using wrap_plots() to handle the grobs
+#    and then add the layout settings.
+top_row <- wrap_plots(aligned_plots, ncol = 2) + 
+  plot_layout(widths = c(1, 1.5))
+
+# 3. Combine the aligned top row with the bottom plot
+patchwork <- top_row / p_dis_3 + 
   plot_layout(heights = c(1, 1))
 
-
+# Display the final combined plot
 patchwork
 
 
@@ -427,6 +440,5 @@ mms_export_vector(
   filepath = here("Output", "charts", "I_discrimination.svg"),
   bg_col = pw_bg_color
   )
-
-
 ```
+
