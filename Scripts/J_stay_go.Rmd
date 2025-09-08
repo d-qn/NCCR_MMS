@@ -1,0 +1,201 @@
+---
+title: "MMS_NCCR_template"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+h162f <- tibble(
+  H16 = c(1,2,3,4),
+  h16 = c("Leave", "Leave", "Stay", "Don't know")   
+) %>% 
+  mutate(
+    h16 = factor(h16, levels = c("Leave",  "Don't know", "Stay"))
+  )
+data_all <- mms_df %>% 
+  left_join(h162f, by = c("H16")) %>%
+  left_join(c2t_B1) 
+
+j_df <- data_all %>% 
+  select(H16, year:country) 
+
+```
+
+### Wrangle & check
+
+```{r wrangle & check}
+sl_df <- j_df %>% 
+  filter(!is.na(h16)) %>% 
+  group_by(year, h16) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() 
+
+
+
+if(run_n_check) {
+  sl_df %>% 
+    select(year, h16, share, n_y) %>%
+    pivot_wider(
+      names_from = h16,
+      values_from = share
+    )
+}
+
+slc_df <- j_df %>% 
+  filter(!is.na(country)) %>% 
+  filter(!is.na(h16)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(year >= 2024) %>% 
+  group_by(h16, country) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(country) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() %>% 
+  filter(country != "Other countries")
+
+
+if(run_n_check) {
+  slc_df %>% 
+    select(country, h16, share, n_y) %>%
+    pivot_wider(
+      names_from = h16,
+      values_from = share
+    )
+}
+
+```
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+ annot_df <- tibble(
+   year = rep(2021, 3),
+   share_w = c(28, 66, 92),
+   txt = c("Stay", "Don't know", "Leave")
+ )  
+
+
+sl_df %>% 
+  ggplot(aes(x = year, y = share, group = h16)) +
+  geom_area(
+    aes(fill = h16), 
+    alpha = 1) +
+  theme_mms(
+    grid="XY", axis="XY", 
+    grid_col =  scales::alpha("lightgrey", 0.6),
+    #  plot_margin = mms_plot_margin_l,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  )  +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = NA),  # transparent
+        panel.ontop = TRUE
+  ) +
+  # remove any scale expansion  
+  scale_x_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(2018, 2024, 2)) +
+  # have y scale not start at 0, add unit %
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(25, 100, 25),
+                     labels = function(x) paste0(x, "%")) +
+  labs(
+    title = str_c("More people want to stay in Switzerland"),
+    subtitle="Plans regarding residence in Switzerland") +
+  scale_fill_manual(values =nccr_bi_colors[c(8,13,6)]) +
+  geom_richtext(data = annot_df, aes(
+    x = year, y = share_w, label = txt, group = 1),
+    fill = NA, label.color = NA,# remove background and outline,
+    color = "white", size = 6, alpha = 1,
+    #fontface = "bold",
+    hjust = 0.5, family = mms_base_family
+  )
+
+
+```
+
+#### 2.   
+
+```{r 2}
+
+ ordered_c <- slc_df %>% 
+  filter(h16 == "Stay") %>% 
+  mutate(
+    country = fct_reorder(country, share, .desc = TRUE)
+  ) %>% 
+  .$country %>% levels()
+
+slc_df %<>% 
+  mutate(
+    country = factor(country, levels = rev(ordered_c))
+  ) 
+
+ slc_df %>% 
+  ggplot(aes(x = country, y = share)) +
+  geom_bar(aes( fill = h16), stat = "identity", position = "fill") +
+  coord_flip(clip = "off") +
+  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
+  theme_mms(
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) + 
+  theme(
+    legend.position = "none",
+    axis.text.y = element_blank(),
+    panel.grid.major = element_blank(),
+    axis.text.x = element_text(size = 13, hjust = 0.35)
+  ) +
+ scale_y_continuous(
+    name = "", expand = c(0, 0),
+    breaks = NULL,
+    position = "right"
+  ) +
+  scale_x_discrete(expand = c(0, 0), name = "") +
+  labs(
+    title = "Improvement in professional situation varies by country of origin",
+    subtitle = "In 2024, with migration, the professional situation was: "
+  ) 
+
+```
+
+
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```
