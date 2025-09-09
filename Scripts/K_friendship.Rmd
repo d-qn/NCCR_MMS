@@ -1,0 +1,78 @@
+---
+title: "K Friendship"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# gender
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+# education
+c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+# qualification for the job
+c2t_E38 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - E38.csv"))
+
+
+data_all <- mms_df  %>% 
+  ### subset !!!
+  select(
+    A1, A6, B1, B9, D1, E38, year, weight, everything()
+  ) %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  left_join(c2t_D1) %>% 
+  left_join(c2t_E38)
+```
+
+### Wrangle & check
+
+```{r wrangle & check}
+
+
+if(run_n_check) {
+  
+}
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```
