@@ -102,7 +102,7 @@ if(run_n_check) {
  )  
 
 
-sl_df %>% 
+p_sl_1 <- sl_df %>% 
   ggplot(aes(x = year, y = share, group = h16)) +
   geom_area(
     aes(fill = h16), 
@@ -137,7 +137,7 @@ sl_df %>%
     hjust = 0.5, family = mms_base_family
   )
 
-
+p_sl_1
 ```
 
 #### 2.   
