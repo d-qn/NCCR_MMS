@@ -200,7 +200,7 @@ p_dis_1 <- disy_df %>%
   ggplot(aes(x = year, y = share, group = h7)) +
   geom_area(aes(fill = h7), alpha = 1) +
   theme_mms(grid="XY", axis="xy", 
-            grid_col =  scales::alpha("lightgrey", 0.6),
+           # grid_col =  scales::alpha("lightgrey", 0.6),
           #  plot_margin = mms_plot_margin_l,
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)

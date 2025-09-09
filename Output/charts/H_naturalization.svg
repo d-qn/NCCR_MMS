@@ -87,15 +87,15 @@
 <text x='139.39' y='193.59' style='font-size: 14.23px;fill: #FFFFFF; font-family: "Roboto Slab";'>know</text>
 <text x='130.29' y='136.41' style='font-size: 14.23px;fill: #FFFFFF; font-family: "Roboto Slab";'>No</text>
 <rect x='51.48' y='96.75' width='176.49' height='300.95' style='stroke-width: 0.00; stroke: none;' />
-<polyline points='51.48,397.70 227.97,397.70 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='51.48,322.47 227.97,322.47 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='51.48,247.23 227.97,247.23 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='51.48,171.99 227.97,171.99 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='51.48,96.75 227.97,96.75 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='51.65,397.70 51.65,96.75 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='110.37,397.70 110.37,96.75 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='169.08,397.70 169.08,96.75 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
-<polyline points='227.79,397.70 227.79,96.75 ' style='stroke-width: 0.43; stroke: #D3D3D3; stroke-opacity: 0.60; stroke-linecap: butt;' />
+<polyline points='51.48,397.70 227.97,397.70 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='51.48,322.47 227.97,322.47 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='51.48,247.23 227.97,247.23 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='51.48,171.99 227.97,171.99 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='51.48,96.75 227.97,96.75 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='51.65,397.70 51.65,96.75 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='110.37,397.70 110.37,96.75 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='169.08,397.70 169.08,96.75 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='227.79,397.70 227.79,96.75 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <polyline points='51.48,397.70 51.48,96.75 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />

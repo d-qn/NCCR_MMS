@@ -109,10 +109,10 @@ p_sl_1 <- sl_df %>%
     alpha = 1) +
   theme_mms(
     grid="XY", axis="XY", 
-    grid_col =  scales::alpha("lightgrey", 0.6),
+   # grid_col =  scales::alpha("lightgrey", 0.6),
     #  plot_margin = mms_plot_margin_l,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   )  +
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
@@ -126,13 +126,21 @@ p_sl_1 <- sl_df %>%
                      breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
   labs(
-    title = str_c("More people want to stay in Switzerland"),
-    subtitle="Plans regarding residence in Switzerland") +
+    title = str_c("More people are planning to ","<span style='color:",
+        nccr_bi_colors[6], 
+        ";'>stay</span> ", "in Switzerland"),
+    subtitle = str_c(
+      "Share of respondents intending to ",
+      "<span style='color:", nccr_bi_colors[6], ";'>stay</span> in Switzerland, ", 
+       "<span style='color:", nccr_bi_colors[8], ";'>leave</span> or who are ",      
+      "<span style='color:", nccr_bi_colors[14], ";'>undecided</span>, ",      
+      " by survey year"
+    )) +
   scale_fill_manual(values =nccr_bi_colors[c(8,13,6)]) +
   geom_richtext(data = annot_df, aes(
     x = year, y = share_w, label = txt, group = 1),
     fill = NA, label.color = NA,# remove background and outline,
-    color = "white", size = 6, alpha = 1,
+    color = "white", size = 7, alpha = 1,
     #fontface = "bold",
     hjust = 0.5, family = mms_base_family
   )
@@ -144,7 +152,7 @@ p_sl_1
 
 ```{r 2}
 
- ordered_c <- slc_df %>% 
+ordered_c <- slc_df %>% 
   filter(h16 == "Stay") %>% 
   mutate(
     country = fct_reorder(country, share, .desc = TRUE)
@@ -156,15 +164,29 @@ slc_df %<>%
     country = factor(country, levels = rev(ordered_c))
   ) 
 
- slc_df %>% 
+slc_labels_df <- slc_df %>%
+  group_by(country) %>%
+  summarise(
+    share_stay = share[h16 == levels(h162f$h16)[3]] / 100,
+    stay_pc = round(share[h16 == levels(h162f$h16)[3]], 1),
+    leave_pc = round(share[h16 == levels(h162f$h16)[1]], 1),
+  ) %>%
+  mutate(
+    y = -0.001,
+    # Insert line breaks between words
+    labels = as.character(country) #gsub(" ", "<br>", as.character(country))
+  )
+
+
+ p_sl_2 <- slc_df %>% 
   ggplot(aes(x = country, y = share)) +
   geom_bar(aes( fill = h16), stat = "identity", position = "fill") +
   coord_flip(clip = "off") +
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(8, 13, 6)]) +
   theme_mms(
     grid="X", axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) + 
   theme(
     legend.position = "none",
@@ -179,10 +201,43 @@ slc_df %<>%
   ) +
   scale_x_discrete(expand = c(0, 0), name = "") +
   labs(
-    title = "Improvement in professional situation varies by country of origin",
-    subtitle = "In 2024, with migration, the professional situation was: "
-  ) 
-
+    title = str_c(
+      "Intentions to ", "<span style='color:",
+        nccr_bi_colors[6], 
+        ";'>stay</span> ", "in Switzerland vary significantly by national group"),
+   subtitle = str_c(
+      "Share of respondents by country intending to ",
+      "<span style='color:", nccr_bi_colors[6], ";'>stay</span> in Switzerland, ", 
+       "<span style='color:", nccr_bi_colors[8], ";'>leave</span> or who are ",      
+      "<span style='color:", nccr_bi_colors[14], ";'>undecided</span>",      
+      " in 2024"
+    )) +
+   geom_richtext(
+     data = slc_labels_df,
+     aes(x = country, y = share_stay,
+         label = stay_pc),
+     fill = NA,
+     family = mms_base_family,
+     vjust = 1, nudge_x = -0.2,
+     hjust = 1, label.color = NA, size = 3, colour = "white"
+   ) +
+   geom_richtext(
+     data = slc_labels_df,
+     aes(x = country, y = 0.995, label = leave_pc),
+     family = mms_base_family,  nudge_x = -0.2,
+     vjust = 1, nudge_y = 0.007,
+     hjust = 1, fill = NA, label.color = NA, size = 3, colour = "white"
+   ) +
+   geom_richtext(
+     data = slc_labels_df,
+     aes(x = country, y = y,
+         label = labels),
+     fill = NA, label.color = NA,# remove background and outline,
+     size = 4, nudge_x = 0.1,
+     hjust = 0, vjust = 0, colour = "white",
+     family = mms_base_family#, fontface = "bold"
+   ) 
+p_sl_2
 ```
 
 
@@ -191,9 +246,13 @@ slc_df %<>%
 
 ```{r patch}
 
+patchwork <- p_sl_1 / p_sl_2 +
+  plot_layout(ncol = 2, widths = c(1, 1.15)) 
+patchwork
+
 mms_export_vector(
   plot = patchwork,
-  filepath = #here("Output", "charts", ""),
+  filepath = here("Output", "charts", "J_stay_leave.svg"),
   bg_col = pw_bg_color
   )
 
