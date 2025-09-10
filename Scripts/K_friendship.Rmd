@@ -233,7 +233,7 @@ p_fri_1
 #### 2.   
 
 ```{r 2}
-frim_df %>% 
+p_fri_2 <- frim_df %>% 
   ggplot(aes(x = mig_4y, y = share, fill = g6)) +
   geom_bar(stat = "identity", position = "stack", alpha = 1) +
   theme_mms(
@@ -272,7 +272,7 @@ frim_df %>%
             vjust = 1, nudge_y = -2,
             size = 3, color = "white", family = mms_base_family)
 
-
+p_fri_2
 ```
 
 #### 3.
@@ -311,7 +311,7 @@ fric_3_df <- left_join(
 segm_lw <- 3
 point_size <- 6
 # lollipop chart by country
-fric_df %>% 
+p_fri_3 <- fric_df %>% 
   ggplot() +
   geom_segment(data = fric_3_df,
                aes(x = xstart, xend = xend, y = country, yend = country), 
@@ -347,7 +347,7 @@ fric_df %>%
   scale_y_discrete(name = "") +
   scale_color_manual(values = nccr_bi_colors[c(7,13,3)]) +
   labs(
-    title = str_c("The location of friends' residence varies greatly by country"),
+    title = str_c("Italians have friends in many locations, while the Spanish and Portuguese tend to have friends in their country of origin"),
     subtitle = str_c(
       "Friends' place of residence in 2024, by country: ",
       "<span style='color:", nccr_bi_colors[7], ";'>mostly in Switzerland</span>, ", 
@@ -366,6 +366,8 @@ fric_df %>%
             vjust = 0, hjust = 0.5, nudge_y = 0.25,
             size = 3, color = nccr_bi_colors[3], family = mms_base_family)
 
+
+p_fri_3
 ```
 
 #### 4.
