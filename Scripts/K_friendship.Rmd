@@ -92,7 +92,11 @@ frim_df <- k_df %>%
     n_y = sum(n, na.rm = TRUE),
     share = weight/sum(weight, na.rm = TRUE)*100
   ) %>%
-  ungroup()
+  ungroup() %>% 
+  mutate(
+    g6 = factor(g6, levels = g62f$g6[c(1,3,5)])
+  )
+
 
 if(run_n_check) {
   frim_df %>% 
@@ -176,63 +180,9 @@ if(run_n_check) {
 #### 1. main  chart
 
 ```{r 1}
-
-
-#  annot_df <- tibble(
-#    year = rep(2021, 3),
-#    share_w = c(28, 66, 92),
-#    txt = c("Stay", "Don't know", "Leave")
-#  )  
-# 
-# 
-# p_sl_1 <- sl_df %>% 
-#   ggplot(aes(x = year, y = share, group = h16)) +
-#   geom_area(
-#     aes(fill = h16), 
-#     alpha = 1) +
-#   theme_mms(
-#     grid="XY", axis="XY", 
-#    # grid_col =  scales::alpha("lightgrey", 0.6),
-#     #  plot_margin = mms_plot_margin_l,
-#     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
-#     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
-#   )  +
-#   theme(legend.position = "none",
-#         panel.background = element_rect(fill = NA),  # transparent
-#         panel.ontop = TRUE
-#   ) +
-#   # remove any scale expansion  
-#   scale_x_continuous(expand = c(0,0), name = "", 
-#                      breaks = seq(2018, 2024, 2)) +
-#   # have y scale not start at 0, add unit %
-#   scale_y_continuous(expand = c(0,0), name = "", 
-#                      breaks = seq(25, 100, 25),
-#                      labels = function(x) paste0(x, "%")) +
-#   labs(
-#     title = str_c("More people are planning to ","<span style='color:",
-#         nccr_bi_colors[6], 
-#         ";'>stay</span> ", "in Switzerland"),
-#     subtitle = str_c(
-#       "Share of respondents intending to ",
-#       "<span style='color:", nccr_bi_colors[6], ";'>stay</span> in Switzerland, ", 
-#        "<span style='color:", nccr_bi_colors[8], ";'>leave</span> or who are ",      
-#       "<span style='color:", nccr_bi_colors[14], ";'>undecided</span>, ",      
-#       " by survey year"
-#     )) +
-#   scale_fill_manual(values =nccr_bi_colors[c(8,13,6)]) +
-#   geom_richtext(data = annot_df, aes(
-#     x = year, y = share_w, label = txt, group = 1),
-#     fill = NA, label.color = NA,# remove background and outline,
-#     color = "white", size = 7, alpha = 1,
-#     #fontface = "bold",
-#     hjust = 0.5, family = mms_base_family
-#   )
-# 
-# p_sl_1
-
 annot_df <- tibble(
   year = rep(2021, 3),
-  share_w = c(28, 66, 92),
+  share_w = c(22, 55, 87),
   txt = g62f$g6[rev(c(1,3,5))]
 )
 
@@ -257,20 +207,18 @@ p_fri_1 <- fri_df %>%
                      breaks = seq(2018, 2024, 2)) +
   # have y scale not start at 0, add unit %
   scale_y_continuous(expand = c(0,0), name = "", 
-                     breaks = seq(0, 100, 20),
+                     breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
   labs(
-    title = str_c("Most migrants make friends ","<span style='color:",
-        nccr_bi_colors[6], 
-        ";'>(mostly)</span> ", "in Switzerland"),
+    title = str_c("The location of friends' residence shows little change between 2018 and 2024"),
     subtitle = str_c(
-      "Share of respondents who made friends ",
-      "<span style='color:", nccr_bi_colors[6], ";'>(mostly)</span> in Switzerland, ", 
-       "<span style='color:", nccr_bi_colors[10], ";'>mixed</span> or ",      
-      "<span style='color:", nccr_bi_colors[8], ";'>(mostly)</span> abroad, ",      
+      "Friends' place of residence: ",
+      "<span style='color:", nccr_bi_colors[7], ";'>mostly in Switzerland</span>, ", 
+       "<span style='color:", nccr_bi_colors[13], ";'>mixed</span> or ",      
+      "<span style='color:", nccr_bi_colors[3], ";'>mostly abroad</span>, ",
       " by survey year"
     )) +
-  scale_fill_manual(values =nccr_bi_colors[c(6,10,8)]) +
+  scale_fill_manual(values =nccr_bi_colors[c(7,13,3)]) +
   geom_richtext(data = annot_df, aes(
     x = year, y = share_w, label = txt, group = 1),
     fill = NA, label.color = NA,# remove background and outline,
@@ -285,12 +233,144 @@ p_fri_1
 #### 2.   
 
 ```{r 2}
+frim_df %>% 
+  ggplot(aes(x = mig_4y, y = share, fill = g6)) +
+  geom_bar(stat = "identity", position = "stack", alpha = 1) +
+  theme_mms(
+    grid=F, axis=F, 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+  ) +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = NA),  # transparent
+    panel.ontop = TRUE
+  ) +
+  scale_x_discrete(expand = c(0.05,0.05), name = "") +
+  scale_y_continuous(name = "", 
+                     breaks = NULL,
+                    # n.breaks = 10,
+                    # labels = function(x) paste0(x, "%"),
+                     expand = c(0,0)
+  ) +
+  scale_fill_manual(values = nccr_bi_colors[c(7,13,3)]) +
+  labs(
+    title = str_c("Friends' place of residence differs by respondents' migration history"),
+    subtitle = str_c(
+      "Friends' place of residence in 2024, by respondents' migration year: ",
+      "<span style='color:", nccr_bi_colors[7], ";'>mostly in Switzerland</span>, ", 
+       "<span style='color:", nccr_bi_colors[13], ";'>mixed</span> or ",      
+      "<span style='color:", nccr_bi_colors[3], ";'>mostly abroad</span>"
+    )
+  ) +
+  geom_text(data = frim_df %>% filter(g6 == g62f$g6[1]), 
+            aes(y = 100 - share, label = paste0(round(share, 1), "%")), 
+            vjust = 0, nudge_y = 2,
+            size = 3, color = "white", family = mms_base_family) +
+  geom_text(data = frim_df %>% filter(g6 == g62f$g6[5]),
+            aes(y = share, label = paste0(round(share, 1), "%")), 
+            vjust = 1, nudge_y = -2,
+            size = 3, color = "white", family = mms_base_family)
+
 
 ```
 
 #### 3.
 
 ```{r 3}
+ordered_c <- fric_df %>% 
+  filter(g6 == g62f$g6[1]) %>% 
+  mutate(
+    country = fct_reorder(country, share, .desc = TRUE)
+  ) %>% 
+  .$country %>% levels()
+
+fric_df %<>%
+  mutate(
+    country = factor(country, levels = rev(ordered_c))
+  )
+
+fric_1_df <- fric_df %>% 
+  filter(g6 == g62f$g6[1])
+
+fric_2_df <- fric_df %>% 
+  filter(g6 == g62f$g6[5]) %>% 
+  mutate(
+    label_share = share,
+    share = 100-share
+  )
+
+fric_3_df <- left_join(
+  fric_1_df %>% 
+    rename(xstart = share),
+  fric_2_df %>%
+    rename(xend = share) %>% 
+  select(country, xend)
+)
+  
+segm_lw <- 3
+point_size <- 6
+# lollipop chart by country
+fric_df %>% 
+  ggplot() +
+  geom_segment(data = fric_3_df,
+               aes(x = xstart, xend = xend, y = country, yend = country), 
+               color = nccr_bi_colors[13], size = segm_lw) +
+  geom_segment(data = fric_1_df, 
+               aes(x = 0, xend = share, y = country, yend = country), 
+               color = nccr_bi_colors[7], size = segm_lw) +
+  geom_point(data = fric_1_df, 
+             aes(x = share, y = country, color = g6), size = point_size,
+             color = nccr_bi_colors[8]) +
+  geom_segment(data = fric_2_df, 
+               aes(x = 100, xend = share, y = country, yend = country), 
+               color = nccr_bi_colors[3], size = segm_lw) +
+  geom_point(data = fric_2_df, aes(x = share, y = country,
+                                   color = g6), size = point_size,
+             color = nccr_bi_colors[4]) +
+  theme_mms(
+    grid=F, axis=F, 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+  ) +
+  theme(
+    # legend.position = "none",
+    # panel.background = element_rect(fill = NA),  # transparent
+    # panel.ontop = TRUE
+    axis.text.y = element_text(hjust = 1)
+  ) +
+  scale_x_continuous(name = "", 
+                     breaks = NULL,# seq(0, 100, 20),
+                    # labels = function(x) paste0(x, "%"),
+                     expand = c(0.01,0.01)
+                    ) +
+  scale_y_discrete(name = "") +
+  scale_color_manual(values = nccr_bi_colors[c(7,13,3)]) +
+  labs(
+    title = str_c("The location of friends' residence varies greatly by country"),
+    subtitle = str_c(
+      "Friends' place of residence in 2024, by country: ",
+      "<span style='color:", nccr_bi_colors[7], ";'>mostly in Switzerland</span>, ", 
+       "<span style='color:", nccr_bi_colors[13], ";'>mixed</span> or ",      
+      "<span style='color:", nccr_bi_colors[3], ";'>mostly abroad</span>"
+    )
+  ) +
+  geom_text(data = fric_1_df, 
+            aes(x = share, y = country, 
+                label = paste0(round(share, 1), "%")), 
+            vjust = 0, hjust = 0.5, nudge_y = 0.25,
+            size = 3, color = nccr_bi_colors[8], family = mms_base_family) +
+  geom_text(data = fric_2_df,
+            aes(x = share, y = country, 
+                label = paste0(round(label_share, 1), "%")), 
+            vjust = 0, hjust = 0.5, nudge_y = 0.25,
+            size = 3, color = nccr_bi_colors[3], family = mms_base_family)
+
+```
+
+#### 4.
+
+```{r 4}
 ```
 
 #### patch
