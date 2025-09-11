@@ -1,0 +1,160 @@
+---
+title: "L homesickness"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# gender
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+G26 <- mms_load_data(F) %>% 
+  select(G26_1)
+
+g262f <-  tibble(
+  G26_1 = 0:7,
+  g26 = c(
+   rep("weak",3),
+   rep("moderate",2),
+   rep("strong", 3)
+  )
+)
+
+data_all <- bind_cols(mms_df, G26) %>% 
+  mutate(migy = mms_encode_migration_year(A6,year)) %>% 
+  left_join(migy2yearIntervals) %>%
+  left_join(g262f) %>% 
+  left_join(c2t_A1) %>%
+  left_join(c2t_B1) 
+
+l_df <- data_all %>% 
+  select(year:country) %>% 
+  filter(year == 2024) %>% 
+  mutate(
+    g26 = factor(g26, levels = g262f$g26[c(1,5,8)]),
+  )
+```
+
+### Wrangle & check
+
+```{r wrangle & check}
+l_df %>% 
+  filter(!is.na(g26)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(year == 2024) %>% 
+  group_by(sexe, g26) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(sexe) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  select(sexe, g26, share, n_y) -> ho_g_df
+
+if(run_n_check) {
+  ho_g_df %>% 
+    select(sexe, g26, share, n_y) %>%
+    pivot_wider(
+      names_from = g26,
+      values_from = share
+    )
+}
+l_df %>% 
+  filter(!is.na(g26)) %>% 
+  filter(!is.na(country)) %>% 
+  group_by(country, g26) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(country) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  select(country, g26, share, n_y) %>% 
+  filter(country != "Other countries") -> ho_c_df
+  
+if(run_n_check) {
+  ho_c_df %>% 
+    select(country, g26, share, n_y) %>%
+    pivot_wider(
+      names_from = g26,
+      values_from = share
+    )
+}
+
+# by migration mig_4y
+l_df %>% 
+  filter(!is.na(g26)) %>% 
+  filter(!is.na(mig_4y)) %>% 
+  group_by(mig_4y, g26) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(mig_4y) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  select(mig_4y, g26, share, n_y) -> ho_m_df
+
+if(run_n_check) {
+  ho_m_df %>% 
+    select(mig_4y, g26, share, n_y) %>%
+    pivot_wider(
+      names_from = g26,
+      values_from = share
+    )
+}
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```

@@ -15,17 +15,6 @@ run_n_check <- T
 # pays 
 c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
 
-
-# h162f <- tibble(
-#   H16 = c(1,2,3,4),
-#   h16 = c("Leave", "Leave", "Stay", "Don't know")   
-# ) %>% 
-#   mutate(
-#     h16 = factor(h16, levels = c("Leave",  "Don't know", "Stay"))
-#   )
-# data_all <- mms_df %>% 
-#   left_join(h162f, by = c("H16")) %>%
-#   left_join(c2t_B1) 
 g62f <- tibble(
   G6 = 1:5,
   g6 = c(rep("(Mostly) in Switzerland", 2), "Mixed", rep("(Mostly) abroad", 2))
