@@ -273,7 +273,7 @@ p_dis_2 <- disr_df %>%
   # Add the numeric value as a text label next to the dot
   geom_text(
     aes(label = paste0(round(weighted_share, 0), "%")),
-    hjust = -0.4, # Position the text slightly to the right of the point
+    hjust = -0.37, # Position the text slightly to the right of the point
     size = 3,
     nudge_x = 0.1,
     color = nccr_bi_colors[14],
@@ -289,27 +289,30 @@ p_dis_2 <- disr_df %>%
     size = 3,
     nudge_x = 0.1,
     nudge_y = 0.25,
-    #color = "black",
-    family = mms_base_family
+    color = darken(mms_axis_tick_txt_color, 0.2), # "black",
+    family = mms_base_family,
+    #fontface = "italic",
   ) +
   # Customize labels and theme
   labs(
     title = "Discrimination is more frequent in public life than in institutional settings",
-    subtitle = "Discrimination incidents in the last 24 months",
+    subtitle = "Discrimination incidents in the last 24 months<br>",
     #x = "Share of Respondents (%)",
     y = ""
   ) +
   # Ensure the x-axis starts at 0 and add some padding for the text labels
   scale_x_continuous(
-    limits = c(0, max(disr_df$weighted_share) * 1.1),
+    limits = c(0, max(disr_df$weighted_share) * 1.13),
     expand = c(0, 0),
     breaks = NULL,
     name = ""
   ) +
+  coord_cartesian(clip = "off") + # Allow text to go beyond plot area
+  scale_y_discrete(expand = c(0, 0)) +
   theme_mms(
     grid = F, axis = "Y",
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) +
   theme(
     panel.grid.major.y = element_blank(), # Remove horizontal grid lines for a cleaner look
@@ -371,7 +374,7 @@ p_dis_3 <- disrc_df %>%
   
   # Add the text labels inside the tiles
   geom_text(aes(label = share_label, color = text_color), 
-            size = 3.5) +
+            size = 3.5, family = mms_base_family) +
   
   # Customize the color gradient
   scale_fill_gradient(low = "#f1f1f4", high = "#4a476b", name = "Weighted Share (%)") +
@@ -431,7 +434,7 @@ top_row <- wrap_plots(aligned_plots, ncol = 2) +
 
 # 3. Combine the aligned top row with the bottom plot
 patchwork <- top_row / p_dis_3 + 
-  plot_layout(heights = c(1, 1))
+  plot_layout(heights = c(1.2, 1))
 
 # Display the final combined plot
 patchwork

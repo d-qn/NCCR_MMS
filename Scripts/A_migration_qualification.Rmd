@@ -139,7 +139,7 @@ if(run_n_check) {
 }          
 ```
 
-#### Main stacke area
+#### Main stacked area
 
 
 ```{r color palettes trials, eval = F}
@@ -147,7 +147,7 @@ edu_chart_1 <- edu_main %>%
   ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
   geom_area(aes(fill = groupe_edu), alpha = 1) + 
   theme_mms(grid="XY", axis="xy", 
-                 grid_col =  scales::alpha("lightgrey", 0.5),
+                 #grid_col =  scales::alpha("lightgrey", 0.5),
                  base_size = mms_base_size,
                  plot_title_size = mms_plot_title_size,
                  subtitle_size = mms_subtitle_size,
@@ -212,7 +212,7 @@ edu_chart_1 <- edu_main %>%
   ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
   geom_area(aes(fill = groupe_edu), alpha = 1) + 
   theme_mms(grid="XY", axis="xy", 
-                 grid_col =  scales::alpha("lightgrey", 0.6),
+                # grid_col =  scales::alpha("lightgrey", 0.6),
                  base_size = mms_base_size,
                  mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
                  plot_title_size = mms_plot_title_size,
@@ -227,11 +227,12 @@ edu_chart_1 <- edu_main %>%
   scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2016, 2024, 2)) +
   # have y scale not start at 0, add unit % 
   scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = str_c("Strong increase in ", 
                   "<span style='color:#6E6C88'>highly skilled</span> migration"),
-    subtitle="Highest level of education attained") +
+    subtitle="Highest level of education attained, by survey year") +
   scale_fill_nccr_categorical(order = c(5,6,10))
 
 
@@ -241,7 +242,7 @@ annot_df <- tibble(
   txt = c("Tertiaire", "Secondaire II", "Secondaire I")
 )
 
-edu_chart_1a <- flush_ticks(edu_chart_1)  +
+edu_chart_1a <- edu_chart_1 +
   geom_richtext(data = annot_df, aes(
     x = year, y = share_w, label = txt, group = 1),
     fill = NA, label.color = NA,# remove background and outline,

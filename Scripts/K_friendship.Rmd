@@ -195,8 +195,8 @@ p_fri_1 <- fri_df %>%
     grid="XY", axis="XY", 
    # grid_col =  scales::alpha("lightgrey", 0.6),
      plot_margin = mms_plot_margin_l,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 5)
   )  +
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
@@ -238,8 +238,8 @@ p_fri_2 <- frim_df %>%
   geom_bar(stat = "identity", position = "stack", alpha = 1) +
   theme_mms(
     grid=F, axis=F, 
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 5)
   ) +
   theme(
     legend.position = "none",
@@ -308,8 +308,8 @@ fric_3_df <- left_join(
   select(country, xend)
 )
   
-segm_lw <- 3
-point_size <- 6
+segm_lw <- 2
+point_size <- 4
 # lollipop chart by country
 p_fri_3 <- fric_df %>% 
   ggplot() +
@@ -330,8 +330,8 @@ p_fri_3 <- fric_df %>%
              color = nccr_bi_colors[4]) +
   theme_mms(
     grid=F, axis=F, 
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 5)
   ) +
   theme(
     # legend.position = "none",
@@ -357,14 +357,14 @@ p_fri_3 <- fric_df %>%
   ) +
   geom_text(data = fric_1_df, 
             aes(x = share, y = country, 
-                label = paste0(round(share, 1), "%")), 
+                label = paste0(round(share, 0), "%")), 
             vjust = 0, hjust = 0.5, nudge_y = 0.25,
-            size = 3, color = nccr_bi_colors[8], family = mms_base_family) +
+            size = 2.5, color = nccr_bi_colors[8], family = mms_base_family) +
   geom_text(data = fric_2_df,
             aes(x = share, y = country, 
-                label = paste0(round(label_share, 1), "%")), 
+                label = paste0(round(label_share, 0), "%")), 
             vjust = 0, hjust = 0.5, nudge_y = 0.25,
-            size = 3, color = nccr_bi_colors[3], family = mms_base_family)
+            size = 2.5, color = nccr_bi_colors[3], family = mms_base_family)
 
 
 p_fri_3
@@ -373,15 +373,67 @@ p_fri_3
 #### 4.
 
 ```{r 4}
+frimg_y_labels <- frimg_df %>% 
+  filter(g20 == "Yes")
+
+frimg_n_labels <- frimg_df %>% 
+  filter(g20 == "No")
+
+p_fri_4 <- frimg_df %>% 
+  ggplot(aes(x = mig_4y, y = share)) +
+  geom_bar(aes(fill = g20), stat = "identity", position = "stack", alpha = 1) +
+  theme_mms(
+    grid=F, axis=F, 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 5)
+  ) +
+  theme(
+    legend.position = "none"
+  ) +
+  scale_x_discrete(expand = c(0.,0), name = "") +
+  scale_y_continuous(name = "", 
+                     breaks = NULL,
+                     expand = c(0,0)
+  ) +
+  scale_fill_manual(values = nccr_bi_colors[c(7,3)]) +
+  labs(
+    title = str_c("Most respondents have someone in Switzerland they can count on. Especially those who arrived long time ago compared to recent arrivals"),
+    subtitle = str_c(
+      "Presence, ",
+      "<span style='color:", nccr_bi_colors[4], ";'>yes</span> or ",
+      "<span style='color:", nccr_bi_colors[8], ";'>no</span>, ",
+      "of a person to count on in Switzerland in 2024, by year of migration"
+    )
+  ) +
+  geom_text(data = frimg_y_labels, 
+            aes(y = share, label = paste0(round(share), "%")), 
+            vjust = 1, nudge_y = -3,
+            size = 3, color = "white", family = mms_base_family) +
+  geom_text(data = frimg_n_labels,
+            aes(y = 100 - share, label = paste0(round(share), "%")), 
+            vjust = 0, nudge_y = 3,
+            size = 3, color = "white", family = mms_base_family)
+
+p_fri_4
+
 ```
 
 #### patch
 
 ```{r patch}
+left_col <- (p_fri_1 /p_fri_2) + 
+  plot_layout(heights = c(1,1), widths = 1, ncol = 1)
+right_col <- (p_fri_3 /p_fri_4) +
+    plot_layout(heights = c(1.5,1),  widths = 1, ncol = 1)
+
+# 3. Combine the aligned top row with the bottom plot
+patchwork <- (left_col | right_col) + 
+  plot_layout(width = c(1, 1.2))
+patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = #here("Output", "charts", ""),
+  filepath = here("Output", "charts", "K_friendship.svg"),
   bg_col = pw_bg_color
   )
 

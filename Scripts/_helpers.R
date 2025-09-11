@@ -184,7 +184,7 @@ mms_txtbox_plot.subtitle <- function(nrow_txt = 1) element_textbox_simple(
   colour = mms_plot_subtitle_color,
   halign = 0,  # ⬅️ align with left side of chart panel
  # padding = margin(0, 0, 0, 0),
-  margin = margin(0, 15, 15, 15)  # space *after* subtitle before plot
+  margin = margin(0, 15, 25, 15)  # space *after* subtitle before plot
 )
 
 
@@ -213,8 +213,8 @@ theme_mms <- function(
       plot.title = mms_plot_title,
       plot.title.position = "plot",
       plot.subtitle = mms_plot_subtitle,
-      axis.text.x = element_text(color = mms_axis_tick_txt_color),
-      axis.text.y = element_text(color = mms_axis_tick_txt_color),
+      axis.text.x = element_text(color = mms_axis_tick_txt_color, margin=margin(t=2)),
+      axis.text.y = element_text(color = mms_axis_tick_txt_color, margin=margin(r=2)),
       panel.background = element_rect(fill = mms_plot_bg_color, 
                                      color = NA, #mms_plot_line_color,
                                       linewidth = 0),
