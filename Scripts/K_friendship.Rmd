@@ -299,6 +299,8 @@ fric_3_df <- left_join(
   
 segm_lw <- 2
 point_size <- 4
+nudge_y_txt <- 0.3
+
 # lollipop chart by country
 p_fri_3 <- fric_df %>% 
   ggplot() +
@@ -307,16 +309,16 @@ p_fri_3 <- fric_df %>%
                color = nccr_bi_colors[13], size = segm_lw) +
   geom_segment(data = fric_1_df, 
                aes(x = 0, xend = share, y = country, yend = country), 
-               color = nccr_bi_colors[7], size = segm_lw) +
+               color = nccr_bi_colors[7], size = segm_lw, alpha = 0.8) +
   geom_point(data = fric_1_df, 
              aes(x = share, y = country, color = g6), size = point_size,
-             color = nccr_bi_colors[8]) +
+             color = nccr_bi_colors[7]) +
   geom_segment(data = fric_2_df, 
                aes(x = 100, xend = share, y = country, yend = country), 
-               color = nccr_bi_colors[3], size = segm_lw) +
+               color = nccr_bi_colors[3], size = segm_lw, alpha = 0.8) +
   geom_point(data = fric_2_df, aes(x = share, y = country,
                                    color = g6), size = point_size,
-             color = nccr_bi_colors[4]) +
+             color = nccr_bi_colors[3]) +
   theme_mms(
     grid=F, axis=F, 
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
@@ -347,12 +349,12 @@ p_fri_3 <- fric_df %>%
   geom_text(data = fric_1_df, 
             aes(x = share, y = country, 
                 label = paste0(round(share, 0), "%")), 
-            vjust = 0, hjust = 0.5, nudge_y = 0.25,
+            vjust = 0, hjust = 0.5, nudge_y = nudge_y_txt,
             size = 2.5, color = nccr_bi_colors[8], family = mms_base_family) +
   geom_text(data = fric_2_df,
             aes(x = share, y = country, 
                 label = paste0(round(label_share, 0), "%")), 
-            vjust = 0, hjust = 0.5, nudge_y = 0.25,
+            vjust = 0, hjust = 0.5, nudge_y = nudge_y_txt,
             size = 2.5, color = nccr_bi_colors[3], family = mms_base_family)
 
 
@@ -410,15 +412,16 @@ p_fri_4
 #### patch
 
 ```{r patch}
-left_col <- (p_fri_1 /p_fri_2) + 
-  plot_layout(heights = c(1,1), widths = 1, ncol = 1)
-right_col <- (p_fri_3 /p_fri_4) +
-    plot_layout(heights = c(1.5,1),  widths = 1, ncol = 1)
+# On crée une ligne du haut, puis une ligne du bas
+top_row <- (p_fri_1 | p_fri_3)
+bottom_row <- (p_fri_2 | p_fri_4)
 
-# 3. Combine the aligned top row with the bottom plot
-patchwork <- (left_col | right_col) + 
-  plot_layout(width = c(1, 1.2))
+# On les place l'une sur l'autre
+patchwork <- (top_row / bottom_row) + 
+  plot_layout(heights = c(1.5, 1)) # On garde le contrôle des largeurs
+
 patchwork
+
 
 mms_export_vector(
   plot = patchwork,
