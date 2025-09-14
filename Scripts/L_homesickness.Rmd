@@ -127,7 +127,7 @@ if(run_n_check) {
 
 ## colors
 genderg_col <- nccr_categorical()[c(3,3,4)]
-genderg_col[1] <- desaturate(genderg_col[1], 0.5) %>% lighten(0.35)
+genderg_col[1] <- desaturate(genderg_col[1], 0.6) %>% lighten(0.35)
 genderg_col[3] <- darken(genderg_col[3], 0.1) 
 
 
@@ -172,7 +172,7 @@ p_ho_1 <- ho_g_df %>%
     group = rev(g26)), size=4,
     fill = NA, label.size = 0,
     family = mms_base_family) +
-  facet_wrap(~sexe) +
+  facet_wrap(~sexe, nrow = 2) +
   coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
   theme_mms(
     grid=F, 
@@ -203,7 +203,7 @@ p_ho_1 <- ho_g_df %>%
     subtitle = str_c("Reported homesickness in 2024, by gender: ",
                    "<span style='color:", darken(genderg_col[1], 0.2), ";'><b>weak</span></b>, ",
                    "<span style='color:", genderg_col[2], ";'><b>moderate</span></b>",
-                   " and <span style='color:", darken(genderg_col[3], 0.2), ";'><b>strong</span></b> "
+                   " or <span style='color:", darken(genderg_col[3], 0.2), ";'><b>strong</span></b> "
                      )
   ) +
   scale_color_identity() +
@@ -212,8 +212,8 @@ p_ho_1 <- ho_g_df %>%
     data = gender_labels, # Use a dedicated data frame with one row per year
     aes(x = 2, y = 0, label = label, color = color), # Position text at the center
     inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
-    size = 6,
-    family = mms_base_family, fontface = "bold"
+    size = 4,
+    family = mms_base_family#, fontface = "bold"
   )
 
 p_ho_1
@@ -246,7 +246,7 @@ p_ho_2 <- ho_m_df %>%
     subtitle = str_c("Reported homesickness by migration year intervals: ",
                    "<span style='color:", darken(genderg_col[1], 0.2), ";'><b>weak</span></b>, ",
                    "<span style='color:", genderg_col[2], ";'><b>moderate</span></b>",
-                   " and <span style='color:", darken(genderg_col[3], 0.1), ";'><b>strong</span></b> "
+                   " or <span style='color:", darken(genderg_col[3], 0.1), ";'><b>strong</span></b> "
                      )
   ) +
    # Ajoute cette couche geom_text
@@ -261,10 +261,11 @@ p_ho_2 <- ho_m_df %>%
     position = position_stack(vjust = 0.5),
     # Choisis une couleur qui ressort bien, et ajuste la taille
    # color = "white", 
-    size = 4,
+    size = 3.5,
     family = mms_base_family
   ) +
-  scale_color_manual(values = c("black" = "black", "white" = "white"))
+  scale_color_manual(values = c("black" = darken(genderg_col[3], 0.3), 
+                                "white" = "white"))
 
 
 p_ho_2
@@ -288,90 +289,98 @@ ho_c_df %<>%
   ) %>% 
   arrange(country)
 
-ho_c_1_df <- ho_c_df %>%
-  filter(g26 == g262f$g26[1])
 
-ho_c_2_df <- ho_c_df %>%
-  filter(g26 == g262f$g26[5]) %>%
+ho_c_labels <- ho_c_df %>%
+  group_by(country) %>%
+  summarise(
+    weak = sum(share[g26 == g262f$g26[1]]),
+    mid = sum(share[g26 ==g262f$g26[4]]),
+    mid_pos = (weak + (mid/2)) / 100,
+    strong = sum(share[g26 == g262f$g26[7]])
+  ) %>%
   mutate(
-    label_share = share,
-    share = 100-share
+    weak_lbl = paste0("<span style='color:", darken(genderg_col[3], 0.3), ";'>", round(weak, 0), "%</span>"),
+    mid_lbl = paste0("<span style='color:", "white", ";'>", round(mid, 0), "</span>"),
+    strong_lbl = paste0("<span style='color:", "white", ";'>", round(strong, 0), "</span>")
+  ) %>%
+  mutate(
+    y = 0.005,
+    # Insert line breaks between words
+    labels = gsub(" ", "<br>", as.character(country))
   )
 
-ho_c_3_df <- left_join(
-  ho_c_1_df %>%
-    rename(xstart = share),
-  ho_c_2_df %>%
-    rename(xend = share) %>%
-  select(country, xend) 
-) %>% 
-  mutate(share = (xstart + xend) / 2)
-
-segm_lw <- 2
-point_size <- 4
-nudge_y_txt <- 0.3
-font_size <- 3
 
 p_ho_3 <- ho_c_df %>% 
-  ggplot() +
-  geom_segment(data = ho_c_3_df,
-               aes(x = xstart, xend = xend, y = country, yend = country),
-               color = genderg_col[2], size = segm_lw) +
-  geom_segment(data = ho_c_1_df,
-               aes(x = 0, xend = share, y = country, yend = country),
-               color = genderg_col[1], size = segm_lw, alpha = 0.8) +
-  geom_point(data = ho_c_1_df,
-             aes(x = share, y = country, color = g26), size = point_size,
-             color = genderg_col[1]) +
-  geom_segment(data = ho_c_2_df,
-               aes(x = 100, xend = share, y = country, yend = country),
-               color = genderg_col[3], size = segm_lw, alpha = 0.8) +
-  geom_point(data = ho_c_2_df, aes(x = share, y = country,
-                                   color = g26), size = point_size,
-             color = genderg_col[3]) +
+  ggplot(aes(x = country, y = share, fill = rev(g26)), group = rev(g26)) +
+  geom_col(position = "fill", color = "white", size = 0.2) +
+  coord_flip(clip = "off") +
   theme_mms(
-    grid=F, axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 5)
-  ) +
+    grid="X", axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) + 
   theme(
-    axis.text.y = element_text(hjust = 1)
+    legend.position = "none",
+    axis.text.y = element_blank(),
+    panel.grid.major = element_blank(),
+    axis.text.x = element_text(size = 13, hjust = 0.35)
   ) +
-  scale_x_continuous(name = "",
-                     breaks = NULL,# seq(0, 100, 20),
-                     # labels = function(x) paste0(x, "%"),
-                     expand = c(0.01,0.01)
-                     ) +
-  scale_y_discrete(name = "") +
-  scale_color_manual(values = genderg_col) +
+ scale_y_continuous(
+    name = "", expand = c(0, 0),
+    breaks = NULL,
+    position = "right"
+  ) +
+  scale_x_discrete(expand = c(0, 0), name = "") +
+  scale_fill_manual(values = rev(genderg_col)) +
   labs(
-    title = str_c("People from Portugal and from far away countries tend to feel more homesick"),
+  title = str_c("People from Portugal and from far away countries tend to feel more homesick"),
     subtitle = str_c("Reported homesickness in 2024 by country: ",
                    "<span style='color:", darken(genderg_col[1], 0.2), ";'><b>weak</span></b>, ",
                    "<span style='color:", genderg_col[2], ";'><b>moderate</span></b>",
-                   " and <span style='color:", darken(genderg_col[3], 0.1), ";'><b>strong</span></b> "
+                   " or <span style='color:", darken(genderg_col[3], 0.1), ";'><b>strong</span></b> "
                      )
   ) +
-  geom_text(data = ho_c_1_df,
-            aes(x = share, y = country,
-                label = paste0(round(share, 0), "%")),
-            vjust = 0, hjust = 0.5, nudge_y = nudge_y_txt,
-            size = font_size, color = darken(genderg_col[1], 0.3), family = mms_base_family) +
-  geom_text(data = ho_c_2_df,
-            aes(x = share, y = country,
-                label = paste0(round(label_share, 0), "%")),
-            vjust = 0, hjust = 0.5, nudge_y = nudge_y_txt,
-            size = font_size, color = genderg_col[3], family = mms_base_family)
-  
+  geom_richtext(
+    data = ho_c_labels,
+    aes(x = country, y = weak/100,
+        label = weak_lbl),
+    fill = NA,
+    family = mms_base_family,
+    hjust = 1, label.color = NA, size = 3.5
+  ) +
+  geom_richtext(
+    data = ho_c_labels,
+    aes(x = country, y = 1, label = strong_lbl),
+    family = mms_base_family,
+    hjust = 1, fill = NA, label.color = NA, size = 3.5
+  ) +
+  geom_richtext(
+    data = ho_c_labels,
+    aes(x = country, y = mid_pos, label = mid_lbl),
+    family = mms_base_family,
+    hjust = 1, fill = NA, label.color = NA, size = 3.5
+  ) +
+  geom_richtext(
+    data = ho_c_labels,
+    aes(x = country, y = y,
+        label = labels),
+    fill = NA, label.color = NA,# remove background and outline,
+    size = 4,
+    hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
+    family = mms_base_family#, fontface = "bold"
+  ) 
+
+
 p_ho_3
+
 ```
 
 #### patch
 
 ```{r patch}
-left_col <- (p_ho_1 + p_ho_2) + plot_layout(ncol = 1)
+left_col <- (p_ho_1 + p_ho_2) + plot_layout(ncol = 1, heights = c(1.4, 1))
 
-patchwork <- (left_col | p_ho_3) + plot_layout(widths = c(1, 1.3))
+patchwork <- (left_col | p_ho_3) + plot_layout(widths = c(1, 1.35))
 patchwork
 
 mms_export_vector(
