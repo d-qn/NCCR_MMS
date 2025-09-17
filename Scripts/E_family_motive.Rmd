@@ -14,7 +14,6 @@ run_n_check <- T
 ```{r wrangle}
 c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
 c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
-#mms_encode_yes_no_code
 
 b8 <- mms_load_data(F) %>% 
   select(B8_3, B8_4, B8_11)

@@ -1,0 +1,265 @@
+---
+title: "M Home country visit"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+G7 & G11
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+data_all <- mms_df %>% 
+  mutate(
+    g7 = mms_encode_yes_no_code(G7),
+    g11 = mms_encode_yes_no_code(G11)
+  ) %>% 
+  left_join(c2t_B1) 
+
+
+m_df <- data_all %>% 
+  select(year:country) 
+
+```
+
+### Wrangle & check
+
+```{r wrangle & check}
+hc_df <- m_df %>% 
+  filter(!is.na(g7)) %>% 
+  group_by(year, g7) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup()
+
+if(run_n_check) {
+  hc_df %>% 
+    select(year, g7, share, n_y) %>%
+    pivot_wider(
+      names_from = g7,
+      values_from = share
+    )
+}
+
+hcv_df <- m_df %>% 
+  filter(!is.na(g11)) %>% 
+  group_by(year, g11) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup()
+
+if(run_n_check) {
+  hcv_df %>% 
+    select(year, g11, share, n_y) %>%
+    pivot_wider(
+      names_from = g11,
+      values_from = share
+    )
+}
+
+hcc_df <- m_df %>% 
+  filter(!is.na(country)) %>% 
+  filter(!is.na(g7)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(year >= 2024) %>% 
+  group_by(g7, country) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(country) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() %>% 
+  filter(country != "Other countries") 
+
+if(run_n_check) {
+  hcc_df %>% 
+    select(country, g7, share, n_y) %>%
+    pivot_wider(
+      names_from = g7,
+      values_from = share
+    )
+  
+}
+
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+annot_df2 <- tibble(
+  year = rep(2020, 2),
+  share = c(40, 87),
+  txt = c("Yes", "No")
+)
+
+p_hc_1 <- hc_df %>% 
+  ggplot(aes(x = year, y = share, group = g7)) +
+  geom_area(aes(fill = g7), alpha = 1, show.legend = FALSE) + 
+  geom_line(data = hc_df %>% filter(g7 == "Yes"),
+            color = "white", linewidth = 1
+  ) +
+  theme_mms(
+    grid="XY", axis="xy", 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    panel.background = element_rect(fill = NA),  # transparent
+    panel.ontop = TRUE
+  ) +
+   # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(25, 100, 25),
+                     labels = function(x) paste0(x, "%")) +
+  scale_fill_manual(values = nccr_categorical()[c(13, 10)]) +
+  labs(
+    title = "Visits to the country of origin dropped in 2020 and have not returned to pre-pandemic levels",
+    subtitle = 'Share of respondants who have visited their country of origin in the last 12 months')
+  # ) +
+  # geom_richtext(
+  #   data = annot_df2, 
+  #   aes(x = year, y = share, label = txt, group = 1),
+  #   fill = NA, label.color = NA,# remove background and outline,
+  #   color = "white", size = 7,# fontface = "bold",
+  #   hjust = 0.5, family = mms_base_family
+  # )
+
+p_hc_1
+```
+
+#### 2.   
+
+```{r 2}
+
+p_hc_2 <- hcv_df %>% 
+  ggplot(aes(x = year, y = share, group = g11)) +
+  geom_area(aes(fill = g11), alpha = 1, show.legend = FALSE) + 
+  geom_line(data = hcv_df %>% filter(g11 == "Yes"),
+            color = "white", linewidth = 1
+  ) +
+  theme_mms(
+    grid="XY", axis="xy", 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    panel.background = element_rect(fill = NA),  # transparent
+    panel.ontop = TRUE
+  ) +
+   # remove any scale expansion
+  scale_x_continuous(expand = c(0,0), name = "") +
+  # have y scale not start at 0, add unit % 
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = seq(25, 100, 25),
+                     labels = function(x) paste0(x, "%")) +
+  scale_fill_manual(values = nccr_categorical()[c(13, 9)]) +
+  labs(
+    title = "... a similar decline was observed in visits from relatives from the country of origin",
+    subtitle = 'Proportion of respondents who received visits from relatives from their country of origin')
+  # ) +
+  # geom_richtext(
+  #   data = annot_df2, 
+  #   aes(x = year, y = share, label = txt, group = 1),
+  #   fill = NA, label.color = NA,# remove background and outline,
+  #   color = "white", size = 7,# fontface = "bold",
+  #   hjust = 0.5, family = mms_base_family
+  # )
+
+p_hc_2
+```
+
+#### 3.
+
+```{r 3}
+hccp_df<- hcc_df %>% 
+  filter(g7 == "Yes") %>%
+  left_join(pays2col) %>% 
+  mutate(
+    country = fct_reorder(country, share, .desc = F)
+  ) %>% 
+  arrange(country) 
+
+p_hc_3 <- hccp_df %>%   
+  ggplot(aes(x = share, y = country, fill = color)) +
+  geom_col(show.legend = FALSE) +
+  theme_mms(
+    grid=F, axis=F, 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    panel.background = element_rect(fill = NA),  # transparent
+    panel.ontop = TRUE,
+    axis.text.y = element_blank()
+  ) +
+  scale_x_continuous(expand = c(0,0), name = "", 
+                     breaks = NULL,
+                    # breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  scale_y_discrete(expand = c(0,0), name = "") +
+  scale_fill_identity() +
+  labs(
+    title = "Visits to the home country decrease as distance increases",
+    subtitle = 'Share of respondents who have visited their homeland in the last 12 months, in 2024')+
+  geom_text(
+    aes(label = country, x = 1),
+    color = "white",
+    size = 4,
+    hjust = 0,
+    family = mms_base_family
+  ) +
+  geom_text(
+    aes(label = paste0(round(share, 1), "%"), x = share),
+    color = "white",
+    size = 3,
+    hjust = 1.1,
+    family = mms_base_family
+  )
+
+p_hc_3
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```

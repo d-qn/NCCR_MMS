@@ -42,8 +42,8 @@ mms_df <- mms_load_data()
 # utility generic yes/no reencoding function
 mms_encode_yes_no_code <- function(x) {
   x = case_when(
-    x == "1" ~ "Oui",
-    x == "2" ~ "Non",
+    x == "1" ~ "Yes",
+    x == "2" ~ "No",
     TRUE ~ NA_character_
   )
 }

@@ -39,12 +39,7 @@ b_df <- data_all %>%
   mutate(
     sexe = ifelse(sexe == "male", "Men", "Women")
   ) %>% 
-  select(contrat, year:mig_4y) %>% 
-  mutate(contrat = case_when(
-    contrat == "Oui" ~ "Yes",
-    contrat == "Non" ~ "No",
-    TRUE ~ NA_character_
-  )) 
+  select(contrat, year:mig_4y) 
 ```
 
 
