@@ -366,6 +366,7 @@ p_ho_3 <- ho_c_df %>%
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
     size = 4,
+    color = "black",#darken(genderg_col[3], 0.3),
     hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
     family = mms_base_family#, fontface = "bold"
   ) 

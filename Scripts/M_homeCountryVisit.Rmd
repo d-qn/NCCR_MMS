@@ -234,10 +234,12 @@ p_hc_3 <- hccp_df %>%
     title = "Visits to the home country decrease as distance increases",
     subtitle = 'Share of respondents who have visited their homeland in the last 12 months, in 2024')+
   geom_text(
-    aes(label = country, x = 1),
+    aes(label = country, x = 2),
     color = "white",
     size = 4,
     hjust = 0,
+    vjust = 0,
+    nudge_y = 0.2,
     family = mms_base_family
   ) +
   geom_text(
@@ -245,6 +247,10 @@ p_hc_3 <- hccp_df %>%
     color = "white",
     size = 3,
     hjust = 1.1,
+    vjust = 1,
+    nudge_x = -0.2,
+    nudge_y = -0.2,
+    alpha = 0.95,
     family = mms_base_family
   )
 
@@ -254,10 +260,17 @@ p_hc_3
 #### patch
 
 ```{r patch}
+# left_col <- (p_ho_1 + p_ho_2) + plot_layout(ncol = 1, heights = c(1.4, 1))
+# 
+# patchwork <- (left_col | p_ho_3) + plot_layout(widths = c(1, 1.35))
+left_col <- (p_hc_1 / p_hc_2) + plot_layout(heights = c(1, 1))
+patchwork <- (left_col | p_hc_3) + plot_layout(widths = c(1, 1))
+patchwork
+
 
 mms_export_vector(
   plot = patchwork,
-  filepath = #here("Output", "charts", ""),
+  filepath = here("Output", "charts", "M_homeCountryVisit.svg"),
   bg_col = pw_bg_color
   )
 
