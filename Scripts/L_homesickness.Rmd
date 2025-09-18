@@ -311,8 +311,8 @@ ho_c_labels <- ho_c_df %>%
 
 
 p_ho_3 <- ho_c_df %>% 
-  ggplot(aes(x = country, y = share, fill = rev(g26)), group = rev(g26)) +
-  geom_col(position = "fill", color = "white", size = 0.2) +
+  ggplot(aes(x = country, y = share)) +
+  geom_col(aes( fill = rev(g26), group = rev(g26)), position = "fill", color = "white", linewidth = 0.2) +
   coord_flip(clip = "off") +
   theme_mms(
     grid="X", axis=F,
@@ -367,7 +367,7 @@ p_ho_3 <- ho_c_df %>%
     fill = NA, label.color = NA,# remove background and outline,
     size = 4,
     color = "black",#darken(genderg_col[3], 0.3),
-    hjust = 0, nudge_x = 0, vjust = 0.5, colour = "white",
+    hjust = 0, nudge_x = 0, vjust = 0.5,
     family = mms_base_family#, fontface = "bold"
   ) 
 

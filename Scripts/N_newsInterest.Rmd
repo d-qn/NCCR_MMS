@@ -1,0 +1,88 @@
+---
+title: "N News & politics interest"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+
+
+G26 <- mms_load_data(F) %>% 
+  select(G13_1:G13_2, G16_1:G16_2) %>%
+
+
+
+g132f <- tibble(
+  G13 = 0:7,
+  g13 = c(
+   rep("weak",3),
+   rep("moderate",2),
+   rep("strong", 3)
+  )
+)
+
+g162f <- tibble(
+  G16 = 
+)
+
+
+data_all <- mms_df %>% 
+  mutate(
+    g7 = mms_encode_yes_no_code(G7),
+    g11 = mms_encode_yes_no_code(G11)
+  ) %>% 
+  left_join(c2t_B1) 
+
+
+```
+
+### Wrangle & check
+
+```{r wrangle & check}
+
+
+if(run_n_check) {
+  
+}
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```
