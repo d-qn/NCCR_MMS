@@ -182,14 +182,15 @@ mig_job_1 <- mig4y_df %>%
       )
     )
   )+
-  scale_y_continuous(expand = c(0.047,0.012), name = "", 
+  scale_y_continuous(
+    #expand = c(0.047,0.012), 
+   # expand = c(0.2,0.2), 
+    name = "", 
                      labels = function(x) paste0(x, "%")) +
   labs(
     x = "", y = "",
     subtitle = "Employment contract or job offer in Switzerland at the time of moving",
-    title = "Almost half of migrants arrive in Switzerland with a work contract<br><br>",
-    size = "n",
-    linewidth = "n"
+    title = "Almost half of migrants arrive in Switzerland with a work contract<br><br>"
   )
 
 mig_job_1

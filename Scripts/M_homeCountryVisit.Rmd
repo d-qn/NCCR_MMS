@@ -122,6 +122,9 @@ annot_df2 <- tibble(
   txt = c("Yes", "No")
 )
 
+p1_cols <- nccr_categorical()[c(13, 10)]
+p1_cols[1] <- p1_cols[1] %>% lighten(0.4)
+
 p_hc_1 <- hc_df %>% 
   ggplot(aes(x = year, y = share, group = g7)) +
   geom_area(aes(fill = g7), alpha = 1, show.legend = FALSE) + 
@@ -143,7 +146,7 @@ p_hc_1 <- hc_df %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_categorical()[c(13, 10)]) +
+  scale_fill_manual(values = p1_cols) +
   labs(
     title = "Visits to the country of origin dropped in 2020 and have not returned to pre-pandemic levels",
     subtitle = 'Share of respondants who have visited their country of origin in the last 12 months')
@@ -162,6 +165,10 @@ p_hc_1
 #### 2.   
 
 ```{r 2}
+
+p2_cols <- nccr_categorical()[c(13, 9)]
+p2_cols[1] <- p1_cols[1] %>% lighten(0.4)
+
 
 p_hc_2 <- hcv_df %>% 
   ggplot(aes(x = year, y = share, group = g11)) +
@@ -184,7 +191,7 @@ p_hc_2 <- hcv_df %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_categorical()[c(13, 9)]) +
+  scale_fill_manual(values = p2_cols) +
   labs(
     title = "... a similar decline was observed in visits from relatives from the country of origin",
     subtitle = 'Proportion of respondents who received visits from relatives from their country of origin')
@@ -212,8 +219,10 @@ hccp_df<- hcc_df %>%
   arrange(country) 
 
 p_hc_3 <- hccp_df %>%   
-  ggplot(aes(x = share, y = country, fill = color)) +
-  geom_col(show.legend = FALSE) +
+  ggplot() +
+  geom_col(aes(y = country, x = 100), fill = lighten(nccr_bi_colors[13], 0.4)) +
+  geom_col(aes(x = share, y = country, fill = color),
+           show.legend = FALSE) +
   theme_mms(
     grid=F, axis=F, 
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -234,7 +243,7 @@ p_hc_3 <- hccp_df %>%
     title = "Visits to the home country decrease as distance increases",
     subtitle = 'Share of respondents who have visited their homeland in the last 12 months, in 2024')+
   geom_text(
-    aes(label = country, x = 2),
+    aes(y = country, label = country, x = 2),
     color = "white",
     size = 4,
     hjust = 0,
@@ -243,7 +252,8 @@ p_hc_3 <- hccp_df %>%
     family = mms_base_family
   ) +
   geom_text(
-    aes(label = paste0(round(share, 1), "%"), x = share),
+    aes(y = country, 
+        label = paste0(round(share, 1), "%"), x = share),
     color = "white",
     size = 3,
     hjust = 1.1,

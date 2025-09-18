@@ -13,44 +13,157 @@ run_n_check <- T
 
 ```{r load}
 
-
 G26 <- mms_load_data(F) %>% 
-  select(G13_1:G13_2, G16_1:G16_2) %>%
-
-
+  select(G13_1:G13_2, G16_1:G16_2) 
 
 g132f <- tibble(
   G13 = 0:7,
   g13 = c(
-   rep("weak",3),
+   rep("low",3),
    rep("moderate",2),
-   rep("strong", 3)
+   rep("high", 3)
   )
 )
 
 g162f <- tibble(
-  G16 = 
+  G16 = 1:4,
+  g16 = c("low", "low", "moderate", "high")
 )
 
 
-data_all <- mms_df %>% 
-  mutate(
-    g7 = mms_encode_yes_no_code(G7),
-    g11 = mms_encode_yes_no_code(G11)
-  ) %>% 
-  left_join(c2t_B1) 
+data_all <- bind_cols(mms_df, G26) %>% 
+  mutate(migy = mms_encode_migration_year(A6,year)) %>% 
+  left_join(g132f, by = c("G13_1" = "G13")) %>%
+  left_join(g132f, by = c("G13_2" = "G13"), suffix = c("_ch", "_home")) %>%
+  left_join(g162f, by = c("G16_1" = "G16")) %>%
+  left_join(g162f, by = c("G16_2" = "G16"), suffix = c("_ch", "_home")) %>% 
+  left_join(migy2yearIntervals) 
 
+n_df <- data_all %>% 
+  select(year:mig_4y) 
 
 ```
 
 ### Wrangle & check
 
 ```{r wrangle & check}
-
+nic_df <- n_df %>% 
+  filter(year >= 2024) %>% 
+  filter(!is.na(g13_ch)) %>%
+  filter(!is.na(mig_4y)) %>%
+  group_by(mig_4y, g13_ch) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(mig_4y) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() %>% 
+  mutate(
+    g13_ch = factor(g13_ch, levels = g132f$g13[c(1,5,8)])
+  ) %>% 
+  arrange(mig_4y, g13_ch)
 
 if(run_n_check) {
-  
+  ni_df %>% 
+    select(mig_4y, g13_ch, share, n_y) %>%
+    pivot_wider(
+      names_from = g13_ch,
+      values_from = share
+    )
 }
+
+nih_df <- n_df %>% 
+  filter(year >= 2024) %>% 
+  filter(!is.na(g13_home)) %>%
+  filter(!is.na(mig_4y)) %>%
+  group_by(mig_4y, g13_home) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(mig_4y) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() %>% 
+  mutate(
+    g13_home = factor(g13_home, levels = g132f$g13[c(1,5,8)])
+  ) %>% 
+  arrange(mig_4y, g13_home)
+
+if(run_n_check) {
+  nih_df %>% 
+    select(mig_4y, g13_home, share, n_y) %>%
+    pivot_wider(
+      names_from = g13_home,
+      values_from = share
+    )
+}
+
+
+nipc_df <- n_df %>% 
+  filter(year >= 2024) %>% 
+  filter(!is.na(g16_ch)) %>%
+  filter(!is.na(mig_4y)) %>%
+  group_by(mig_4y, g16_ch) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(mig_4y) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() %>% 
+  mutate(
+    g16_ch = factor(g16_ch, levels = g132f$g13[c(1,5,8)])
+  ) %>% 
+  arrange(mig_4y, g16_ch)
+
+if(run_n_check) {
+  nipc_df %>% 
+    select(mig_4y, g16_ch, share, n_y) %>% 
+    pivot_wider(
+      names_from = g16_ch,
+      values_from = share
+    )
+}
+
+niph_df <- n_df %>% 
+  filter(year >= 2024) %>% 
+  filter(!is.na(g16_home)) %>%
+  filter(!is.na(mig_4y)) %>%
+  group_by(mig_4y, g16_home) %>%
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>%
+  group_by(mig_4y) %>%
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>%
+  ungroup() %>% 
+  mutate(
+    g16_home = factor(g16_home, levels = g132f$g13[c(1,5,8)])
+  ) %>% 
+  arrange(mig_4y, g16_home)
+
+if(run_n_check) {
+  niph_df %>% 
+    select(mig_4y, g16_home, share, n_y) %>%
+    pivot_wider(
+      names_from = g16_home,
+      values_from = share
+    )
+}
+
 ```
 
 
@@ -61,6 +174,76 @@ if(run_n_check) {
 
 ```{r 1}
 
+p_ni_1a <- nic_df %>% 
+  ggplot(aes(x = mig_4y)) +
+  geom_col(aes(y = share, fill = g13_ch), position = "stack") +
+  theme_mms(
+    plot_margin = margin(15, 20, -5, 10),
+    grid=F, axis="Y", 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+  ) +
+  theme(
+    legend.position = "none",
+    #panel.background = element_rect(fill = NA),  # transparent
+    #panel.ontop = TRUE
+    axis.text.x = element_text(size = 12, marrgin=margin(t=75))
+  ) +
+  scale_y_continuous(expand = c(0,0), name = "", 
+                     breaks = NULL,
+                     #breaks = seq(25, 100, 25),
+                     labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(name = "", expand = c(0.05,0.05)
+  ) +
+  labs(
+    title = "Interest in news & politics (children's country)",
+    subtitle = "By migration duration"
+  ) +
+  geom_text(
+    aes(y = share, group = g13_ch, 
+        label = paste0(round(share,1), "%")),
+    position = position_stack(vjust = 0.5),
+    size = 3,
+    color = "white",
+    family = mms_base_family
+  )
+  
+ p_ni_1a
+ 
+ p_ni_1b <- nih_df %>% 
+   ggplot(aes(x = mig_4y)) +
+   geom_col(aes(y = -share, fill = g13_home), position = "stack") +
+   theme_mms(
+     plot_margin = margin(0, 20, 5, 10),
+     grid=F, axis="X", 
+     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+   ) +
+   theme(
+     legend.position = "none",
+     panel.background = element_rect(fill = NA),  # transparent
+     panel.ontop = TRUE,
+     axis.text.x = element_blank()
+   ) +
+   scale_y_continuous(expand = c(0,0), name = "", 
+                      breaks = NULL,
+                      #breaks = seq(-25, -100, -25),
+                      labels = function(x) paste0(abs(x), "%")) +
+   scale_x_discrete(name = "", expand = c(0.05,0.05)
+   ) +
+   geom_text(
+     aes(y = -share, group = g13_home, 
+         label = paste0(round(share,1), "%")),
+     position = position_stack(vjust = 0.5),
+     size = 3,
+     color = "white",
+     family = mms_base_family
+   )
+ p_ni_1b
+ 
+ p_ni_1p <- (p_ni_1a / p_ni_1b) + 
+   plot_layout(heights = c(1, 1), guides = 'collect') 
+p_ni_1p 
 ```
 
 #### 2.   

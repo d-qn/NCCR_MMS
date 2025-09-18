@@ -239,7 +239,7 @@ edu_chart_1 <- edu_main %>%
 annot_df <- tibble(
   year = rep(2020, 3),
   share_w = c(27, 72, 93),
-  txt = c("Tertiaire", "Secondaire II", "Secondaire I")
+  txt = c("Tertiary", "Secondary II", "Secondary I")
 )
 
 edu_chart_1a <- edu_chart_1 +
