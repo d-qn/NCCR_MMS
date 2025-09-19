@@ -180,7 +180,10 @@ ni_cols[1] <- lighten(ni_cols[1], 0.4) %>% desaturate(0.5)
 nih_cols <- nccr_bi_colors[c(11,11,12)]
 nih_cols[1] <- lighten(nih_cols[1], 0.4) %>% desaturate(0.5)
 
-clabel_size <- 13
+box_col <- nccr_bi_colors[13] %>% lighten(0.8)
+
+
+clabel_size <- 12
 vlabel_size <- 3.5
 
 p_ni_1a <- nic_df %>% 
@@ -208,7 +211,7 @@ p_ni_1a <- nic_df %>%
       maxwidth = unit(5, "in"),
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
-      fill = nccr_bi_colors[13] %>% lighten(0.7),
+      fill = box_col,
       color = darken(mms_axis_tick_txt_color, 0.5),
       size =clabel_size
     )
@@ -263,7 +266,7 @@ p_ni_1a <- nic_df %>%
       maxwidth = unit(5, "in"),
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
-      fill = nccr_bi_colors[13] %>% lighten(0.7),
+      fill = box_col,
       color = darken(mms_axis_tick_txt_color, 0.5),
       size =clabel_size
     )
@@ -284,7 +287,7 @@ p_ni_1a <- nic_df %>%
      color = "white",
      family = mms_base_family
    ) +
-  scale_fill_manual(values = nih_cols)
+  scale_fill_manual(values = ni_cols)
  # scale_fill_manual(values = lighten(ni_cols, 0) %>% desaturate(0.5))
  
  
@@ -325,9 +328,9 @@ p_nip_2a <- nipc_df %>%
       maxwidth = unit(5, "in"),
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
-      fill = nccr_bi_colors[13] %>% lighten(0.7),
+      fill = box_col,
       color = darken(mms_axis_tick_txt_color, 0.5),
-      size =clabel_size
+      size = clabel_size
     )
   ) +
   scale_y_continuous(expand = c(0,0), 
@@ -382,7 +385,7 @@ p_nip_2b <- niph_df %>%
       maxwidth = unit(5, "in"),
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
-      fill = nccr_bi_colors[13] %>% lighten(0.7),
+      fill = box_col,
       color = darken(mms_axis_tick_txt_color, 0.5),
       size =clabel_size
     )
@@ -404,7 +407,7 @@ p_nip_2b <- niph_df %>%
     color = "white",
     family = mms_base_family
   ) +
-  scale_fill_manual(values = nih_cols)
+  scale_fill_manual(values = ni_cols)
 
 p_nip_2b
 
@@ -431,12 +434,9 @@ patchwork <- plot_final +
   plot_annotation(
     title = "As time of residence in Switzerland increases, interest in local news and politics grows while interest in the home country's declines",
     subtitle = str_c("Level of interest: ",
-                    "<span style='color:", ni_cols[1], ";'><b>low</b></span>",
-                    "/<span style='color:", nih_cols[1], ";'><b>low</b></span>, ",
-                    "<span style='color:", ni_cols[2], ";'><b>moderate</b></span>",
-                    "/<span style='color:", nih_cols[2], ";'><b>moderate</b></span>, ",
+                    "<span style='color:", ni_cols[1], ";'><b>low</b></span>, ",
+                    "<span style='color:", ni_cols[2], ";'><b>moderate</b></span> or ",
                     "<span style='color:", ni_cols[3], ";'><b>high</b></span>",
-                    "/<span style='color:", nih_cols[3], ";'><b>high</b></span>",
                      ", by migration year in 2024 survey"),
     theme = theme_mms(
       mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
