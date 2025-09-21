@@ -275,72 +275,51 @@ p_ints_2
 ints_pays_ordered <- ints_pays_df %>% 
   filter(groupe_job_edu == "Yes") %>% 
   mutate(
-    country = factor(country) %>% fct_reorder(share, .desc = T)
+    country = factor(country) %>% fct_reorder(share, .desc = F)
   ) %>% 
   arrange(country) %>% 
   .$country %>% as.character()
 
-ints2mekko_df <- mms_mekko_wrangler(
-  ints_pays_df %>% 
-    filter(country != "Other countries") %>% 
-    mutate(
-      country = factor(country, levels = ints_pays_ordered),
-      groupe_job_edu = factor(groupe_job_edu),
-      n_y = 1
-    ) %>% 
-    mutate(groupe_job_edu = fct_rev(groupe_job_edu)) %>% 
-    arrange(country, groupe_job_edu),
-  var1 = "groupe_job_edu", 
-  var2 = "country", 
-  varv = "share", 
-  tot_n = "n_y"
-) %>% 
+ints_pays_df %<>%
+  filter(country != "Other countries") %>% 
+  filter(groupe_job_edu == "Yes") %>%
   left_join(pays2col) %>% 
   mutate(
-    color = ifelse(groupe_job_edu == "No", "white", color)
+    country = factor(country, levels = ints_pays_ordered),
+    groupe_job_edu = factor(groupe_job_edu),
   ) 
 
-p_ints_3 <- ints2mekko_df %>%   
+p_ints_3 <- ints_pays_df %>%   
   ggplot() +
-  geom_rect(
-    aes(xmin = xmin, xmax = xmax, 
-        ymin = ymin, ymax = ymax,
-        fill = color),
-    colour = "white", 
-    size = 2, alpha = 1) +
-  scale_fill_identity() +
+  geom_col(aes(y = country, x = 100), fill = nccr_bi_colors[15], 
+            linewidth = 1, color = "white",  width = 0.9) +
+  geom_col(aes(x = share, y = country, fill = color),
+           width = 0.9,
+           show.legend = FALSE, linewidth =1, color = "white") +
   theme_mms(
     grid=F, axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) + 
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
                      labels = function(x) paste0(x, "%"),
                      breaks = NULL) +
-  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+  scale_y_discrete(name = "",  labels = NULL, expand = c(0,0)) +
+  scale_fill_identity()
 
 #p_ints_3
 
 
-ints_pays_labels <- ints2mekko_df %>%
-  filter(country != "Other countries") %>%
-  filter(groupe_job_edu == "Yes") %>%
-  mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
-  select(country, xmin, y, yRange) %>%
-  ungroup() %>% 
+ints_pays_labels <- ints_pays_df %>%
   mutate(
-    # Insert line breaks between words
     labels = country#gsub(" ", "<br>", country)
   ) 
 
-
-ints_value_labels <- ints2mekko_df %>% 
-  filter(country != "Other countries") %>%
-  filter(groupe_job_edu == "Yes") %>% 
-  select(country, groupe_job_edu, xmin, xmax, ymin, ymax, share) %>%
+ints_value_labels <- ints_pays_df %>% 
+  select(country, groupe_job_edu, share) %>%
   mutate(
-    x = xmax,
-    y = ymax - 0.01,
+    x = share,
+    y = as.numeric(country) - 0.01,
     label = paste0(round(share, 1), "%"),
     hjust = ifelse(groupe_job_edu == "Yes", 1.05, -0.05)
   ) 
@@ -348,18 +327,19 @@ ints_value_labels <- ints2mekko_df %>%
 p_ints_3a <- p_ints_3 +
    geom_richtext(
     data = ints_pays_labels,
-    aes(x = xmin + 0.01, y = y, 
+    aes(x = 0.04, y = country, 
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
     size = 4,
-    hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
+    nudge_y = 0.03,
+    hjust = 0, nudge_x = .5, vjust = 0, colour = "white",
     family = mms_base_family
   ) +
   geom_richtext(
     data = ints_value_labels,
-    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
+    aes(x = share, y = country, label = label, hjust = hjust),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95, colour = "white",
+    vjust = 1, nudge_y = -0.05, size = 3, alpha = 0.95, colour = "white",
     family = mms_base_family
    ) + labs(
     title = str_c("Migrants from Germany and France are more likely to consider their education suited to their job"),

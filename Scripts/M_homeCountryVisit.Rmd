@@ -122,8 +122,8 @@ annot_df2 <- tibble(
   txt = c("Yes", "No")
 )
 
-p1_cols <- nccr_categorical()[c(13, 10)]
-p1_cols[1] <- p1_cols[1] %>% lighten(0.4)
+p1_cols <- nccr_categorical()[c(15, 10)]
+#p1_cols[1] <- p1_cols[1] %>% lighten(0.4)
 
 p_hc_1 <- hc_df %>% 
   ggplot(aes(x = year, y = share, group = g7)) +
@@ -166,8 +166,8 @@ p_hc_1
 
 ```{r 2}
 
-p2_cols <- nccr_categorical()[c(13, 9)]
-p2_cols[1] <- p1_cols[1] %>% lighten(0.4)
+p2_cols <- nccr_categorical()[c(15, 9)]
+#p2_cols[1] <- p1_cols[1] %>% lighten(0.4)
 
 
 p_hc_2 <- hcv_df %>% 
@@ -220,7 +220,7 @@ hccp_df<- hcc_df %>%
 
 p_hc_3 <- hccp_df %>%   
   ggplot() +
-  geom_col(aes(y = country, x = 100), fill = lighten(nccr_bi_colors[13], 0.4)) +
+  geom_col(aes(y = country, x = 100), fill = nccr_bi_colors[15]) +
   geom_col(aes(x = share, y = country, fill = color),
            show.legend = FALSE) +
   theme_mms(

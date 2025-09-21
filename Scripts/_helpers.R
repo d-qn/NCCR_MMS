@@ -240,7 +240,8 @@ nccr_bi_colors <- c(
   "#C8866F", "#9F6C59",
   "#8884A6", "#6E6C88",
   "#80AF8A", "#678E6F",
-  "#b9c3c6", '#878f92'
+  "#b9c3c6", '#878f92',
+  "#c4d0d4"
 ) 
 
 
@@ -265,13 +266,13 @@ nccr_categorical <- function() {
 # =============================================================================
 
 # ggplot2 scale functions for categorical
-scale_color_nccr_categorical <- function(order = 1:14, ...) {
+scale_color_nccr_categorical <- function(order = 1:15, ...) {
   colors <- nccr_categorical()[order]
   ggplot2::discrete_scale("colour", "nccr_categorical", 
                          function(n) colors[1:n], ...)
 }
 
-scale_fill_nccr_categorical <- function(order = 1:14, ...) {
+scale_fill_nccr_categorical <- function(order = 1:15, ...) {
   colors <- nccr_categorical()[order]
   ggplot2::discrete_scale("fill", "nccr_categorical", 
                          function(n) colors[1:n], ...)
@@ -281,9 +282,9 @@ scale_fill_nccr_categorical <- function(order = 1:14, ...) {
 show_nccr_categorical_numbers <- function() {
   colors <- nccr_categorical()
   par(mar = c(3, 1, 2, 1))
-  barplot(rep(1, 14), col = colors, 
+  barplot(rep(1, 15), col = colors, 
           main = "NCCR Categorical Colors with Numbers", 
-          names.arg = 1:14, axes = FALSE)
+          names.arg = 1:15, axes = FALSE)
   par(mar = c(5, 4, 4, 2))
 }
 
@@ -434,7 +435,7 @@ show_nccr_palettes <- function() {
   par(mfrow = c(6, 1), mar = c(1, 1, 2, 1))
   
   # Categorical (12 colors with measured base colors)
-  barplot(rep(1, 14), col = nccr_categorical(), 
+  barplot(rep(1, 15), col = nccr_categorical(), 
           main = "NCCR Categorical (measured base colors)", axes = FALSE)
   
   # Sequential Education-based
