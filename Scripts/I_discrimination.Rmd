@@ -200,16 +200,12 @@ p_dis_1 <- disy_df %>%
   ggplot(aes(x = year, y = share, group = h7)) +
   geom_area(aes(fill = h7), alpha = 1) +
   theme_mms(grid="XY", axis="xy", 
-           # grid_col =  scales::alpha("lightgrey", 0.6),
-          #  plot_margin = mms_plot_margin_l,
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   )  +
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
-        panel.ontop = TRUE,
-      #  plot.margin = margin(l = -150,  r = 50, unit = "pt") # hack !!!!!!!!!!!!!!!!!!!!
-      #  plot.title.position = "panel"
+        panel.ontop = TRUE
   ) +
   # remove any scale expansion  
   scale_x_continuous(expand = c(0,0), name = "", breaks = seq(2018, 2024, 2)) +
@@ -222,7 +218,7 @@ p_dis_1 <- disy_df %>%
     subtitle="Experiences of prejudice or discrimination in the last 24 months") +
  # scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
   scale_fill_manual(values = c(darken(nccr_bi_colors[10], 0.2), darken(nccr_bi_colors[10], 0),
-                               lighten(nccr_bi_colors[9], 0), nccr_bi_colors[13]))
+                               lighten(nccr_bi_colors[9], 0), nccr_bi_colors[15]))
 
  annot_df <- tibble(
    year = rep(2021, 4),

@@ -136,7 +136,7 @@ p_sl_1 <- sl_df %>%
       "<span style='color:", nccr_bi_colors[14], ";'>undecided</span>, ",      
       " by survey year"
     )) +
-  scale_fill_manual(values =nccr_bi_colors[c(8,13,6)]) +
+  scale_fill_manual(values =nccr_bi_colors[c(8,15,6)]) +
   geom_richtext(data = annot_df, aes(
     x = year, y = share_w, label = txt, group = 1),
     fill = NA, label.color = NA,# remove background and outline,
@@ -204,12 +204,12 @@ slc_labels_df <- slc_df %>%
     title = str_c(
       "Intentions to ", "<span style='color:",
         nccr_bi_colors[6], 
-        ";'>stay</span> ", "in Switzerland vary significantly by national group"),
+        ";'><b>stay</b></span> ", "in Switzerland vary significantly by national group"),
    subtitle = str_c(
       "Share of respondents by country intending to ",
-      "<span style='color:", nccr_bi_colors[6], ";'>stay</span> in Switzerland, ", 
-       "<span style='color:", nccr_bi_colors[8], ";'>leave</span> or who are ",      
-      "<span style='color:", nccr_bi_colors[14], ";'>undecided</span>",      
+      "<span style='color:", nccr_bi_colors[6], ";'><b>stay</b></span> in Switzerland, ", 
+       "<span style='color:", nccr_bi_colors[8], ";'><b>leave</b></span> or who are ",      
+      "<span style='color:", nccr_bi_colors[14], ";'><b>undecided</b></span>",      
       " in 2024"
     )) +
    geom_richtext(

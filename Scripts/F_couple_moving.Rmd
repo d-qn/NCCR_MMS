@@ -209,15 +209,12 @@ p_coum_1 <- coum4y_df %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_categorical()[c(13, 2)]) +
+  scale_fill_manual(values = nccr_categorical()[c(15, 2)]) +
   scale_size_continuous(guide = guide_legend(), 
                         breaks = scales::breaks_pretty(n = 4)) + # choose ~3 "pretty" breaks
   labs(
     title = "Recent migrants more often arrived as part of a couple than those in the early 2000s",
-    subtitle = "Share of migrants in a couple at time of arrival, by migration period",
-    #fill = "n",
-    size = "n",
-    color = "n"
+    subtitle = "Share of migrants in a couple at time of arrival, by migration period"
   ) +
   geom_richtext(
     data = annot_df, 
@@ -258,7 +255,7 @@ coum2mekko_df <- mms_mekko_wrangler(
 ) %>% 
   left_join(pays2col) %>% 
   mutate(
-    color = ifelse(mar == "TRUE", color, nccr_bi_colors[13])
+    color = ifelse(mar == "TRUE", color, nccr_bi_colors[15])
   )
 
 

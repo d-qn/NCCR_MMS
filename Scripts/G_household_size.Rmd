@@ -128,11 +128,6 @@ hh_y_labels <- tibble(
 p_hh_1 <- hh_y_df %>% 
   ggplot(aes(x = factor(year), y = share, fill = hh3)) +
   geom_area(aes(group = hh3), alpha = 1) +
-  # geom_text(
-  #   aes(label = paste0(round(share, 1), "%")),
-  #   alpha = 0.8,
-  #   size = 3, position = position_stack(vjust = 0.9),
-  #   family = mms_base_family, color = "white") +
   geom_richtext(
     data = hh_y_labels,
     aes(x = factor(year), y = share, label = label),
@@ -151,10 +146,7 @@ p_hh_1 <- hh_y_df %>%
   theme(
     legend.position = "none",
     panel.ontop = TRUE,
-    panel.background = element_rect(fill = NA),
-    # panel.grid.major.y = element_line(color = "white",
-    #                                   linetype = "dashed", linewidth = 0.2) # Make grid lines more visible
-   # axis.text.y = element_blank()
+    panel.background = element_rect(fill = NA)
   ) +
   # remove any scale expansion
   scale_x_discrete(expand = c(0,0), name = "") +
@@ -162,7 +154,7 @@ p_hh_1 <- hh_y_df %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
-  scale_fill_manual(values = nccr_categorical()[c(13, 3, 4)]) +
+  scale_fill_manual(values = nccr_categorical()[c(15, 3, 4)]) +
   labs(
     title = str_c("Over half of households have ", 
                     '<span style="color:', nccr_categorical()[4], ';">three or more members'),
@@ -199,7 +191,7 @@ p_hh_2 <- hh_g_df %>%
     #  fontface = "bold"
   ) +
   #coord_flip(clip = "on") +
-  scale_fill_manual(values = nccr_categorical()[c(13, 3, 4)]) +
+  scale_fill_manual(values = nccr_categorical()[c(15, 3, 4)]) +
   theme_mms(
     grid="", axis="",
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -295,7 +287,7 @@ p_hh_3 <- hh2mekko_df %>%
   theme(
     legend.position = "none"
   ) + 
-  scale_fill_manual(values = nccr_categorical()[c(13, 3, 4)]) +
+  scale_fill_manual(values = nccr_categorical()[c(15, 3, 4)]) +
   scale_x_continuous(name = "", expand = c(0,0), 
                      # position = "top",
                      # labels = function(x) paste0(x, "%"),

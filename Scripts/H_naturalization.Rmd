@@ -234,7 +234,7 @@ p_nati_1 <- nati_y_df %>%
     title = str_c("The share of people ", 
                   "<span style='color:#678E6F'>interested in naturalization</span> is gradually increasing"),
     subtitle="Do you plan to apply for Swiss naturalization in the future?") +
-  scale_fill_nccr_categorical(order = c(7,13,12))
+  scale_fill_nccr_categorical(order = c(7,15,12))
 
 
 annot_df <- tibble(
