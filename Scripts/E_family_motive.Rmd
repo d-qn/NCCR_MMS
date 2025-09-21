@@ -137,6 +137,7 @@ famr_1 <- fam_sexe_df %>%
     name = "", expand = c(0.05,0.05)
   ) +
   scale_y_continuous(name = "", 
+                     #limits = c(0, 65),
                      n.breaks = 10,
                      labels = function(x) paste0(x, "%"),
                      expand = c(0.05,0.05)
@@ -144,8 +145,7 @@ famr_1 <- fam_sexe_df %>%
   guides(color = "none") +
   labs(
     title = "Increase in the share of people reporting family-related reasons for moving to Switzerland",
-    subtitle = "Share of people reporting family-related reasons for moving to Switzerland, by survey year",
-    size = "n", linewidth = "n"
+    subtitle = "Share of people reporting family-related reasons for moving to Switzerland, by survey year"
   )
 
 famr_1
@@ -158,42 +158,44 @@ fam_pays_ordered <- fam_pays_df %>%
   filter(famr == "yes") %>% 
   mutate(
     country = factor(country) %>% 
-      fct_reorder(share, .desc = T)
+      fct_reorder(share, .desc = F)
   ) %>% 
   arrange(country) %>% 
   .$country %>% as.character()
 
-fam2mekko_df <- mms_mekko_wrangler(
-  fam_pays_df %>% 
-    mutate(
-      country = factor(country, levels = fam_pays_ordered),
-      pays = factor(country),
-      famr = factor(famr, levels = c("yes", "no")),
-      n_y = 1,
-    ) %>% 
-    arrange(country, famr),
-  var1 = "famr", 
-  var2 = "country", 
-  varv = "share", 
-  tot_n = "n_y"
-) %>% 
+fam_pays_df %<>% 
+  filter(famr == "yes") %>% 
   left_join(pays2col) %>% 
-  filter(famr != "no")
+  mutate(
+    country = factor(country, levels = fam_pays_ordered)
+  ) %>% 
+  arrange(country) 
 
 
-famr_2 <- fam2mekko_df %>%   
-  ggplot() +
-  geom_rect(
-    aes(xmin = xmin, xmax = xmax, 
-        ymin = ymin, ymax = ymax,
-        fill = color),
-    colour = "white", 
-    size = 2, alpha = 1) +
-  scale_fill_identity() +
+
+
+# famr_2 <- fam2mekko_df %>%   
+#   ggplot() +
+#   geom_rect(
+#     aes(xmin = xmin, xmax = xmax, 
+#         ymin = ymin, ymax = ymax,
+#         fill = color),
+#     colour = "white", 
+#     size = 2, alpha = 1) +
+#   scale_fill_identity() +
+
+
+famr2 <- fam_pays_df %>%
+  ggplot() + 
+  geom_col(aes(y = country, x = 100), fill = nccr_bi_colors[15], 
+           linewidth = 1, color = "white",  width = 0.9) +
+  geom_col(aes(x = share, y = country, fill = color),
+           width = 0.9,
+           show.legend = FALSE, linewidth =1, color = "white") +
   theme_mms(
     grid=F, axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) + 
   theme(
     legend.position = "none"
@@ -201,43 +203,34 @@ famr_2 <- fam2mekko_df %>%
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
                      labels = function(x) paste0(x, "%"),
                      breaks = NULL) +
-  scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
+  scale_y_discrete(name = "",  labels = NULL, expand = c(0,0)) +
+  scale_fill_identity() 
 
-famr_pays_labels <- fam2mekko_df %>%
-  filter(famr == "yes") %>%
-  mutate(y = ymax - 0.007, yRange = (ymax - ymin)* 100) %>%
-  select(country, xmin, y, yRange) %>%
-  ungroup() %>% 
+famr_labels <- fam_pays_df %>%
   mutate(
     # Insert line breaks between words
-    labels = country#gsub(" ", "<br>", country)
+    labelc = gsub(" ", "<br>", country), # country, 
+    labelv = paste0(round(share, 1), "%"),
+    hjust = 1.05
   ) 
 
-famr_value_labels <- fam2mekko_df %>% 
-  filter(famr == "yes") %>% 
-  select(country, famr, xmin, xmax, ymin, ymax, share) %>%
-  mutate(
-    x = xmax,
-    y = ymax - 0.01,
-    label = paste0(round(share, 1), "%"),
-    hjust = ifelse(famr == "yes", 1.05, -0.05)
-  ) 
-
-famr_2a <- famr_2 +
+famr_2a <- famr2 +
    geom_richtext(
-    data = famr_pays_labels,
-    aes(x = xmin + 0.01, y = y, 
-        label = labels),
+    data = famr_labels,
+    aes(x = 0.07, y = country, 
+        label = labelc),
     fill = NA, label.color = NA,# remove background and outline,
     size = 4,
-    hjust = 0, nudge_x = 0.5, vjust = 1, colour = "white",
+    nudge_y = 0.4,
+    hjust = 0, nudge_x = 0.1, vjust = 1, colour = "white",
     family = mms_base_family
   ) +
   geom_richtext(
-    data = famr_value_labels,
-    aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
+    data = famr_labels,
+    aes(x = share, y = country, label = labelv, hjust = hjust),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.95, colour = "white",
+    vjust = 1, size = 3, alpha = 0.95, colour = "white",
+    nudge_y = -0.15,
     family = mms_base_family
    ) + 
   labs(
