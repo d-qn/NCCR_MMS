@@ -1,0 +1,235 @@
+---
+title: "O Satisfaction of migrating to Switzerland"
+author: "Duc-Quang Nguyen"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup & load data, include=FALSE}
+source("_helpers.R")
+run_n_check <- T
+```
+
+
+```{r load}
+# gender
+c2t_A1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes A1.csv"))
+# education
+c2t_D1 <- read_csv(here("Data", "code2txt", "NCCR MMS Codes D1.csv"))
+# pays 
+c2t_B1 <- read_csv(here("Data", "code2txt", "NCCR_MMS_codes - B1.csv"))
+
+c1_codes <- tibble(
+ C1 = c(1, 2, 3, 4, 5, 6, 7),
+ nat = c("yes", "yes", "no", "no", "don't know", "yes", "yes")
+)
+
+h6 <- mms_load_data(F) %>% 
+  select(H6_5)
+
+h62f <- tibble(
+ H6_5 = 0:10,
+ h6 = c(rep("low", 3),  rep("moderate", 5), rep("high", 3))
+)
+
+edu2f <- tibble(
+  groupe_edu = c("Secondaire I", "Secondaire II", "Tertiaire"),
+  edu = c("Secondary I & II", "Secondary I & II", "Tertiary")
+)
+
+data_all <- bind_cols(mms_df, h6)  %>% 
+  left_join(h62f) %>%
+ # hack in 2024 C1 column is named c1
+  mutate(
+    C1 = ifelse(year == 2024, c1, C1)
+  ) %>% 
+  left_join(
+    c1_codes, by = "C1"
+  ) %>% 
+  left_join(c2t_A1) %>% 
+  left_join(c2t_B1) %>% 
+  left_join(c2t_D1) %>% 
+  left_join(edu2f) %>%
+  left_join(pays2col) 
+
+o_df <- data_all %>% 
+  select(year:color)
+
+
+```
+
+### Wrangle & check
+
+```{r wrangle & check}
+sa_df <- o_df %>% 
+  filter(!is.na(h6)) %>% 
+  filter(!is.na(year)) %>% 
+  group_by(year, h6) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(year) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() 
+
+if(run_n_check) {
+  sa_df %>% 
+    select(year, h6, share, n_y) %>%
+    pivot_wider(
+      names_from = h6,
+      values_from = share
+    )
+}
+
+sa_s_df <- o_df %>% 
+  filter(!is.na(h6)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(!is.na(sexe)) %>% 
+  filter(year == 2024) %>%
+  group_by(sexe, h6) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(sexe) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup()
+
+if(run_n_check) {
+  sa_s_df %>% 
+    select(sexe, h6, share, n_y) %>%
+    pivot_wider(
+      names_from = h6,
+      values_from = share
+    )
+}
+
+sa_n_df <- o_df %>% 
+  filter(!is.na(h6)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(!is.na(nat)) %>% 
+  filter(year == 2024) %>%
+  group_by(nat, h6) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(nat) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup()
+
+if(run_n_check) {
+  sa_n_df %>% 
+    select(nat, h6, share, n_y) %>%
+    pivot_wider(
+      names_from = h6,
+      values_from = share
+    )
+}
+
+sa_e_df <- o_df %>% 
+  filter(!is.na(h6)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(!is.na(groupe_edu)) %>% 
+  filter(year == 2024) %>%
+  group_by(groupe_edu, h6) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(groupe_edu) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup()
+  
+
+if(run_n_check) {
+  sa_e_df %>% 
+    select(groupe_edu, h6, share, n_y) %>%
+    pivot_wider(
+      names_from = h6,
+      values_from = share
+    )
+}
+
+
+sa_ec_df <- o_df %>% 
+  filter(!is.na(h6)) %>% 
+  filter(!is.na(year)) %>% 
+  filter(!is.na(edu)) %>% 
+  filter(!is.na(country)) %>% 
+  filter(year == 2024) %>%
+  group_by(edu, country, h6) %>% 
+  reframe(
+    n = n(),
+    weight = sum(weight, na.rm = TRUE)
+  ) %>% 
+  group_by(country, edu) %>% 
+  mutate(
+    n_y = sum(n, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100
+  ) %>% 
+  ungroup() %>% 
+  filter(country != "Other countries") %>% 
+  arrange(country, edu) %>% 
+  filter(h6 == h62f$h6[10]) 
+
+
+if(run_n_check) {
+  sa_ec_df %>% 
+    select(country, edu, share, n_y) %>%
+    pivot_wider(
+      names_from = edu,
+      values_from = c(share, n_y)
+    )
+}
+
+
+  
+```
+
+
+
+### VIZ
+
+#### 1. main  chart
+
+```{r 1}
+
+```
+
+#### 2.   
+
+```{r 2}
+
+```
+
+#### 3.
+
+```{r 3}
+```
+
+#### patch
+
+```{r patch}
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = #here("Output", "charts", ""),
+  bg_col = pw_bg_color
+  )
+
+
+```

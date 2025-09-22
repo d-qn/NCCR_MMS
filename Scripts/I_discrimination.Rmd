@@ -217,22 +217,32 @@ p_dis_1 <- disy_df %>%
     title = str_c("Discrimination rates remain stable, affecting over half of respondents"),
     subtitle="Experiences of prejudice or discrimination in the last 24 months") +
  # scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
-  scale_fill_manual(values = c(darken(nccr_bi_colors[10], 0.2), darken(nccr_bi_colors[10], 0),
-                               lighten(nccr_bi_colors[9], 0), nccr_bi_colors[15]))
+  scale_fill_manual(values = c(
+    darken(nccr_bi_colors[10], 0.2), 
+    darken(nccr_bi_colors[10], 0),
+    lighten(nccr_bi_colors[9], 0), 
+    nccr_bi_colors[9] %>% desaturate(0.4) %>% lighten(0.3)))
 
  annot_df <- tibble(
    year = rep(2021, 4),
-   share_w = c(27, 62, 86, 98.8),
+   share_w = c(27, 62, 86, 98.1),
    txt = c("Never", "Rarely", "Sometimes", "Frequently")
- )   
+ ) %>% 
+   left_join(
+      disy_df %>% group_by(h7) %>% reframe(m_share = mean(share)),
+      by = c("txt" = "h7")
+   )
 p_dis_1a <- p_dis_1  +
    geom_richtext(data = annot_df, aes(
-     x = year, y = share_w, label = txt, group = 1),
+     x = year, y = share_w, label = txt, size = m_share, group = 1),
      fill = NA, label.color = NA,# remove background and outline,
-     color = "white", size = 3, alpha = 1,
+     color = "white", 
+     #size = 3, 
+     alpha = 1,
      #fontface = "bold",
      hjust = 0.5, family = mms_base_family
-   )
+   ) +
+  scale_size_continuous(range = c(2.5,5), guide = "none")
 p_dis_1a
 ```
 
@@ -263,15 +273,15 @@ p_dis_2 <- disr_df %>%
   # Create the "candy" dot at the end
   geom_point(
     color = nccr_bi_colors[10], # Using one of your nccr_bi_colors
-    size = 4,
-    alpha = 0.9
+    size = 3,
+    alpha = 1
   ) +
   # Add the numeric value as a text label next to the dot
   geom_text(
     aes(label = paste0(round(weighted_share, 0), "%")),
     hjust = -0.37, # Position the text slightly to the right of the point
     size = 3,
-    nudge_x = 0.1,
+    nudge_x = 0.2,
     color = nccr_bi_colors[14],
     family = mms_base_family,
     #alpha = 0.7
