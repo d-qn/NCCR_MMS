@@ -145,7 +145,7 @@ if(run_n_check) {
 ```{r color palettes trials, eval = F}
 edu_chart_1 <- edu_main %>% 
   ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
-  geom_area(aes(fill = groupe_edu), alpha = 1) + 
+  geom_area(aes(fill = groupe_edu), alpha = 1, linewidth = 1) + 
   theme_mms(grid="XY", axis="xy", 
                  #grid_col =  scales::alpha("lightgrey", 0.5),
                  base_size = mms_base_size,
@@ -210,7 +210,8 @@ dev.off()
 
 edu_chart_1 <- edu_main %>% 
   ggplot(aes(x = year, y = share_w, group = groupe_edu)) +
-  geom_area(aes(fill = groupe_edu), alpha = 1) + 
+  geom_area(aes(fill = groupe_edu), alpha = 1, 
+            linewidth = 0.5, color = "white") + 
   theme_mms(grid="XY", axis="xy", 
                 # grid_col =  scales::alpha("lightgrey", 0.6),
                  base_size = mms_base_size,

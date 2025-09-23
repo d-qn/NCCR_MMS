@@ -87,23 +87,23 @@
 </defs>
 <g clip-path='url(#cpNDkuODR8MjkwLjQyfDEyMi40NnwzNjEuNDQ=)'>
 <rect x='49.84' y='122.46' width='240.58' height='238.98' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
-<polyline points='49.84,305.00 290.42,305.00 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='49.84,247.68 290.42,247.68 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='49.84,190.36 290.42,190.36 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='49.84,133.04 290.42,133.04 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
-<polyline points='77.59,133.04 123.86,290.67 170.13,350.86 216.39,325.06 262.66,284.94 ' style='stroke-width: 4.27; stroke: #8884A6; stroke-opacity: 0.40;' />
-<circle cx='77.59' cy='133.04' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='123.86' cy='290.67' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='170.13' cy='350.86' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='216.39' cy='325.06' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
-<circle cx='262.66' cy='284.94' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
+<polyline points='49.84,304.84 290.42,304.84 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='49.84,247.67 290.42,247.67 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='49.84,190.49 290.42,190.49 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='49.84,133.32 290.42,133.32 ' style='stroke-width: 0.43; stroke: #CCCCCC; stroke-linecap: butt;' />
+<polyline points='77.59,133.32 123.86,290.54 170.13,350.57 216.39,324.85 262.66,284.83 ' style='stroke-width: 4.27; stroke: #8884A6; stroke-opacity: 0.40;' />
+<circle cx='77.59' cy='133.32' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='123.86' cy='290.54' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='170.13' cy='350.57' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='216.39' cy='324.85' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
+<circle cx='262.66' cy='284.83' r='5.72' style='stroke-width: 0.77; stroke: #6E6C88; fill: #6E6C88;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <polyline points='49.84,361.44 49.84,122.46 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
-<text x='35.60' y='308.41' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>48%</text>
-<text x='35.60' y='251.09' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>50%</text>
-<text x='35.60' y='193.77' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>52%</text>
-<text x='35.60' y='136.45' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>54%</text>
+<text x='35.60' y='308.25' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>48%</text>
+<text x='35.60' y='251.08' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>50%</text>
+<text x='35.60' y='193.91' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>52%</text>
+<text x='35.60' y='136.74' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>54%</text>
 <polyline points='49.84,361.44 290.42,361.44 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
 <text x='77.59' y='374.67' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2005</text>
 <text x='77.59' y='385.04' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>—</text>
