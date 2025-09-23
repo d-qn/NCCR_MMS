@@ -127,7 +127,8 @@ hh_y_labels <- tibble(
 
 p_hh_1 <- hh_y_df %>% 
   ggplot(aes(x = factor(year), y = share, fill = hh3)) +
-  geom_area(aes(group = hh3), alpha = 1) +
+  geom_area(aes(group = hh3), alpha = 1,
+                        linewidth = 0.5, color = "white") +
   geom_richtext(
     data = hh_y_labels,
     aes(x = factor(year), y = share, label = label),

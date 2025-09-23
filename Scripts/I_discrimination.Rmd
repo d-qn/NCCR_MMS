@@ -198,7 +198,8 @@ if(run_n_check) {
 ```{r 1}
 p_dis_1 <- disy_df %>% 
   ggplot(aes(x = year, y = share, group = h7)) +
-  geom_area(aes(fill = h7), alpha = 1) +
+  geom_area(aes(fill = h7), alpha = 1,
+            linewidth = 0.1, color = "white") +
   theme_mms(grid="XY", axis="xy", 
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)

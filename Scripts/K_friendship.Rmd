@@ -179,7 +179,7 @@ p_fri_1 <- fri_df %>%
   ggplot(aes(x = year, y = share, group = g6)) +
   geom_area(
     aes(fill = g6), 
-    alpha = 1) +
+    alpha = 1, linewidth = 0.5, color = "white") +
   theme_mms(
     grid="XY", axis="XY", 
    # grid_col =  scales::alpha("lightgrey", 0.6),

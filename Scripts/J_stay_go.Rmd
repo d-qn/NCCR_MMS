@@ -106,7 +106,7 @@ p_sl_1 <- sl_df %>%
   ggplot(aes(x = year, y = share, group = h16)) +
   geom_area(
     aes(fill = h16), 
-    alpha = 1) +
+    alpha = 1, linewidth = 1, color = "white") +
   theme_mms(
     grid="XY", axis="XY", 
    # grid_col =  scales::alpha("lightgrey", 0.6),

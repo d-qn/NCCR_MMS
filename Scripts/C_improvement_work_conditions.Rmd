@@ -258,7 +258,8 @@ wcond_mig4y_df <- c_df %>%
 iwc_1 <- wcond5_df %>% 
  # arrange(wcond5) %>%
   ggplot(aes(x = year, y = share, group = wcond5)) +
-  geom_area(aes(fill = wcond5), alpha = 1) + 
+  geom_area(aes(fill = wcond5), alpha = 1, 
+            linewidth = 0.2, color = "white") + 
   theme_mms(
     grid="XY", axis="xy", 
     grid_col =  scales::alpha("lightgrey", 0.6),
