@@ -360,7 +360,7 @@ mig_job_3 <- fpp_chart +
   ) +
   annotate(
     geom = "richtext",
-    x=90,y = 0.5, angle = -90, label = "sans emploi",
+    x=90,y = 0.5, angle = -90, label = "jobless",
     fill = NA, label.color = NA,# remove background and outline,
     size = 10,
     family = mms_base_family, #fontface = "bold", 

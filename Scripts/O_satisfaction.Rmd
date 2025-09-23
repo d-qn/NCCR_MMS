@@ -207,9 +207,57 @@ if(run_n_check) {
 #### 1. main  chart
 
 ```{r 1}
-sa_df %>% 
-  ggplot(aes(x = year, y = share, color = h6)) +
-  geom_area
+sa_df %>%
+  ggplot(aes(x = year, y = share)) +
+  geom_area(aes(fill = ), linewidth = 1, 
+            color = "white", 
+            position = position_stack(reverse = TRUE)) +
+  geom_text(
+    data = tibble(
+      year = c(2021, 2021, 2021),
+      share_w = c(15, 50, 85),
+      label = rev(c("Low", "Moderate", "High"))
+    ),
+    aes(x = year, y = share_w, label = label),
+    color = "white",
+    size = 6,
+    fontface = "bold"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 100),
+    breaks = seq(0, 100, by = 20),
+    labels = function(x) paste0(x, "%")
+  ) +
+  scale_x_continuous(
+    breaks = seq(2018, 2024, by = 2)
+  ) +
+  scale_fill_manual(
+    values = rev(h6_colors)
+  ) +
+  labs(
+    title = "Satisfaction with life in Switzerland",
+    subtitle = "Share of respondents who are satisfied with their life in Switzerland,<br>by level of satisfaction (low, moderate, high)",
+    caption = "Source: NCCR Migration & Mobility Survey (2024)<br>Note: Based on respondents who answered the question on satisfaction with life in Switzerland (n=27,644).<br>Weights applied.",
+    x = NULL,
+    y = NULL,
+    fill = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(family = "Lato"),
+    plot.title = element_text(face = "bold", size = 20),
+    plot.subtitle = element_markdown(size = 14),
+    plot.caption = element_markdown(size = 10, color = "gray40"),
+    axis.text.y = element_text(size = 12),
+    axis.text.x = element_text(size = 12),
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    plot.background = element_rect(fill = pw_bg_color, color = pw_bg_color),
+    panel.background = element_rect(fill = pw_bg_color, color = pw_bg_color)
+  ) +
+  coord_cartesian(ylim = c(0, 100), expand = FALSE)
+
 
 ```
 
@@ -238,11 +286,11 @@ sa_df %>%
 
 ```{r patch}
 
-mms_export_vector(
-  plot = patchwork,
-  filepath = #here("Output", "charts", ""),
-  bg_col = pw_bg_color
-  )
+# mms_export_vector(
+#   plot = patchwork,
+#   filepath = #here("Output", "charts", ""),
+#   bg_col = pw_bg_color
+#   )
 
 
 ```
