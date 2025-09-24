@@ -189,7 +189,7 @@ p_ints_1 <- ints_df %>%
   theme_mms(
     grid=F, 
     axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   theme(
@@ -243,7 +243,7 @@ p_ints_2 <- ints_migy_df %>%
   ) +
   theme_mms(grid="Y",
             axis = T,
-            mms_txtbox_plot.title(nrow_txt = 4),
+            mms_txtbox_plot.title(nrow_txt = 5),
             mms_txtbox_plot.subtitle(nrow_txt = 4)#,
             #plot_margin = margin(15, 20, 50, 10)
             
@@ -298,7 +298,7 @@ p_ints_3 <- ints_pays_df %>%
            show.legend = FALSE, linewidth =1, color = "white") +
   theme_mms(
     grid=F, axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) + 
   scale_x_continuous(name = "", expand = c(0,0), position = "top",
@@ -370,7 +370,7 @@ p_ints_4 <- ints_sexe_df %>%
             family = mms_base_family, size =3) +
   theme_mms(grid=F,
             axis = F,
-            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   coord_cartesian(clip = "off") +

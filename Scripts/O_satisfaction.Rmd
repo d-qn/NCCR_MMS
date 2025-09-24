@@ -30,7 +30,10 @@ h6 <- mms_load_data(F) %>%
 h62f <- tibble(
  H6_5 = 0:10,
  h6 = c(rep("low", 3),  rep("moderate", 5), rep("high", 3))
-)
+) %>% 
+  mutate(
+    h6 = factor(h6, levels = c("low", "moderate", "high"))
+  )
 
 edu2f <- tibble(
   groupe_edu = c("Secondaire I", "Secondaire II", "Tertiaire"),
@@ -196,10 +199,7 @@ if(run_n_check) {
     )
 }
 
-
-  
 ```
-
 
 
 ### VIZ
@@ -207,63 +207,128 @@ if(run_n_check) {
 #### 1. main  chart
 
 ```{r 1}
-sa_df %>%
+
+sa_cols <- nccr_bi_colors[c(3,3,4)]
+sa_cols[1] <- lighten(sa_cols[1], 0.4) %>% desaturate(0.5)
+
+p_sa_1 <- sa_df %>%
   ggplot(aes(x = year, y = share)) +
-  geom_area(aes(fill = ), linewidth = 1, 
+  geom_area(aes(fill = h6), linewidth = 1, 
             color = "white", 
             position = position_stack(reverse = TRUE)) +
   geom_text(
     data = tibble(
-      year = c(2021, 2021, 2021),
-      share_w = c(15, 50, 85),
-      label = rev(c("Low", "Moderate", "High"))
+      year = c(2020, 2020),
+      share_w = c(10, 56),
+      label = h62f$h6[c(5,10)]
     ),
     aes(x = year, y = share_w, label = label),
     color = "white",
-    size = 6,
-    fontface = "bold"
+    size = 5,
+    family = mms_base_family
+    #fontface = "bold"
+  ) +
+ theme_mms(
+    grid="XY", axis="xy", 
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+  ) +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = NA),  # transparent
+    panel.ontop = TRUE
   ) +
   scale_y_continuous(
-    limits = c(0, 100),
-    breaks = seq(0, 100, by = 20),
+    name = "",
+    expand = c(0, 0),
+    breaks = seq(25, 100, by = 25),
     labels = function(x) paste0(x, "%")
   ) +
-  scale_x_continuous(
-    breaks = seq(2018, 2024, by = 2)
-  ) +
-  scale_fill_manual(
-    values = rev(h6_colors)
-  ) +
+  scale_x_continuous(expand = c(0, 0), name = "") +
+  scale_fill_manual(values = sa_cols) +
   labs(
-    title = "Satisfaction with life in Switzerland",
-    subtitle = "Share of respondents who are satisfied with their life in Switzerland,<br>by level of satisfaction (low, moderate, high)",
-    caption = "Source: NCCR Migration & Mobility Survey (2024)<br>Note: Based on respondents who answered the question on satisfaction with life in Switzerland (n=27,644).<br>Weights applied.",
-    x = NULL,
-    y = NULL,
-    fill = NULL
-  ) +
-  theme_minimal() +
-  theme(
-    text = element_text(family = "Lato"),
-    plot.title = element_text(face = "bold", size = 20),
-    plot.subtitle = element_markdown(size = 14),
-    plot.caption = element_markdown(size = 10, color = "gray40"),
-    axis.text.y = element_text(size = 12),
-    axis.text.x = element_text(size = 12),
-    legend.position = "none",
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank(),
-    plot.background = element_rect(fill = pw_bg_color, color = pw_bg_color),
-    panel.background = element_rect(fill = pw_bg_color, color = pw_bg_color)
-  ) +
-  coord_cartesian(ylim = c(0, 100), expand = FALSE)
+    title = str_c("Four out of five people are satisfied with their decision to migrate to Switzerland, with little change over time"),
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, by survey year: ",
+                    "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
+                   "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
+                   "<span style='color:", sa_cols[3], ";'><b>high</b></span>")
+  )
 
-
+p_sa_1  
 ```
 
 #### 2.   
 
-```{r 2}
+```{r 2 by sex}
+
+sa_s_df %<>% 
+  select(sexe, h6, share, n_y) %>% 
+  # create coords for donut chart https://r-graph-gallery.com/128-ring-or-donut-plot.html
+  group_by(sexe) %>% 
+  mutate(
+    ymax = cumsum(share),
+    ymin = c(0, head(ymax, n=-1)),
+    # Compute label position
+    label_pos = (ymax + ymin) / 2,
+    # Compute a good label
+    label = paste0(round(share,0), "%")
+  ) %>%
+  ungroup()
+
+gender_labels <-tibble(
+  sexe = distinct(sa_s_df, sexe) %>% deframe(),
+  label = c("women", "men"),
+  color = nccr_bi_colors[c(12,2)]
+)
+
+p_sa_2 <- sa_s_df %>%
+ ggplot(
+   aes(ymax=ymax, ymin=ymin, xmax=4.5, xmin=3, fill=h6)) +
+  geom_rect(color = "white") +
+  geom_label(
+    data = sa_s_df %>% filter(h6 !=  h62f$h6[1]),
+    x=3.7,
+    aes(y=label_pos, label=label, group = rev(h6)),
+    color = "white",
+    size=4,
+    fill = NA, label.size = 0,
+    family = mms_base_family) +
+  facet_wrap(~sexe, ncol =2) +
+  coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
+  theme_mms(
+    grid=F, 
+    axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    legend.position = "none",
+    panel.spacing = unit(0, "pt"),  # reduce space between facets
+    strip.text = element_blank(),
+    strip.background = element_blank()
+  ) +
+  scale_fill_manual(values = sa_cols) +
+  scale_color_identity() +
+  scale_y_continuous(name = "", expand = c(0, 0)) +
+  scale_x_continuous(name = "", expand = c(0, 0), limits = c(2, 4.5)) +
+  geom_text(
+    data = gender_labels,
+    aes(x = 2, y = 0, label = label, color = color), # Position text at the center
+    inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
+    size = 4,
+    family = mms_base_family, fontface = "bold"
+  ) +
+  labs(
+    title = str_c("Women are less satisfied than men with their move to Switzerland"),
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by gender: ",
+                    "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
+                   "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
+                   "<span style='color:", sa_cols[3], ";'><b>high</b></span>")
+  )
+
+p_sa_2
 
 ```
 

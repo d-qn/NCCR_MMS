@@ -263,7 +263,7 @@ iwc_1 <- wcond5_df %>%
   theme_mms(
     grid="XY", axis="xy", 
     grid_col =  scales::alpha("lightgrey", 0.6),
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
@@ -367,7 +367,7 @@ iwc_2 <- wcond3_p_df %>%
   scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
   theme_mms(
     grid="X", axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) + 
   theme(
