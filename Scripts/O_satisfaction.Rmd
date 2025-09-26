@@ -129,7 +129,10 @@ sa_n_df <- o_df %>%
     n_y = sum(n, na.rm = TRUE),
     share = weight/sum(weight, na.rm = TRUE)*100
   ) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(
+    nat = factor(nat, levels = rev(c("yes", "don't know", "no")))
+  ) 
 
 if(run_n_check) {
   sa_n_df %>% 
@@ -143,14 +146,14 @@ if(run_n_check) {
 sa_e_df <- o_df %>% 
   filter(!is.na(h6)) %>% 
   filter(!is.na(year)) %>% 
-  filter(!is.na(groupe_edu)) %>% 
+  filter(!is.na(edu)) %>% 
   filter(year == 2024) %>%
-  group_by(groupe_edu, h6) %>% 
+  group_by(edu, h6) %>% 
   reframe(
     n = n(),
     weight = sum(weight, na.rm = TRUE)
   ) %>% 
-  group_by(groupe_edu) %>% 
+  group_by(edu) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
     share = weight/sum(weight, na.rm = TRUE)*100
@@ -160,7 +163,7 @@ sa_e_df <- o_df %>%
 
 if(run_n_check) {
   sa_e_df %>% 
-    select(groupe_edu, h6, share, n_y) %>%
+    select(edu, h6, share, n_y) %>%
     pivot_wider(
       names_from = h6,
       values_from = share
@@ -335,16 +338,131 @@ p_sa_2
 #### 3.
 
 ```{r 3}
+sa_n_labels <- sa_n_df %>% 
+  select(nat) %>% distinct() %>% 
+  mutate(
+    share = 0
+  )
+
+# dodged bar chart by naturalisation will
+p_sa_3 <- sa_n_df %>%
+  ggplot(aes(x = share, y = nat, fill = h6)) +
+  # geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme_mms(
+    grid=F, 
+    axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) +
+  theme(
+    axis.text.x = element_blank(),
+    legend.position = "none",
+    axis.text.y = element_blank()
+  ) +
+  scale_y_discrete(name = "", expand = c(0, 0)) +
+  scale_x_continuous(name = "", expand = c(0, 0)) +
+  scale_fill_manual(values = sa_cols) +
+  geom_text(
+    data = sa_n_df %>% filter(h6 != h62f$h6[1]),
+    aes(label = paste0(round(share, 0), "%")),
+    position = position_stack(vjust = 0.5),
+    vjust = 3,
+    color = "white",
+    size = 3,
+    family = mms_base_family
+  ) +
+  scale_color_identity() +
+  geom_text(
+    data = sa_n_labels,
+    aes(x = share, y = nat, label = nat), # Position text at the center
+    inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
+    size = 4,
+    color = "white",
+    vjust = -2,
+    hjust = 0,
+    nudge_x = 2,
+    family = mms_base_family, fontface = "bold"
+  ) +
+  labs(
+    title = str_c("People intending to naturalize are more satisfied with their move to Switzerland"),
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by intent to naturalize: ",
+                   "<span style='color:", sa_cols[3],
+                    ";'><b>high</b></span>, ",
+                   "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
+                   "<span style='color:", sa_cols[1], ";'><b>low</b></span>")
+  )
+
+  
+p_sa_3
+
 ```
 
 #### 4.
 
 ```{r 4}
+# same as above by edu 
+sa_e_labels <- sa_e_df %>% 
+  select(edu) %>% distinct() %>% 
+  mutate(
+    share = 0
+  )
+# dodged bar chart by naturalisation will
+p_sa_4 <- sa_e_df %>%
+  ggplot(aes(x = share, y = edu, fill = h6
+             )) +
+  # geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme_mms(
+    grid=F, 
+    axis=F,
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) +
+  theme(
+    axis.text.x = element_blank(),
+    legend.position = "none",
+    axis.text.y = element_blank()
+  ) +
+  scale_y_discrete(name = "", expand = c(0, 0)) +
+  scale_x_continuous(name = "", expand = c(0, 0)) +
+  scale_fill_manual(values = sa_cols) +
+  geom_text(
+    data = sa_e_df %>% filter(h6 != h62f$h6[1]),
+    aes(label = paste0(round(share, 0), "%")),
+    position = position_stack(vjust = 0.5),
+    vjust = 6,
+    color = "white",
+    size = 3,
+    family = mms_base_family
+  ) +
+  scale_color_identity() +
+  geom_text(
+    data = sa_e_labels,
+    aes(x = share, y = edu, label = edu), # Position text at the center
+    inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
+    size = 4,
+    color = "white",
+    vjust = -3.2,
+    hjust = 0,
+    nudge_x = 3,
+    family = mms_base_family, fontface = "bold"
+  ) +
+  labs(
+    title = str_c("People with higher education are more satisfied with their move to Switzerland"),
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by education level: ",
+                   "<span style='color:", sa_cols[3],
+                    ";'><b>high</b></span>, ",
+                   "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
+                   "<span style='color:", sa_cols[1], ";'><b>low</b></span>")  
+  )
+
+p_sa_4
 ```
 
 #### 5.
 
-```{r 4}
+```{r 5}
 ```
 
 #### patch

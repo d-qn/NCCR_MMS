@@ -138,6 +138,9 @@ mms_export_vector <- function(
 
 ### New ggplot2 theme
 
+num_n_dec  <- 1
+num_n_dect <- 0
+
 
 # Temporarily add borders to see the actual plot areas
 debug_theme <- theme(
