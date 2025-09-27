@@ -381,7 +381,7 @@ p_ho_3
 ```{r patch}
 left_col <- (p_ho_1 + p_ho_2) + plot_layout(ncol = 1, heights = c(1.4, 1))
 
-patchwork <- (left_col | p_ho_3) + plot_layout(widths = c(1, 1.35))
+patchwork <- (left_col | p_ho_3) + plot_layout(widths = c(1, 1))
 patchwork
 
 mms_export_vector(

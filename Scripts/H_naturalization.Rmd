@@ -88,6 +88,7 @@ if(run_n_check) {
 # )
 
 nati_migy_df <- h_df %>% 
+  filter(year > 2016) %>% 
   filter(!is.na(nat)) %>%
   filter(!is.na(year)) %>%
   filter( 
@@ -128,6 +129,7 @@ if(run_n_check) {
 nati_c_df <- h_df %>% 
   filter(!is.na(nat)) %>% 
   filter(!is.na(country)) %>% 
+  filter(year > 2016) %>% 
   group_by(country, year, nat) %>% 
   reframe(
     n = n(),
@@ -219,8 +221,8 @@ p_nati_1 <- nati_y_df %>%
   theme_mms(grid="XY", axis="xy", 
             #grid_col =  scales::alpha("lightgrey", 0.6),
             base_size = mms_base_size,
-            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
+            mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+            mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   )  + 
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
@@ -297,7 +299,7 @@ p_nati_2 <- nati_migy_df %>%
     name = "", expand = c(0.05,0.05)
   ) +
   scale_y_continuous(name = "", 
-                     n.breaks = 10,
+                     n.breaks = 6,
                      labels = function(x) paste0(x, "%"),
                      expand = c(0.05,0.05)
   ) +
@@ -322,18 +324,18 @@ nati_c_df %<>%
 
 fl_points <- nati_c_df %>%
   group_by(country_styled) %>%
-  slice(c(1,5)) %>% 
+  slice(c(1,4)) %>% 
   ungroup()
 
 l_points <- nati_c_df %>%
   group_by(country_styled) %>%
-  slice(c(5)) %>% 
+  slice(c(4)) %>% 
   ungroup()
 
 # Create the data frame for the labels
 year_label_df <- tibble(
-  x = c(2016, 2024),
-  label = c(2016, 2024),
+  x = c(2018, 2024),
+  label = c(2018, 2024),
   hjust = c(0, 1) # 0 for left-align, 1 for right-align
 )
 

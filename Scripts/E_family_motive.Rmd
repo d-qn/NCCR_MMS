@@ -96,7 +96,7 @@ fam_pays_df <- e_df %>%
   group_by(country) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
+    share = weight/sum(weight, na.rm = TRUE)*100, 
   ) %>% 
   ungroup() %>% 
   select(country, famr, share, n_y,n, weight) %>% 
@@ -194,8 +194,8 @@ famr2 <- fam_pays_df %>%
            show.legend = FALSE, linewidth =1, color = "white") +
   theme_mms(
     grid=F, axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 6),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 5)
   ) + 
   theme(
     legend.position = "none"
@@ -210,7 +210,7 @@ famr_labels <- fam_pays_df %>%
   mutate(
     # Insert line breaks between words
     labelc = gsub(" ", "<br>", country), # country, 
-    labelv = paste0(round(share, 1), "%"),
+    labelv = paste0(round(share, num_n_dec), "%"),
     hjust = 1.05
   ) 
 

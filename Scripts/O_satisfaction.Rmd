@@ -211,8 +211,9 @@ if(run_n_check) {
 
 ```{r 1}
 
-sa_cols <- nccr_bi_colors[c(3,3,4)]
-sa_cols[1] <- lighten(sa_cols[1], 0.4) %>% desaturate(0.5)
+sa_cols <- nccr_bi_colors[c(1,1,2)]
+#sa_cols[2] <- sa_cols[2] %>% desaturate(0.1)
+sa_cols[1] <- lighten(sa_cols[1], 0.5) %>% desaturate(0.5)
 
 p_sa_1 <- sa_df %>%
   ggplot(aes(x = year, y = share)) +
@@ -463,12 +464,97 @@ p_sa_4
 #### 5.
 
 ```{r 5}
+point_s <- 3.5
+
+
 # a dot plot range chart by country & edu ?? 
+sa_ecw <- sa_ec_df %>% 
+  select(country, edu, share) %>% 
+  pivot_wider(
+    names_from = edu,
+    values_from = share
+  ) %>% 
+  mutate(
+    country = factor(country) %>% fct_reorder(Tertiary),
+    largert = ifelse(`Secondary I & II` > Tertiary, TRUE, FALSE),
+    minv = pmin(`Secondary I & II`, Tertiary),
+  ) %>% 
+  arrange(country)
 
-sa_ec_df %>% 
-  ggplot(aes(x = share, y = country, color = edu)) 
 
 
+annot_sub <- sa_ec_df %>% 
+  filter(country == "Other Europe") %>% 
+  select(edu, country, share) %>% 
+  mutate(country = factor(country, levels = levels(sa_ecw$country)))
+
+# A tibble: 2 × 5
+arrow_txt <-
+  tibble(
+    x2 = annot_sub$share+c(-1,1),
+    x1 = annot_sub$share,
+    y2 = as.numeric(annot_sub$country)+c(0.7, 0.2),
+    y1 = as.numeric(annot_sub$country),
+    label = annot_sub$edu,
+    hj = c(0.7,0.3)
+  )
+
+p_sa_5 <- sa_ecw %>% 
+  ggplot() +
+  geom_curve(
+    data = arrow_txt,
+    aes(x = x1, y = y1, xend = x2, yend = y2),
+    color = nccr_bi_colors[13],
+    alpha = 0.5,
+    curvature = 0.2, size = .3) +
+  geom_richtext(
+    data = arrow_txt,
+    aes(x = x2, y = y2, label = label, hjust = hj),
+    family = mms_base_family,
+    fontface ="bold",
+    fill = NA, label.color = NA,# remove background and outline,
+    color = nccr_bi_colors[14],
+    size = 3.5,
+    vjust = 0
+  ) +
+  geom_segment(aes(x = `Secondary I & II`, xend = Tertiary, 
+                   y = country, yend = country,
+                   color = largert),
+               size = 1.5, alpha = 0.8) +
+  geom_point(aes(x = `Secondary I & II`, y = country), color = sa_cols[2], size = point_s, 
+             shape = 15)  +
+  geom_point(aes(x = Tertiary, y = country), color = sa_cols[3], size = point_s) +
+  scale_color_manual(values = c("TRUE" =  nccr_bi_colors[13], "FALSE" =  sa_cols[1])) +
+  theme_mms(
+    grid="X", axis="X",
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+  ) +
+  scale_x_continuous(
+    name = "",
+    expand = c(0.15, 0.1),
+   # limits = c(0, 100),
+  #  breaks = seq(0, 100, by = 20),
+    labels = function(x) paste0(x, "%"),
+    position = "top"
+  ) +
+  scale_y_discrete(name = "", expand = c(0.02, 0.015)) +
+  theme(
+    legend.position = "none",
+    axis.text.y = element_blank(),
+  ) +
+  geom_text(
+    aes(x = minv, y = country, label = country),
+    size = 3.5,
+    hjust = 1.1,
+    vjust = 0.5,
+    nudge_x = -0.3,
+    #nudge_y = -0.2,
+    family = mms_base_family
+  ) +
+  coord_cartesian(clip = "off") 
+
+p_sa_5
 ```
 
 #### patch

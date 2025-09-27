@@ -180,19 +180,21 @@ hh_g_labels <- tibble(
 p_hh_2 <- hh_g_df %>% 
  ggplot(aes(x = sexe, y = share, fill = hh3)) +
   geom_bar(stat = "identity", position = "fill") +
-  geom_text(aes(y = share / 100, label = paste0(round(share, num_n_dect), "%")), size = 3,
-            position = position_stack(vjust = 0.8), family =mms_base_family,
-            color = "white") +
-   geom_richtext(data = hh_g_labels, 
-                 aes(x = as.numeric(sexe), y = share / 100, 
-                     label = label),
-                 color = "white",
-                 fill = NA, family = mms_base_family,
+  geom_text(aes(y = share / 100, label = paste0(round(share, num_n_dect), "%"),
+                color = ifelse(hh3 == "1 person", "black", "white")), 
+            size = 3,
+            position = position_stack(vjust = 0.8), family =mms_base_family) +
+  geom_richtext(data = hh_g_labels, 
+                aes(x = as.numeric(sexe), y = share / 100, 
+                    label = label),
+                color = "white",
+                fill = NA, family = mms_base_family,
                 hjust = 0.5,  label.color = NA, size = 6
     #  fontface = "bold"
   ) +
   #coord_flip(clip = "on") +
   scale_fill_manual(values = nccr_categorical()[c(15, 3, 4)]) +
+  scale_colour_identity() +
   theme_mms(
     grid="", axis="",
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),

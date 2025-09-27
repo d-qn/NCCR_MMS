@@ -51,7 +51,7 @@ ints_df <- d_df %>%
   group_by(year) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
+    share = weight/sum(weight, na.rm = TRUE)*100, 
   ) %>% 
   ungroup() %>% 
   select(year, groupe_job_edu, share, n_y,n, weight) %>% 
@@ -90,7 +90,7 @@ ints_migy_df <- d_df %>%
   group_by(mig_4y) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
+    share = weight/sum(weight, na.rm = TRUE)*100, 
   ) %>% 
   ungroup() %>% 
   select(mig_4y, groupe_job_edu, share, n_y,n, weight) 
@@ -118,7 +118,7 @@ ints_pays_df <- d_df %>%
   group_by(country) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
+    share = weight/sum(weight, na.rm = TRUE)*100,
   ) %>% 
   ungroup() %>% 
   select(country, groupe_job_edu, share, n_y,n, weight) %>% 
@@ -150,7 +150,7 @@ ints_sexe_df <- d_df %>%
   group_by(sexe) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
+    share = weight/sum(weight, na.rm = TRUE)*100, 
   ) %>% 
   ungroup() %>% 
   select(sexe, groupe_job_edu, share, n_y,n, weight)
@@ -331,7 +331,7 @@ p_ints_3a <- p_ints_3 +
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
     size = 4,
-    nudge_y = 0.03,
+    nudge_y = 0.05,
     hjust = 0, nudge_x = .5, vjust = 0, colour = "white",
     family = mms_base_family
   ) +
@@ -339,7 +339,7 @@ p_ints_3a <- p_ints_3 +
     data = ints_value_labels,
     aes(x = share, y = country, label = label, hjust = hjust),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 1, nudge_y = -0.05, size = 3, alpha = 0.95, colour = "white",
+    vjust = 1, nudge_y = -0.08, size = 3, alpha = 0.95, colour = "white",
     family = mms_base_family
    ) + labs(
     title = str_c("Migrants from Germany and France are more likely to consider their education suited to their job"),
@@ -410,7 +410,7 @@ p_ints_4
 patchwork <- ((p_ints_1 /p_ints_2/p_ints_4) +
   plot_layout(heights = c(1,1,1), widths = 1, ncol = 1) | (p_ints_3a) +
     plot_layout(heights = c(1),  widths = 1, ncol = 1)) +
-  plot_layout(widths = c(1,1.2))
+  plot_layout(widths = c(1,1))
 patchwork
 
 

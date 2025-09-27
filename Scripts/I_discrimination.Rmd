@@ -370,6 +370,12 @@ disrc_df %<>%
     # Create a clean label for the text
     share_label = round(weighted_share, num_n_dec),
     text_color = if_else(weighted_share >= midpoint, "white", "black")
+ )
+
+disrc_df %<>%
+  mutate(
+    share_label = ifelse(country == "Asia" & short_descr == levels(disrc_df$short_descr)[1],
+                         paste0(share_label, "%"), share_label)
   )
 
 # Create the heatmap plot
@@ -418,7 +424,6 @@ p_dis_3
 #### patch
 
 ```{r patch}
-
 
 # top_row <- p_dis_1a + p_dis_2 + plot_layout(widths = c(1, 1.5))
 # patchwork <- top_row / p_dis_3 + plot_layout(heights = c(1, 1.1))

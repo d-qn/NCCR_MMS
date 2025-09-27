@@ -93,15 +93,15 @@
 <rect x='232.86' y='196.19' width='38.88' height='87.65' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B47B94;' />
 <rect x='232.86' y='283.84' width='38.88' height='184.91' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #8C6074;' />
 <text x='79.51' y='190.51' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>12%</text>
-<text x='79.51' y='340.73' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>84,9%</text>
-<text x='122.71' y='205.45' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>18,9%</text>
-<text x='122.71' y='353.54' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>76,6%</text>
-<text x='165.90' y='217.78' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>23,2%</text>
-<text x='165.90' y='363.03' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>70,5%</text>
-<text x='209.10' y='226.25' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>24,4%</text>
-<text x='209.10' y='368.19' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>67,2%</text>
-<text x='252.30' y='243.56' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>28,3%</text>
-<text x='252.30' y='379.84' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>59,7%</text>
+<text x='79.51' y='340.73' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>85%</text>
+<text x='122.71' y='205.45' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>19%</text>
+<text x='122.71' y='353.54' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>77%</text>
+<text x='165.90' y='217.78' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>23%</text>
+<text x='165.90' y='363.03' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>70%</text>
+<text x='209.10' y='226.25' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>24%</text>
+<text x='209.10' y='368.19' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>67%</text>
+<text x='252.30' y='243.56' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>28%</text>
+<text x='252.30' y='379.84' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>60%</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <text x='79.51' y='483.95' text-anchor='middle' style='font-size: 12.00px;fill: #878F92; font-family: "Roboto Slab";'>2005</text>
@@ -147,16 +147,16 @@
 <rect x='232.86' y='791.75' width='38.88' height='40.68' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CEB0BD;' />
 <rect x='232.86' y='698.49' width='38.88' height='93.26' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B47B94;' />
 <rect x='232.86' y='522.46' width='38.88' height='176.04' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #8C6074;' />
-<text x='79.51' y='753.85' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>23,2%</text>
-<text x='79.51' y='621.94' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>61,9%</text>
-<text x='122.71' y='747.22' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>29,3%</text>
-<text x='122.71' y='613.94' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>56,7%</text>
-<text x='165.90' y='740.48' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>29,1%</text>
-<text x='165.90' y='610.69' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>54,6%</text>
-<text x='209.10' y='744.36' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>28,5%</text>
-<text x='209.10' y='613.08' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>56,2%</text>
-<text x='252.30' y='748.66' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>30,1%</text>
-<text x='252.30' y='614.02' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>56,8%</text>
+<text x='79.51' y='753.85' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>23%</text>
+<text x='79.51' y='621.94' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>62%</text>
+<text x='122.71' y='747.22' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>29%</text>
+<text x='122.71' y='613.94' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>57%</text>
+<text x='165.90' y='740.48' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>29%</text>
+<text x='165.90' y='610.69' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>55%</text>
+<text x='209.10' y='744.36' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>29%</text>
+<text x='209.10' y='613.08' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>56%</text>
+<text x='252.30' y='748.66' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>30%</text>
+<text x='252.30' y='614.02' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>57%</text>
 <rect x='57.92' y='522.46' width='215.98' height='309.98' style='stroke-width: 0.00; stroke: none;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
@@ -219,21 +219,21 @@
 <rect x='478.72' y='158.78' width='38.88' height='165.44' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CEB0BD;' />
 <rect x='478.72' y='324.22' width='38.88' height='118.51' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B47B94;' />
 <rect x='478.72' y='442.73' width='38.88' height='26.03' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #8C6074;' />
-<text x='325.38' y='203.46' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>26,5%</text>
-<text x='325.38' y='316.41' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46,3%</text>
-<text x='325.38' y='430.26' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>27,1%</text>
-<text x='368.57' y='216.45' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>34,9%</text>
+<text x='325.38' y='203.46' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>27%</text>
+<text x='325.38' y='316.41' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46%</text>
+<text x='325.38' y='430.26' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>27%</text>
+<text x='368.57' y='216.45' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35%</text>
 <text x='368.57' y='346.50' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49%</text>
-<text x='368.57' y='447.36' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>16,1%</text>
-<text x='411.77' y='227.56' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>42,1%</text>
-<text x='411.77' y='362.33' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>44,9%</text>
+<text x='368.57' y='447.36' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>16%</text>
+<text x='411.77' y='227.56' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>42%</text>
+<text x='411.77' y='362.33' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>45%</text>
 <text x='411.77' y='452.07' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>13%</text>
-<text x='454.97' y='239.09' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49,5%</text>
-<text x='454.97' y='375.95' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>38,8%</text>
-<text x='454.97' y='454.17' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>11,7%</text>
-<text x='498.16' y='245.04' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>53,4%</text>
-<text x='498.16' y='387.01' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>38,2%</text>
-<text x='498.16' y='459.28' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>8,4%</text>
+<text x='454.97' y='239.09' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>50%</text>
+<text x='454.97' y='375.95' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>39%</text>
+<text x='454.97' y='454.17' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>12%</text>
+<text x='498.16' y='245.04' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>53%</text>
+<text x='498.16' y='387.01' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>38%</text>
+<text x='498.16' y='459.28' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>8%</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <text x='325.38' y='483.95' text-anchor='middle' style='font-size: 12.00px;fill: #878F92; font-family: "Roboto Slab";'>2005</text>
@@ -278,21 +278,21 @@
 <rect x='478.72' y='692.37' width='38.88' height='140.07' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CEB0BD;' />
 <rect x='478.72' y='581.65' width='38.88' height='110.72' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B47B94;' />
 <rect x='478.72' y='522.46' width='38.88' height='59.20' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #8C6074;' />
-<text x='325.38' y='773.66' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>40,2%</text>
-<text x='325.38' y='656.50' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35,4%</text>
-<text x='325.38' y='563.84' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>24,4%</text>
-<text x='368.57' y='766.38' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>44,9%</text>
-<text x='368.57' y='636.51' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>38,9%</text>
-<text x='368.57' y='551.12' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>16,2%</text>
-<text x='411.77' y='762.52' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>47,4%</text>
-<text x='411.77' y='634.40' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35,3%</text>
-<text x='411.77' y='552.87' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>17,3%</text>
-<text x='454.97' y='764.35' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46,2%</text>
-<text x='454.97' y='637.73' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35,5%</text>
-<text x='454.97' y='554.37' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>18,3%</text>
-<text x='498.16' y='765.94' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>45,2%</text>
-<text x='498.16' y='640.55' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35,7%</text>
-<text x='498.16' y='555.59' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>19,1%</text>
+<text x='325.38' y='773.66' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>40%</text>
+<text x='325.38' y='656.50' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35%</text>
+<text x='325.38' y='563.84' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>24%</text>
+<text x='368.57' y='766.38' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>45%</text>
+<text x='368.57' y='636.51' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>39%</text>
+<text x='368.57' y='551.12' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>16%</text>
+<text x='411.77' y='762.52' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>47%</text>
+<text x='411.77' y='634.40' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35%</text>
+<text x='411.77' y='552.87' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>17%</text>
+<text x='454.97' y='764.35' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46%</text>
+<text x='454.97' y='637.73' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>35%</text>
+<text x='454.97' y='554.37' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>18%</text>
+<text x='498.16' y='765.94' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>45%</text>
+<text x='498.16' y='640.55' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>36%</text>
+<text x='498.16' y='555.59' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>19%</text>
 <rect x='303.78' y='522.46' width='215.98' height='309.98' style='stroke-width: 0.00; stroke: none;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
