@@ -234,8 +234,8 @@ p_sa_1 <- sa_df %>%
   ) +
  theme_mms(
     grid="XY", axis="xy", 
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   theme(
     legend.position = "none",
@@ -297,13 +297,13 @@ p_sa_2 <- sa_s_df %>%
     size=4,
     fill = NA, label.size = 0,
     family = mms_base_family) +
-  facet_wrap(~sexe, ncol =2) +
+  facet_wrap(~sexe, nrow =2) +
   coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
   theme_mms(
     grid=F, 
     axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
   ) +
   theme(
     axis.text.x = element_blank(),
@@ -325,11 +325,12 @@ p_sa_2 <- sa_s_df %>%
     family = mms_base_family, fontface = "bold"
   ) +
   labs(
-    title = str_c("Women are less satisfied than men with their move to Switzerland"),
-    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by gender: ",
-                    "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
-                   "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
-                   "<span style='color:", sa_cols[3], ";'><b>high</b></span>")
+    title = str_c("<span style='color:", nccr_bi_colors[12],  ";'><b>",
+                  "Women</b></span>", " are less satisfied than men with their move to Switzerland"),
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by gender")#: ",
+                   #  "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
+                   # "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
+                   # "<span style='color:", sa_cols[3], ";'><b>high</b></span>")
   )
 
 p_sa_2
@@ -353,7 +354,7 @@ p_sa_3 <- sa_n_df %>%
   theme_mms(
     grid=F, 
     axis=F,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 5),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   theme(
@@ -368,7 +369,7 @@ p_sa_3 <- sa_n_df %>%
     data = sa_n_df %>% filter(h6 != h62f$h6[1]),
     aes(label = paste0(round(share, num_n_dect), "%")),
     position = position_stack(vjust = 0.5),
-    vjust = 3,
+    vjust = 1,
     color = "white",
     size = 3,
     family = mms_base_family
@@ -380,13 +381,13 @@ p_sa_3 <- sa_n_df %>%
     inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
     size = 4,
     color = "white",
-    vjust = -2,
+    vjust = 0,
     hjust = 0,
     nudge_x = 2,
-    family = mms_base_family, fontface = "bold"
+    family = mms_base_family#, fontface = "bold"
   ) +
   labs(
-    title = str_c("People intending to naturalize are more satisfied with their move to Switzerland"),
+    title = str_c("People intending to naturalize and with higher education are more satisfied with their move to Switzerland"),
     subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by intent to naturalize: ",
                    "<span style='color:", sa_cols[3],
                     ";'><b>high</b></span>, ",
@@ -432,7 +433,7 @@ p_sa_4 <- sa_e_df %>%
     data = sa_e_df %>% filter(h6 != h62f$h6[1]),
     aes(label = paste0(round(share, num_n_dect), "%")),
     position = position_stack(vjust = 0.5),
-    vjust = 6,
+    vjust = 2,
     color = "white",
     size = 3,
     family = mms_base_family
@@ -444,18 +445,19 @@ p_sa_4 <- sa_e_df %>%
     inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
     size = 4,
     color = "white",
-    vjust = -3.2,
+    vjust = -0.5,
     hjust = 0,
-    nudge_x = 3,
-    family = mms_base_family, fontface = "bold"
+    nudge_x = 2,
+    family = mms_base_family,
+    #fontface = "bold"
   ) +
   labs(
-    title = str_c("People with higher education are more satisfied with their move to Switzerland"),
-    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by education level: ",
-                   "<span style='color:", sa_cols[3],
-                    ";'><b>high</b></span>, ",
-                   "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
-                   "<span style='color:", sa_cols[1], ";'><b>low</b></span>")  
+   # title = str_c("People with higher education are more satisfied with their move to Switzerland"),
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by education level")#: ",
+                   # "<span style='color:", sa_cols[3],
+                   #  ";'><b>high</b></span>, ",
+                   # "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
+                   # "<span style='color:", sa_cols[1], ";'><b>low</b></span>")  
   )
 
 p_sa_4
@@ -464,7 +466,7 @@ p_sa_4
 #### 5.
 
 ```{r 5}
-point_s <- 3.5
+point_s <- 3
 
 
 # a dot plot range chart by country & edu ?? 
@@ -493,7 +495,7 @@ arrow_txt <-
   tibble(
     x2 = annot_sub$share+c(-1,1),
     x1 = annot_sub$share,
-    y2 = as.numeric(annot_sub$country)+c(0.7, 0.2),
+    y2 = as.numeric(annot_sub$country)+c(0.7, 0.05),
     y1 = as.numeric(annot_sub$country),
     label = annot_sub$edu,
     hj = c(0.7,0.3)
@@ -532,13 +534,13 @@ p_sa_5 <- sa_ecw %>%
   ) +
   scale_x_continuous(
     name = "",
-    expand = c(0.15, 0.1),
+    expand = c(0.05, 0.05),
    # limits = c(0, 100),
   #  breaks = seq(0, 100, by = 20),
     labels = function(x) paste0(x, "%"),
     position = "top"
   ) +
-  scale_y_discrete(name = "", expand = c(0.02, 0.015)) +
+  scale_y_discrete(name = "", expand = c(0.1, 0.015)) +
   theme(
     legend.position = "none",
     axis.text.y = element_blank(),
@@ -552,7 +554,12 @@ p_sa_5 <- sa_ecw %>%
     #nudge_y = -0.2,
     family = mms_base_family
   ) +
-  coord_cartesian(clip = "off") 
+  coord_cartesian(clip = "off") +
+  labs(
+    title = str_c("People originating from Southern Europe are generally less satisfied with having moved to Switzerland"),
+    subtitle = str_c("Proportion of people with a high level of satisfaction according to their education level",
+                    ", in 2024 and by country of origin")
+  )
 
 p_sa_5
 ```
@@ -561,11 +568,21 @@ p_sa_5
 
 ```{r patch}
 
-# mms_export_vector(
-#   plot = patchwork,
-#   filepath = #here("Output", "charts", ""),
-#   bg_col = pw_bg_color
-#   )
+top_p <- (p_sa_1 | (p_sa_3 / p_sa_4)) + plot_layout(widths = c(1, 1.2))
+bottom_p <- (p_sa_2 |p_sa_5) + plot_layout(widths = c(1, 1.2))
+
+patchwork <- (top_p / bottom_p) +
+    plot_layout(heights = c(1, 1.3))
+
+patchwork
+
+
+
+mms_export_vector(
+  plot = patchwork,
+  filepath = here("Output", "charts", "O_satisfaction.svg"),
+  bg_col = pw_bg_color
+  )
 
 
 ```
