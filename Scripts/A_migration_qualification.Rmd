@@ -443,7 +443,7 @@ edu_chart3 <- edu3_pays_df %>%
     family = mms_base_family,
     #fontface ="bold",
     fill = NA, label.color = NA,# remove background and outline,
-    color = nccr_bi_colors[13], size = 4,
+    color = nccr_bi_colors[14], size = 4,
     hjust = 1, vjust = 0.5
   ) +
   geom_point(

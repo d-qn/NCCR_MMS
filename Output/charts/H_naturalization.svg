@@ -393,7 +393,7 @@
 <circle cx='275.70' cy='396.81' r='2.52' style='stroke-width: 0.77; stroke: #3F7289; fill: #3F7289;' />
 <circle cx='342.96' cy='377.87' r='2.52' style='stroke-width: 0.77; stroke: #3F7289; fill: #3F7289;' />
 <line x1='280.53' y1='404.86' x2='276.24' y2='397.71' style='stroke-width: 1.07; stroke: none;' />
-<line x1='337.73' y1='385.91' x2='342.39' y2='378.74' style='stroke-width: 1.07; stroke: none;' />
+<line x1='337.74' y1='385.91' x2='342.39' y2='378.74' style='stroke-width: 1.07; stroke: none;' />
 <text x='274.88' y='412.73' style='font-size: 8.54px;fill: #3F7289; font-family: "Roboto Slab";'>50%</text>
 <text x='327.07' y='393.78' style='font-size: 8.54px;fill: #3F7289; font-family: "Roboto Slab";'>65%</text>
 </g>

@@ -253,9 +253,10 @@ p_sa_1 <- sa_df %>%
   labs(
     title = str_c("Four out of five people are satisfied with their decision to migrate to Switzerland, with little change over time"),
     subtitle = str_c("Level of satisfaction of moving to Switzerland, by survey year: ",
-                    "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
+                   "<span style='color:", sa_cols[3],
+                    ";'><b>high</b></span>, ",
                    "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
-                   "<span style='color:", sa_cols[3], ";'><b>high</b></span>")
+                   "<span style='color:", sa_cols[1], ";'><b>low</b></span>")
   )
 
 p_sa_1  
@@ -326,7 +327,9 @@ p_sa_2 <- sa_s_df %>%
   ) +
   labs(
     title = str_c("<span style='color:", nccr_bi_colors[12],  ";'><b>",
-                  "Women</b></span>", " are less satisfied than men with their move to Switzerland"),
+                  "Women</b></span>", " are less satisfied than ",
+                  "<span style='color:", nccr_bi_colors[2],  ";'><b>",
+                  "men</b></span> with their move to Switzerland"),
     subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by gender")#: ",
                    #  "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
                    # "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
