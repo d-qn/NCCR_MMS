@@ -168,8 +168,8 @@ slc_labels_df <- slc_df %>%
   group_by(country) %>%
   summarise(
     share_stay = share[h16 == levels(h162f$h16)[3]] / 100,
-    stay_pc = round(share[h16 == levels(h162f$h16)[3]], 1),
-    leave_pc = round(share[h16 == levels(h162f$h16)[1]], 1),
+    stay_pc = round(share[h16 == levels(h162f$h16)[3]], num_n_dec),
+    leave_pc = round(share[h16 == levels(h162f$h16)[1]], num_n_dec),
   ) %>%
   mutate(
     y = -0.001,

@@ -60,7 +60,7 @@ mig2y_df <- b_df %>%
   ) %>% 
   arrange(desc(share)) %>% 
   mutate(
-    share = round(share*100,1)
+    share = round(share*100, num_n_dec)
   ) %>% 
   select(-weight) %>% 
   ungroup() %>% 
@@ -82,7 +82,7 @@ mig4y_df <- b_df %>%
   ) %>%
   arrange(desc(share)) %>%
   mutate(
-    share = round(share*100,1)
+    share = round(share*100, num_n_dec)
   ) %>%
   select(-weight) %>%
   ungroup() %>%
@@ -104,7 +104,7 @@ fhf_df<- b_df %>%
     n_sexe = sum(n, na.rm = T)
   ) %>% 
   mutate(
-    share = round(share*100,1)
+    share = round(share*100, num_n_dec)
   ) %>% 
   ungroup() %>% 
   mutate(
@@ -127,7 +127,7 @@ fpp_df <- b_df %>%
     n_pays = sum(n, na.rm = T)
   ) %>%
     mutate(
-    share = round(share*100,1)
+    share = round(share*100, num_n_dec)
   ) %>% 
   ungroup() %>%
   mutate(

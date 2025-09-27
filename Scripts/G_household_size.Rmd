@@ -180,7 +180,7 @@ hh_g_labels <- tibble(
 p_hh_2 <- hh_g_df %>% 
  ggplot(aes(x = sexe, y = share, fill = hh3)) +
   geom_bar(stat = "identity", position = "fill") +
-  geom_text(aes(y = share / 100, label = paste0(round(share), "%")), size = 3,
+  geom_text(aes(y = share / 100, label = paste0(round(share, num_n_dect), "%")), size = 3,
             position = position_stack(vjust = 0.8), family =mms_base_family,
             color = "white") +
    geom_richtext(data = hh_g_labels, 
@@ -260,7 +260,7 @@ hh_value_labels <- hh2mekko_df %>%
   mutate(
     x = xmin,
     y = ymax - 0.01,
-    label = paste0(round(share, 1), ifelse(hh3 == "3+ people", "%", "")),
+    label = paste0(round(share, num_n_dec), ifelse(hh3 == "3+ people", "%", "")),
     hjust = -0.05,
     color = ifelse(hh3 == "1 person", "black", "white")
   ) 

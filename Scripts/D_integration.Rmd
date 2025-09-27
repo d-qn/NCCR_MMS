@@ -51,7 +51,7 @@ ints_df <- d_df %>%
   group_by(year) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
   ) %>% 
   ungroup() %>% 
   select(year, groupe_job_edu, share, n_y,n, weight) %>% 
@@ -63,7 +63,7 @@ ints_df <- d_df %>%
     # Compute label position
     label_pos = (ymax + ymin) / 2,
     # Compute a good label
-    label = paste0(round(share,0), "%")
+    label = paste0(round(share, num_n_dect), "%")
   ) %>% 
   ungroup()
 
@@ -90,7 +90,7 @@ ints_migy_df <- d_df %>%
   group_by(mig_4y) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
   ) %>% 
   ungroup() %>% 
   select(mig_4y, groupe_job_edu, share, n_y,n, weight) 
@@ -118,7 +118,7 @@ ints_pays_df <- d_df %>%
   group_by(country) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
   ) %>% 
   ungroup() %>% 
   select(country, groupe_job_edu, share, n_y,n, weight) %>% 
@@ -150,7 +150,7 @@ ints_sexe_df <- d_df %>%
   group_by(sexe) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
   ) %>% 
   ungroup() %>% 
   select(sexe, groupe_job_edu, share, n_y,n, weight)
@@ -320,7 +320,7 @@ ints_value_labels <- ints_pays_df %>%
   mutate(
     x = share,
     y = as.numeric(country) - 0.01,
-    label = paste0(round(share, 1), "%"),
+    label = paste0(round(share, num_n_dec), "%"),
     hjust = ifelse(groupe_job_edu == "Yes", 1.05, -0.05)
   ) 
 

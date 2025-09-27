@@ -253,7 +253,7 @@ p_hc_3 <- hccp_df %>%
   ) +
   geom_text(
     aes(y = country, 
-        label = paste0(round(share, 1), "%"), x = share),
+        label = paste0(round(share, num_n_dec), "%"), x = share),
     color = "white",
     size = 3,
     hjust = 1.1,

@@ -274,7 +274,7 @@ sa_s_df %<>%
     # Compute label position
     label_pos = (ymax + ymin) / 2,
     # Compute a good label
-    label = paste0(round(share,0), "%")
+    label = paste0(round(share, num_n_dect), "%")
   ) %>%
   ungroup()
 
@@ -365,7 +365,7 @@ p_sa_3 <- sa_n_df %>%
   scale_fill_manual(values = sa_cols) +
   geom_text(
     data = sa_n_df %>% filter(h6 != h62f$h6[1]),
-    aes(label = paste0(round(share, 0), "%")),
+    aes(label = paste0(round(share, num_n_dect), "%")),
     position = position_stack(vjust = 0.5),
     vjust = 3,
     color = "white",
@@ -429,7 +429,7 @@ p_sa_4 <- sa_e_df %>%
   scale_fill_manual(values = sa_cols) +
   geom_text(
     data = sa_e_df %>% filter(h6 != h62f$h6[1]),
-    aes(label = paste0(round(share, 0), "%")),
+    aes(label = paste0(round(share, num_n_dect), "%")),
     position = position_stack(vjust = 0.5),
     vjust = 6,
     color = "white",
@@ -463,6 +463,12 @@ p_sa_4
 #### 5.
 
 ```{r 5}
+# a dot plot range chart by country & edu ?? 
+
+sa_ec_df %>% 
+  ggplot(aes(x = share, y = country, color = edu)) 
+
+
 ```
 
 #### patch

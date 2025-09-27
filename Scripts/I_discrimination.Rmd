@@ -279,7 +279,7 @@ p_dis_2 <- disr_df %>%
   ) +
   # Add the numeric value as a text label next to the dot
   geom_text(
-    aes(label = paste0(round(weighted_share, 0), "%")),
+    aes(label = paste0(round(weighted_share, num_n_dect), "%")),
     hjust = -0.37, # Position the text slightly to the right of the point
     size = 3,
     nudge_x = 0.2,
@@ -368,7 +368,7 @@ disrc_df %<>%
      # Apply the column order
     short_descr = factor(short_descr, levels = descr_order),
     # Create a clean label for the text
-    share_label = round(weighted_share, 1),
+    share_label = round(weighted_share, num_n_dec),
     text_color = if_else(weighted_share >= midpoint, "white", "black")
   )
 

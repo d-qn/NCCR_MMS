@@ -229,7 +229,7 @@ p_ni_1a <- nic_df %>%
   geom_text(
     data = nic_df %>% filter(g13_ch != g132f$g13[1]),
     aes(y = share, group = g13_ch, 
-        label = paste0(round(share,1), "%")),
+        label = paste0(round(share, num_n_dec), "%")),
     position = position_stack(vjust = 0.5),
     size = vlabel_size,
     color = "white",
@@ -281,7 +281,7 @@ p_ni_1a <- nic_df %>%
    geom_text(
      data = nih_df %>% filter(g13_home != g132f$g13[1]),
      aes(y = -share, group = g13_home, 
-         label = paste0(round(share,1), "%")),
+         label = paste0(round(share, num_n_dec), "%")),
      position = position_stack(vjust = 0.5),
      size = vlabel_size,
      color = "white",
@@ -348,7 +348,7 @@ p_nip_2a <- nipc_df %>%
   geom_text(
     #data = nipc_df %>% filter(g16_ch != g162f$g16[1]),
     aes(y = share, group = g16_ch, 
-        label = paste0(round(share,1), "%")),
+        label = paste0(round(share, num_n_dec), "%")),
     position = position_stack(vjust = 0.5),
     size = vlabel_size,
     color = "white",
@@ -401,7 +401,7 @@ p_nip_2b <- niph_df %>%
   geom_text(
     #data = niph_df %>% filter(g16_home != g162f$g16[1]),
     aes(y = -share, group = g16_home, 
-        label = paste0(round(share,1), "%")),
+        label = paste0(round(share, num_n_dec), "%")),
     position = position_stack(vjust = 0.5),
     size = vlabel_size,
     color = "white",

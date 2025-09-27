@@ -151,7 +151,7 @@ ho_g_df %<>%
     # Compute label position
     label_pos = (ymax + ymin) / 2,
     # Compute a good label
-    label = paste0(round(share,0), "%")
+    label = paste0(round(share, num_n_dect), "%")
   ) %>% 
   ungroup()
 
@@ -253,7 +253,7 @@ p_ho_2 <- ho_m_df %>%
   geom_text(
     # L'étiquette est la valeur 'share', formatée en pourcentage
     aes(y = share / 100, 
-        label = paste0(round(share, 0), ifelse(g26 == g262f$g26[1], "%", "")),
+        label = paste0(round(share, num_n_dect), ifelse(g26 == g262f$g26[1], "%", "")),
         color = ifelse(g26 == g262f$g26[1], "black",  "white"),
         group = rev(g26)), 
     # La magie est ici : on empile les étiquettes comme les barres
@@ -299,9 +299,9 @@ ho_c_labels <- ho_c_df %>%
     strong = sum(share[g26 == g262f$g26[7]])
   ) %>%
   mutate(
-    weak_lbl = paste0("<span style='color:", darken(genderg_col[3], 0.3), ";'>", round(weak, 0), "%</span>"),
-    mid_lbl = paste0("<span style='color:", "white", ";'>", round(mid, 0), "</span>"),
-    strong_lbl = paste0("<span style='color:", "white", ";'>", round(strong, 0), "</span>")
+    weak_lbl = paste0("<span style='color:", darken(genderg_col[3], 0.3), ";'>", round(weak, num_n_dect), "%</span>"),
+    mid_lbl = paste0("<span style='color:", "white", ";'>", round(mid, num_n_dect), "</span>"),
+    strong_lbl = paste0("<span style='color:", "white", ";'>", round(strong, num_n_dect), "</span>")
   ) %>%
   mutate(
     y = 0.005,

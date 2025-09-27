@@ -253,11 +253,11 @@ p_fri_2 <- frim_df %>%
     )
   ) +
   geom_text(data = frim_df %>% filter(g6 == g62f$g6[1]), 
-            aes(y = 100 - share, label = paste0(round(share, 1), "%")), 
+            aes(y = 100 - share, label = paste0(round(share, num_n_dec), "%")), 
             vjust = 0, nudge_y = 2,
             size = 3, color = "white", family = mms_base_family) +
   geom_text(data = frim_df %>% filter(g6 == g62f$g6[5]),
-            aes(y = share, label = paste0(round(share, 1), "%")), 
+            aes(y = share, label = paste0(round(share, num_n_dec), "%")), 
             vjust = 1, nudge_y = -2,
             size = 3, color = "white", family = mms_base_family)
 
@@ -348,12 +348,12 @@ p_fri_3 <- fric_df %>%
   ) +
   geom_text(data = fric_1_df, 
             aes(x = share, y = country, 
-                label = paste0(round(share, 0), "%")), 
+                label = paste0(round(share, num_n_dect), "%")), 
             vjust = 0, hjust = 0.5, nudge_y = nudge_y_txt,
             size = 2.5, color = nccr_bi_colors[8], family = mms_base_family) +
   geom_text(data = fric_2_df,
             aes(x = share, y = country, 
-                label = paste0(round(label_share, 0), "%")), 
+                label = paste0(round(label_share, num_n_dect), "%")), 
             vjust = 0, hjust = 0.5, nudge_y = nudge_y_txt,
             size = 2.5, color = nccr_bi_colors[3], family = mms_base_family)
 
@@ -397,11 +397,11 @@ p_fri_4 <- frimg_df %>%
     )
   ) +
   geom_text(data = frimg_y_labels, 
-            aes(y = share, label = paste0(round(share), "%")), 
+            aes(y = share, label = paste0(round(share, num_n_dect), "%")), 
             vjust = 1, nudge_y = -3,
             size = 3, color = "white", family = mms_base_family) +
   geom_text(data = frimg_n_labels,
-            aes(y = 100 - share, label = paste0(round(share), "%")), 
+            aes(y = 100 - share, label = paste0(round(share, num_n_dect), "%")), 
             vjust = 0, nudge_y = 3,
             size = 3, color = "white", family = mms_base_family)
 

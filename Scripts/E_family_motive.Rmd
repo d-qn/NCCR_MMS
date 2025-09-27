@@ -96,7 +96,7 @@ fam_pays_df <- e_df %>%
   group_by(country) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = round(weight/sum(weight, na.rm = TRUE)*100, 1)
+    share = round(weight/sum(weight, na.rm = TRUE)*100, num_n_dec)
   ) %>% 
   ungroup() %>% 
   select(country, famr, share, n_y,n, weight) %>% 

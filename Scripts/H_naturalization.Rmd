@@ -350,7 +350,7 @@ p_nati_3 <- nati_c_df %>%
   ) +
   ggrepel::geom_text_repel(
     data = fl_points,
-    aes(label = paste0(round(share, 0), "%")),
+    aes(label = paste0(round(share, num_n_dect), "%")),
     size = 3,
     nudge_y = -10,
     direction = "y",
@@ -453,7 +453,7 @@ p_nati_4 <- nati_cr_df %>%
    ) +
   geom_richtext(
     data = nati_cr_labels,
-    aes(x = country, y = c3_4, label = paste0(abs(round(c3_4)), "%"),
+    aes(x = country, y = c3_4, label = paste0(abs(round(c3_4, num_n_dect)), "%"),
         hjust = 0),
     fill = NA, label.color = NA,# remove background and outline,
     vjust = 0.5, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
@@ -461,7 +461,7 @@ p_nati_4 <- nati_cr_df %>%
   ) +
   geom_richtext(
     data = nati_cr_labels,
-    aes(x = country, y = c3_5, label = paste0(abs(round(c3_5)), "%"),
+    aes(x = country, y = c3_5, label = paste0(abs(round(c3_5, num_n_dect)), "%"),
         hjust = 1),
     fill = NA, label.color = NA,# remove background and outline,
     vjust = 0.5, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",

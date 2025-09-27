@@ -138,7 +138,7 @@ mms_export_vector <- function(
 
 ### New ggplot2 theme
 
-num_n_dec  <- 1
+num_n_dec  <- 0
 num_n_dect <- 0
 
 
