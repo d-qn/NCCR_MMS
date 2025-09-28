@@ -211,8 +211,8 @@ p_ints_1 <- ints_df %>%
   labs(
     title = "Most people consider their education suited to their job, with little change over time",
     subtitle = str_c("Share of people who consider their education",
-                     "<span style='color:", nccr_categorical()[11], "'> 'is suited' </span> vs. ", 
-                     "<span style='color:", nccr_categorical()[7], "'> 'not suited' </span>",
+                     "<span style='color:", nccr_categorical()[11], "'><b> 'is suited' </b></span> vs. ", 
+                     "<span style='color:", nccr_categorical()[7], "'><b> 'not suited'</b></span>",
     " to their job")
   ) +
   # place the year inside the donut in the middle and remove facet text title
@@ -358,15 +358,16 @@ p_ints_3a <- p_ints_3 +
 p_ints_4 <- ints_sexe_df %>%
   filter(groupe_job_edu == "Yes") %>% 
   ggplot(aes(x = sexe, y = share, group = rev(sexe))) +
+  geom_col(aes(y = 100), fill = nccr_bi_colors[15]) +
   geom_col(aes(fill = sexe)) +
   geom_richtext(aes(label = sexe, y = 1),
                 fill = NA, label.color = NA,# remove background and outline,
-                size = 4, alpha = 1,
+                size = 5, alpha = 1,
                 #fontface = "bold",
                 family = mms_base_family,
                 vjust = 0, color = "white") +
-  geom_text(aes(label = paste0(share, "%")), color = "white",
-            vjust = 2.5,
+  geom_text(aes(label = paste0(round(share, num_n_dec), "%")), color = "white",
+            vjust = 3,
             family = mms_base_family, size =3) +
   theme_mms(grid=F,
             axis = F,

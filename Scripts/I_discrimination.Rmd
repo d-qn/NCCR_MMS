@@ -293,7 +293,7 @@ p_dis_2 <- disr_df %>%
         label = descr_ordered),
     hjust = 0,
     vjust = 0,
-    size = 3,
+    size = 3.2,
     nudge_x = 0.1,
     nudge_y = 0.25,
     color = darken(mms_axis_tick_txt_color, 0.2), # "black",

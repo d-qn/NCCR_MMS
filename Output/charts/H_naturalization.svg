@@ -287,7 +287,7 @@
 <circle cx='275.70' cy='140.57' r='2.52' style='stroke-width: 0.77; stroke: #9F6C59; fill: #9F6C59;' />
 <circle cx='342.96' cy='135.81' r='2.52' style='stroke-width: 0.77; stroke: #9F6C59; fill: #9F6C59;' />
 <line x1='280.52' y1='148.62' x2='276.24' y2='141.47' style='stroke-width: 1.07; stroke: none;' />
-<line x1='337.73' y1='143.86' x2='342.39' y2='136.68' style='stroke-width: 1.07; stroke: none;' />
+<line x1='337.74' y1='143.86' x2='342.39' y2='136.68' style='stroke-width: 1.07; stroke: none;' />
 <text x='274.86' y='156.49' style='font-size: 8.54px;fill: #9F6C59; font-family: "Roboto Slab";'>73%</text>
 <text x='327.00' y='151.73' style='font-size: 8.54px;fill: #9F6C59; font-family: "Roboto Slab";'>77%</text>
 </g>

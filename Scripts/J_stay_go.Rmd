@@ -131,9 +131,9 @@ p_sl_1 <- sl_df %>%
         ";'>stay</span> ", "in Switzerland"),
     subtitle = str_c(
       "Share of respondents intending to ",
-      "<span style='color:", nccr_bi_colors[6], ";'>stay</span> in Switzerland, ", 
-       "<span style='color:", nccr_bi_colors[8], ";'>leave</span> or who are ",      
-      "<span style='color:", nccr_bi_colors[14], ";'>undecided</span>, ",      
+      "<span style='color:", nccr_bi_colors[6], ";'><b>stay</b></span> in Switzerland, ", 
+       "<span style='color:", nccr_bi_colors[8], ";'><b>leave</span> or who are ",      
+      "<span style='color:", nccr_bi_colors[14], ";'><b>undecided</span>, ",      
       " by survey year"
     )) +
   scale_fill_manual(values =nccr_bi_colors[c(8,15,6)]) +

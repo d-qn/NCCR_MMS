@@ -201,12 +201,12 @@ p_fri_1 <- fri_df %>%
     title = str_c("The location of friends' residence shows little change between 2018 and 2024"),
     subtitle = str_c(
       "Friends' place of residence: ",
-      "<span style='color:", nccr_bi_colors[8], ";'><b>mostly in Switzerland</b></span>, ", 
+      "<span style='color:", nccr_bi_colors[7], ";'><b>mostly in Switzerland</b></span>, ", 
        "<span style='color:", nccr_bi_colors[13], ";'><b>mixed</b></span> or ",      
       "<span style='color:", nccr_bi_colors[4], ";'><b>mostly abroad</b></span>, ",
       " by survey year"
     )) +
-  scale_fill_manual(values =nccr_bi_colors[c(8,13,4)]) +
+  scale_fill_manual(values =nccr_bi_colors[c(7,13,4)]) +
   geom_richtext(data = annot_df, aes(
     x = year, y = share_w, label = txt, group = 1),
     fill = NA, label.color = NA,# remove background and outline,
@@ -241,7 +241,7 @@ p_fri_2 <- frim_df %>%
                     # labels = function(x) paste0(x, "%"),
                      expand = c(0,0)
   ) +
-  scale_fill_manual(values = nccr_bi_colors[c(8,13,4)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(7,13,4)]) +
   labs(
     title = str_c("Friends' place of residence differs by respondents' migration history"),
     subtitle = str_c(
@@ -311,7 +311,7 @@ p_fri_3 <- fric_df %>%
                color = nccr_bi_colors[7], size = segm_lw, alpha = 0.8) +
   geom_point(data = fric_1_df, 
              aes(x = share, y = country, color = g6), size = point_size,
-             color = nccr_bi_colors[8]) +
+             color = nccr_bi_colors[7]) +
   geom_segment(data = fric_2_df, 
                aes(x = 100, xend = share, y = country, yend = country), 
                color = nccr_bi_colors[3], size = segm_lw, alpha = 0.8) +
@@ -385,13 +385,13 @@ p_fri_4 <- frimg_df %>%
                      breaks = NULL,
                      expand = c(0,0)
   ) +
-  scale_fill_manual(values = nccr_bi_colors[c(8,4)]) +
+  scale_fill_manual(values = nccr_bi_colors[c(7,4)]) +
   labs(
     title = str_c("Most respondents have someone in Switzerland they can count on. Especially those who arrived long time ago compared to recent arrivals"),
     subtitle = str_c(
       "Presence, ",
       "<span style='color:", nccr_bi_colors[4], ";'><b>yes</b></span> or ",
-      "<span style='color:", nccr_bi_colors[8], ";'><b>no</b></span>, ",
+      "<span style='color:", nccr_bi_colors[7], ";'><b>no</b></span>, ",
       "of a person to count on in Switzerland in 2024, by year of migration"
     )
   ) +
