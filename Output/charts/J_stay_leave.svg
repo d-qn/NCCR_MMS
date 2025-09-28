@@ -99,15 +99,15 @@
 <text x='75.68' y='64.77' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>respondents</text>
 <text x='142.71' y='64.77' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>intending</text>
 <text x='196.45' y='64.77' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>to</text>
-<text x='209.15' y='64.77' style='font-size: 11.00px;fill: #9F994F; font-family: "Roboto Slab";'>stay</text>
-<text x='233.77' y='64.77' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>in</text>
+<text x='209.15' y='64.77' style='font-size: 11.00px; font-weight: 800;fill: #9F994F; font-family: "Roboto Slab";'>stay</text>
+<text x='234.69' y='64.77' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>in</text>
 <text x='30.39' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>Switzerland,</text>
-<text x='98.14' y='80.11' style='font-size: 11.00px;fill: #9F6C59; font-family: "Roboto Slab";'>leave</text>
-<text x='128.32' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>or</text>
-<text x='141.68' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>who</text>
-<text x='167.30' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>are</text>
-<text x='186.39' y='80.11' style='font-size: 11.00px;fill: #878F92; font-family: "Roboto Slab";'>undecided</text>
-<text x='240.52' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>,</text>
+<text x='98.14' y='80.11' style='font-size: 11.00px; font-weight: 800;fill: #9F6C59; font-family: "Roboto Slab";'>leave</text>
+<text x='129.02' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>or</text>
+<text x='142.38' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>who</text>
+<text x='168.00' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>are</text>
+<text x='187.09' y='80.11' style='font-size: 11.00px; font-weight: 800;fill: #878F92; font-family: "Roboto Slab";'>undecided</text>
+<text x='241.50' y='80.11' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>,</text>
 <text x='30.39' y='95.45' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>by</text>
 <text x='45.67' y='95.45' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>survey</text>
 <text x='83.74' y='95.45' style='font-size: 11.00px;fill: #403D43; font-family: "Roboto Slab";'>year</text>
