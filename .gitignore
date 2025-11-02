@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 *.html
+Data/.DS_Store
+Output/.DS_Store
