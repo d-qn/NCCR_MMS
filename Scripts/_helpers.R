@@ -10,7 +10,7 @@ library(Cairo)
 library(ragg)
 library(cowplot)
 #library(marquee)
-library(ggforce)
+#library(ggforce)
 
 Sys.setlocale("LC_TIME", "fr_FR.UTF-8")
 options(OutDec = ",")
@@ -85,7 +85,7 @@ register_font(
 register_font(
   name = "RobotoSlabLight",
   plain = "/Users/duc-q.nguyen/Library/Fonts/RobotoSlab-Light.ttf"
-  )
+)
 
 
 ### export as vector files 
@@ -141,6 +141,7 @@ mms_export_vector <- function(
 num_n_dec  <- 0
 num_n_dect <- 0
 
+bar_width <- 0.3
 
 # Temporarily add borders to see the actual plot areas
 debug_theme <- theme(
@@ -247,6 +248,21 @@ nccr_bi_colors <- c(
   "#c4d0d4"
 ) 
 
+# second color main
+nccr_colors_1_base <- c(
+  "#DCD16C", "#B6AF5B", "#948E4A", "#76733B"
+)
+lighter_start <- "#e4e3cd" 
+
+full_palette_func <- colorRampPalette(
+  c(lighter_start, nccr_colors_1_base[1], nccr_colors_1_base[4])
+)
+new_palette_8 <- full_palette_func(8)
+#scales::show_col(new_palette_8, labels = TRUE, borders = "grey50")
+
+# 4. On génère la palette complète avec 8 couleurs
+#    (tes 4 originales + 4 nouvelles plus claires)
+nccr_colors_1 <- full_palette_func(8)
 
 ### END styleguide ###
 

@@ -424,7 +424,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "F_couple_moving.svg"),
+  filepath = here("Output", "charts", "1_F_couple_moving.svg"),
   bg_col = pw_bg_color
   )
 

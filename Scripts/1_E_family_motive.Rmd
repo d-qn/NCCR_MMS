@@ -248,7 +248,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "E_family_reunification.svg"),
+  filepath = here("Output", "charts", "1_E_family_reunification.svg"),
   bg_col = pw_bg_color
   )
 
