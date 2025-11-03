@@ -181,7 +181,7 @@ mig_job_1 <- mig4y_df %>%
     ) +
   labs(
     x = "", y = "",
-    subtitle = "Employment contract or job offer in Switzerland at the time of moving, by migration periods from the 2024 survey",
+    subtitle = "Employment contract or job offer in Switzerland at the time of moving, by migration periods in the 2024 survey",
     title = "Almost half of migrants arrive in Switzerland with a work contract<br><br>"
   )
 
@@ -252,7 +252,7 @@ mig_job_2 <- mig_job_donut_df %>%
   ) +
   
   # 3. Séparer en deux graphiques : un pour "women", un pour "men"
-  facet_wrap(~sexe, nrow = 2) +
+  facet_wrap(~sexe, ncol = 2) +
   
   # 4. La magie : transformer les rectangles empilés en anneau
   coord_polar(theta = "y") +
@@ -297,8 +297,9 @@ mig_job_2 <- mig_job_donut_df %>%
     data = gender_labels, # Utilise le dataframe dédié
     aes(x = 2, y = 0, label = label, color = color), # Position au centre
     inherit.aes = FALSE, # TRÈS IMPORTANT
-    size = 4,
-    family = mms_base_family
+    size = 3.8,
+    family = mms_base_family#,
+   # fontface = "bold"
   )
 
 mig_job_2
@@ -306,111 +307,6 @@ mig_job_2
 
 
 ```{r focus par pays 3}
-
-# fpp_pays_ordered <- fpp_df %>% 
-#   filter(contrat == "Yes") %>% 
-#   mutate(
-#     country = factor(country) %>% fct_reorder(share, .desc = T)
-#   ) %>% 
-#   arrange(country) %>% 
-#   .$country %>% as.character()
-# 
-# fpp2mekko_df <- mms_mekko_wrangler(
-#   fpp_df %>% 
-#     mutate(
-#       country = factor(country, levels = fpp_pays_ordered),
-#       contrat = factor(contrat),
-#       n_pays = 1
-#     ) %>% arrange(country),
-#   var1 = "contrat", 
-#   var2 = "country", 
-#   varv = "share", 
-#   tot_n = "n_pays"
-# ) %>% 
-#   left_join(pays2col)
-#   
-# 
-# fpp_chart <- fpp2mekko_df %>%   
-#   ggplot() +
-#   geom_rect(
-#     aes(xmin = xmin, xmax = xmax, 
-#         ymin = ymin, ymax = ymax,
-#         fill = contrat),
-#     colour = "white", #nccr_bi_colors[13]
-#     size = 1, alpha = 1) +
-#   theme_mms(
-#     grid="X", axis=F,
-#     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
-#     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
-#   ) + 
-#   theme(
-#     legend.position = "none"
-#   ) + 
-#   #scale_fill_identity() +
-#   scale_fill_manual(values = nccr_colors_1[c(7,2)]) +
-#   # geom_vline(xintercept = 50, linetype = "dashed",
-#   #            linewidth = 0.5, color = nccr_bi_colors[13]) +
-#   scale_x_continuous(name = "", expand = c(0,0), position = "top",
-#                      labels = function(x) paste0(x, "%"),
-#                      breaks = NULL) +
-#   scale_y_continuous(name = "",  labels = NULL, expand = c(0,0))
-# 
-# #fpp_chart
-# 
-# # job labels tibble
-# fpp_pays_labels <- fpp2mekko_df %>%
-#   filter(contrat == "Yes") %>%
-#   mutate(y = ymax - 0.01, yRange = (ymax - ymin)* 100) %>%
-#   select(country, xmin, y, yRange) %>%
-#   ungroup() %>% 
-#   mutate(
-#     # Insert line breaks between words
-#     labels = gsub(" ", "<br>", country)
-#   )
-# 
-# fpp_value_labels <- fpp2mekko_df %>% 
-#   select(country, contrat, xmin, xmax, ymin, ymax, share) %>%
-#   mutate(
-#     x = ifelse(contrat == "Yes", xmax, xmin),
-#     y = ymax - 0.01,
-#     label = paste0(round(share, 1)),
-#     hjust = ifelse(contrat == "Yes", 1.05, -0.05)
-#   ) 
-# 
-# mig_job_3 <- fpp_chart +
-#    geom_richtext(
-#     data = fpp_pays_labels,
-#     aes(x = xmin + 0.01, y = y, 
-#         label = labels),
-#     fill = NA, label.color = NA,# remove background and outline,
-#     size = 3.5,
-#     hjust = 0, nudge_x = .5, vjust = 1, colour = "white",
-#     family = mms_base_family
-#   ) +
-#   geom_richtext(
-#     data = fpp_value_labels,
-#     aes(x = x + 0.01, y = ymin, label = label, hjust = hjust),
-#     fill = NA, label.color = NA,# remove background and outline,
-#     vjust = 0, nudge_y = 0.005, size = 3, alpha = 0.9, colour = "white",
-#     family = mms_base_family
-#   ) +
-#   annotate(
-#     geom = "richtext",
-#     x=90,y = 0.5, angle = -90, label = "jobless",
-#     fill = NA, label.color = NA,# remove background and outline,
-#     size = 10,
-#     family = mms_base_family, #fontface = "bold", 
-#     alpha = 0.6,
-#     color = nccr_bi_colors[9] #"white"
-#   ) +
-#   labs(
-#     title = str_c("Citizens from <span style='color:", col_voisin, ";'>neighboring countries</span> are more likely to arrive in Switzerland with a job"),
-#     subtitle = str_c("Job secured before moving to Switzerland, by country of origin in 2024")
-#   )
-# mig_job_3
-
-
-
 
 # --- 1. Préparation des données (ordre des pays inchangé) ---
 
@@ -441,19 +337,20 @@ mig_job_3 <- plot_data %>%
   geom_col(color = "white", size = 1) +
   
   theme_mms(
-    grid = "X",
+    grid = F,
     axis = F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 4)
   ) +
   theme(
     legend.position = "none",
+    axis.text.x = element_blank(),
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank()
   ) +
   # --- Les couleurs sont maintenant inversées pour correspondre au facteur ---
   # nccr_colors_1[2] pour "No", nccr_colors_1[7] pour "Yes"
-  scale_fill_manual(values = nccr_colors_1[c(2, 7)]) + 
+  scale_fill_manual(values = nccr_colors_1[c(2, 6)]) + 
   scale_x_continuous(
     name = "", 
     expand = c(0, 0),
@@ -471,11 +368,9 @@ fpp_pays_labels <- plot_data %>%
     labels = gsub(" ", "<br>", country)
   )
 
-# --- MODIFICATION 2 : Dataframe pour les labels de VALEUR ---
-# On recrée la logique xmin/xmax/hjust de ton code original
 fpp_value_labels_simple <- plot_data %>%
   # On s'assure de l'ordre de calcul (No, then Yes)
-  arrange(country, contrat) %>%
+  arrange(country, desc(contrat)) %>%
   group_by(country) %>%
   mutate(
     # On calcule le xmax de chaque segment (position cumulative)
@@ -490,7 +385,7 @@ fpp_value_labels_simple <- plot_data %>%
     x_pos = ifelse(contrat == "Yes", xmax, xmin),
     
     # hjust = -0.05 pour "No" (pousse à gauche), 1.05 pour "Yes" (pousse à droite)
-    hjust_val = ifelse(contrat == "Yes", 1.05, -0.05),
+    hjust_val = ifelse(contrat == "Yes", 1.5, -0.5),
     
     # Le label
     label_val = paste0(round(share, 1))
@@ -499,17 +394,14 @@ fpp_value_labels_simple <- plot_data %>%
 # --- Assemblage final ---
 
 mig_job_3 <- mig_job_3 +
-  
-  # --- Labels des Pays ---
-  # (placés en haut de la barre, comme 'ymax' dans l'original)
   geom_richtext(
     data = fpp_pays_labels,
-    aes(x = 1, y = country, label = labels, inherit.aes = FALSE), 
+    aes(x = 1, y = country, label = labels), 
     fill = NA, label.color = NA,
-    size = 3.5,
+    size = 4,
     hjust = 0,     # Aligner à gauche
     vjust = 1,     # Aligner en HAUT
-    nudge_y = -0.1, # Pousser un peu vers le bas (vers le haut de la barre)
+    nudge_y = 0.35, # Pousser un peu vers le bas (vers le haut de la barre)
     colour = "white",
     family = mms_base_family
   ) +
@@ -524,33 +416,29 @@ mig_job_3 <- mig_job_3 +
       y = country, 
       label = label_val, 
       hjust = hjust_val,
-      inherit.aes = FALSE # Très important !
+      color = ifelse(contrat == "Yes", "white", nccr_colors_1[8])
     ),
     # (placés en bas de la barre, comme 'ymin' dans l'original)
     vjust = 0,     # Aligner en BAS
-    nudge_y = 0.1, # Pousser un peu vers le haut (vers le bas de la barre)
-    color = "white",
-    size = 3,
+    nudge_y = -0.3, # Pousser un peu vers le haut (vers le bas de la barre)
+   # color = "white",
+    size = 3.5,
     family = mms_base_family
   ) +
-  
-  # --- Annotation (inchangée) ---
-  annotate(
-    geom = "richtext",
-    x = 90, 
-    y = (length(fpp_pays_ordered) + 1) / 2, 
-    angle = -90, 
-    label = "jobless",
-    fill = NA, label.color = NA,
-    size = 10,
-    family = mms_base_family, 
-    alpha = 0.6,
-    color = nccr_bi_colors[9]
-  ) +
-  
-  # --- Titres (inchangés) ---
+  scale_colour_identity() +
+  annotate("text", x = 0, y = nlevels(plot_data$country)+0.2,
+           label = "Employed", vjust = -3, hjust = 0, 
+           size = 3.5,
+           family = mms_base_family, fontface = "bold",
+           color = nccr_colors_1[7]) +
+  annotate("text", x = 100, y = nlevels(plot_data$country)+0.2,
+           label = "Unemployed", vjust = -3, hjust = 1, 
+           size = 3.5,
+           family = mms_base_family, fontface = "bold",
+           color = nccr_colors_1[3]) +
+  coord_cartesian(clip = "off") +
   labs(
-    title = str_c("Citizens from <span style='color:", col_voisin, ";'>neighboring countries</span> are more likely to arrive in Switzerland with a job"),
+    title = str_c("Citizens from neighboring countries are more likely to arrive in Switzerland with a job"),
     subtitle = str_c("Job secured before moving to Switzerland, by country of origin in 2024")
   )
 
@@ -563,7 +451,7 @@ mig_job_3
 ```{r patch}
 
 patchwork <- (mig_job_1 /mig_job_2) +
-   plot_layout(heights = c(1, 1)) | mig_job_3 
+   plot_layout(heights = c(1.7, 1)) | mig_job_3 
 patchwork
 
 mms_export_vector(
