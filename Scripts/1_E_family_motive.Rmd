@@ -228,10 +228,10 @@ famr_labels <- fam_pays_df %>%
   mutate(
     # Insert line breaks between words
     labelc = gsub(" ", "<br>", country), # country, 
-    labelv = paste0(round(share, num_n_dec), ""),
-    hjust = ifelse(famr == "yes", 1.05, -0.05),
-    x = ifelse(famr == "yes", share, 100-share),
-    color = ifelse(famr == "yes", "white", nccr_colors_1[6])
+    labelv = paste0(round(share, num_n_dec), "")
+    # hjust = ifelse(famr == "yes", 1.05, -0.05),
+    # x = ifelse(famr == "yes", share, 100-share),
+    # color = ifelse(famr == "yes", "white", nccr_colors_1[6])
   ) 
 
 famr_2a <- famr2 +
@@ -247,14 +247,15 @@ famr_2a <- famr2 +
   ) +
   geom_richtext(
     data = famr_labels,
-    aes(x = x, y = country, label = labelv, hjust = hjust,
-        color = color),
+    aes(x = share, y = country, 
+        label = labelv),
+         hjust = 1.05,
+        color = "white",
     fill = NA, label.color = NA,# remove background and outline,
     vjust = 1, size = 3, alpha = 0.95, 
     nudge_y = -0.15,
     family = mms_base_family
-   ) + 
-  scale_color_identity() +
+   ) +
   labs(
     title = str_c("Family-related migration more common among non-EU Europeans, Africans, and Latin Americans"),
     subtitle = str_c("Share of people reporting they came to Switzerland for family reunification, by country of origin in 2024")
