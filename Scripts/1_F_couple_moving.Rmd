@@ -364,6 +364,7 @@ plot_data <- coum_p_df %>%
   ) %>% 
   arrange(mar)
 
+
 # --- 2. Le Graphique de Base (geom_col) ---
 
 p_coum_2 <- plot_data %>%
@@ -373,7 +374,7 @@ p_coum_2 <- plot_data %>%
   # On remplace geom_rect par geom_col !
   geom_col(
     colour = "white",
-    size = bar_width, 
+    linewidth = bar_width, 
     alpha = 1
   ) +
   
@@ -430,9 +431,7 @@ coum_value_labels_simple <- plot_data %>%
   )
 
 # --- 4. Assemblage Final ---
-
 p_coum_2a <- p_coum_2 +
-  
   # --- Labels des Pays ---
   # On les place en haut à gauche de la barre (vjust=1, hjust=0)
   geom_richtext(
@@ -446,8 +445,8 @@ p_coum_2a <- p_coum_2 +
     size = 4,
     hjust = 0,     # Aligner à gauche
     nudge_x = 0.5, # (Garde ton nudge original)
-    nudge_y = 0,
-    vjust = 0,     # Aligner en HAUT
+    nudge_y = 0.4,
+    vjust = 1,     # Aligner en HAUT
     colour = "white",
     family = mms_base_family
   ) +
@@ -462,8 +461,8 @@ p_coum_2a <- p_coum_2 +
       hjust = hjust_val
     ),
     fill = NA, label.color = NA,
-    vjust = 0, # Aligner en BAS
-    nudge_y = 0.005, # (Garde ton nudge original)
+    vjust = 1, # Aligner en BAS
+    nudge_y = -0.2, # (Garde ton nudge original)
     size = 3, 
     alpha = 1, 
     colour = "white",
@@ -474,7 +473,6 @@ p_coum_2a <- p_coum_2 +
   annotate(
     geom = "richtext",
     x = 90, 
-    # TRADUCTION : y=0.51 (continu) devient le milieu de l'axe discret
     y = (length(coum_p_ordered) + 1) / 2, 
     angle = -90, 
     label = "alone",
@@ -485,7 +483,6 @@ p_coum_2a <- p_coum_2 +
     color = "white"
   ) +
   
-  # --- Titres (inchangés) ---
   labs(
     title = str_c(
       "Those from neighboring countries more often migrate ",
@@ -504,12 +501,15 @@ p_coum_2a
 #### 3. waffle
 
 ```{r 3}
+
+colw <- c( nccr_colors_1[c(8,7,6,5,3)])
+
 cou_msa_df %<>% 
   mutate(
     x = c(5.5, 5.3, 5.2, 5.2, 7),
     y = c(2,5, 7, 9, 10),
     hjust = c(0.5, 0.5, 0.5, 0.5, 0.5),
-    color = nccr_colors_1[c(8,6,5,4,3)],
+    color = colw,
     label = str_c(
       " <span style='color:",  color ,";'>",
       b10, "</span>: <span style='color:black;font-size:14px;'>", round(share, num_n_dect), "</span>"),
@@ -540,7 +540,7 @@ p_coum_3 <- cou_msa_df %>%
     axis.ticks.x = element_blank() , # Hide y-axis ticks
   ) +
   scale_fill_manual(
-    values = nccr_colors_1[c(8,6,5,4,2)],
+    values = colw,
     labels = cou_msa_df$label)  +
   #scale_color_manual(values = nccr_bi_colors[c(13,10,1,1,1,1)])  +
   labs(
