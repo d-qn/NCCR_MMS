@@ -252,7 +252,7 @@ famr_2a <- famr2 +
          hjust = 1.05,
         color = "white",
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 1, size = 3, alpha = 0.95, 
+    vjust = 1, size = 3.5, alpha = 0.95, 
     nudge_y = -0.15,
     family = mms_base_family
    ) +

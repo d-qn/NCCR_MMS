@@ -36,9 +36,6 @@ data_all <- mms_df %>%
 
 
 b_df <- data_all %>% 
-  mutate(
-    sexe = ifelse(sexe == "male", "Men", "Women")
-  ) %>% 
   select(contrat, year:mig_4y) 
 ```
 
@@ -416,7 +413,7 @@ mig_job_3 <- mig_job_3 +
       y = country, 
       label = label_val, 
       hjust = hjust_val,
-      color = ifelse(contrat == "Yes", "white", nccr_colors_1[8])
+      color = ifelse(contrat == "Yes", "white", "white") #nccr_colors_1[8])
     ),
     # (placés en bas de la barre, comme 'ymin' dans l'original)
     vjust = 0,     # Aligner en BAS
