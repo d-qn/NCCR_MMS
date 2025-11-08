@@ -247,7 +247,7 @@ edu_chart2 <- edu_all_genre %>%
              aes(x = year, y = share_w, 
                  group = type,
                  color = type), 
-             alpha = 1, size = 3) +
+             alpha = 1, size = 2) +
   geom_line(data = edu_all_genre %>% filter(type != "total"), 
             aes(x = year, y = share_w, group = type,
                 color = type), alpha = 0.3, 
@@ -268,10 +268,12 @@ edu_chart2 <- edu_all_genre %>%
     # limits = c(2016,2024),
     expand = c(0.02,0), name = "") +
   # have y scale not start at 0, add unit % 
-  scale_y_continuous(expand = c(0.2,0.2), 
-                     name = "", 
-                     labels = function(x) paste0(x, "%"),
-                     position = "right") +
+  scale_y_continuous(
+    expand = c(0.2,0.2), 
+    #limits = c(25, 75),
+    name = "", 
+    labels = function(x) paste0(x, "%"),
+    position = "right") +
   scale_colour_manual(
     values=c(nccr_colors_2[c(5,2,7)])) +
   # To hide the alpha legend as well:
@@ -400,7 +402,8 @@ edu_chart3 <- edu3_pays_df %>%
     family = mms_base_family,
     #fontface ="bold",
     fill = NA, label.color = NA,# remove background and outline,
-    color = nccr_bi_colors[14], size = 4,
+    color = nccr_bi_colors[14],
+    size = 4, fontface = "bold",
     hjust = 1, vjust = 0.5
   ) +
   geom_point(
@@ -419,14 +422,9 @@ edu_chart3 <- edu3_pays_df %>%
     color = nccr_colors_2[5],
     size = pt_size,
     alpha = 1, shape = 15, show.legend = F) +
-  # geom_segment(
-  #   data = edu3_pays_w,
-  #   aes(x=type, xend=type, y=`2018`, yend=`2024`,
-  #       color = color),  alpha = 0.4, 
-  #   linewidth = 1, show.legend = F) +
- 
   theme_mms(grid="Y", axis="y") + 
   theme(
+    #plot.subtitle = element_markdown(),
     legend.position = c(0.05, 0.13),
     legend.text = element_text(size = 8, 
                                color = mms_legend_base_col), # Reduce legend text size
@@ -456,8 +454,10 @@ edu_chart3 <- edu3_pays_df %>%
   scale_color_identity() +
   labs(
     title = "Migrants from Asia and Eastern Europe most likely to hold tertiary degrees",
-    subtitle = "Change in tertiary education rate between 2018 ◾️ and 2024 ▲, by country of origin"
-  ) + 
+    subtitle = str_c("Change in tertiary education rate between 2018 ", #(&#9726;)&nbsp;",
+                     
+                      "and 2024, by country of origin"
+  )) + 
   guides(size = guide_legend(override.aes = list(color = mms_legend_base_col))) 
 
 edu_chart3
@@ -471,9 +471,17 @@ edu_chart3
 
 patchwork <- (edu_chart_1a + edu_chart2_a) / edu_chart3
 
+# patchwork 
+#   grid.draw(grid.polygon(
+#   x = unit(c(0.46, 0.53, 0.53), "npc"),      # x-coordinates of the vertices
+#   y = unit(c(0.76, 0.87, 0.53), "npc"),    # y-coordinates of the vertices
+#   gp = gpar(fill = nccr_bi_colors[15], 
+#             col =nccr_bi_colors[14], alpha = 0.1) # customize appearance
+# ))
+
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "A_education.svg"),
+  filepath = here("Output", "charts", "2_A_education.svg"),
   bg_col = pw_bg_color
   )
 
