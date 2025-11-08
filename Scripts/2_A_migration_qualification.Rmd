@@ -393,9 +393,9 @@ edu_chart3 <- edu3_pays_df %>%
   geom_curve(
     data = arrow_txt,
     aes(x = x1, y = y1, xend = x2, yend = y2),
-    color = nccr_bi_colors[13], 
-    alpha = 0.5,
-    curvature = 0.2, linewidth = .3) +
+    color = nccr_bi_colors[14], 
+    alpha = 0.7,
+    curvature = 0.2, linewidth = .5) +
   geom_richtext(
     data = arrow_txt, 
     aes(x = x1, y = y1, label = label),
