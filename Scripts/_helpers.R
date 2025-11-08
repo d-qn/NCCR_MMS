@@ -248,7 +248,7 @@ nccr_bi_colors <- c(
   "#c4d0d4"
 ) 
 
-# second color main
+# 1st section color main
 nccr_colors_1_base <- c(
   "#DCD16C", "#B6AF5B", "#948E4A", "#76733B"
 )
@@ -260,11 +260,19 @@ new_ramp_func <- colorRampPalette(
 new_4_colors <- new_ramp_func(5)[1:4]
 #scales::show_col(new_palette_8, labels = TRUE, borders = "grey50")
 
-# 4. On génère la palette complète avec 8 couleurs
-#    (tes 4 originales + 4 nouvelles plus claires)
 nccr_colors_1 <- c(new_4_colors, nccr_colors_1_base)
 
-### END styleguide ###
+# 2nd section colors
+nccr_colors_2_base <- c(
+  "#C8866F", "#B37964", "#9F6C59"
+)
+lighter_start_2 <- "#ded6d3"
+new_ramp_func2 <- colorRampPalette(
+  c(lighter_start_2, nccr_colors_2_base[1])
+)
+new_4_colors <- new_ramp_func2(5)[1:4]
+nccr_colors_2 <- c(new_4_colors, nccr_colors_2_base)
+#scales::show_col(nccr_colors_2, labels = TRUE, borders = "grey50")
 
 
 # NCCR Color Scales for ggplot2

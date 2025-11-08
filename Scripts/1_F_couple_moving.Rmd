@@ -271,7 +271,7 @@ p_coum_2 <- plot_data %>%
   theme_mms(
     grid = F, axis = F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
-    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
+    mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) +
   theme(
     legend.position = "none",

@@ -148,7 +148,7 @@ famr_1 <- fam_sexe_df %>%
     aes(label = sexe, color = sexe), size = 4, 
     vjust = 1,
     hjust = 0.9,
-    nudge_y = -1.5,
+    nudge_y = -1,
     family = mms_base_family) +
   theme_mms(
     grid="Y", axis=T,

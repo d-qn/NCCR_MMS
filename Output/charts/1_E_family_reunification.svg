@@ -87,9 +87,9 @@
 <polygon points='199.36,459.21 212.94,459.21 212.94,445.63 199.36,445.63 ' style='stroke-width: 0.77; stroke: none; fill: #D7D199;' />
 <polygon points='127.57,511.11 141.15,511.11 141.15,497.53 127.57,497.53 ' style='stroke-width: 0.77; stroke: none; fill: #D7D199;' />
 <polygon points='55.78,549.61 69.36,549.61 69.36,536.03 55.78,536.03 ' style='stroke-width: 0.77; stroke: none; fill: #D7D199;' />
-<text x='280.36' y='728.27' text-anchor='end' style='font-size: 11.38px;fill: #B6AF5B; font-family: "Roboto Slab";'>men</text>
-<text x='281.99' y='226.01' text-anchor='end' style='font-size: 11.38px;fill: #948E4A; font-family: "Roboto Slab";'>women</text>
-<text x='280.35' y='480.60' text-anchor='end' style='font-size: 11.38px;fill: #D7D199; font-family: "Roboto Slab";'>total</text>
+<text x='280.36' y='719.90' text-anchor='end' style='font-size: 11.38px;fill: #B6AF5B; font-family: "Roboto Slab";'>men</text>
+<text x='281.99' y='217.64' text-anchor='end' style='font-size: 11.38px;fill: #948E4A; font-family: "Roboto Slab";'>women</text>
+<text x='280.35' y='472.23' text-anchor='end' style='font-size: 11.38px;fill: #D7D199; font-family: "Roboto Slab";'>total</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <polyline points='50.01,806.38 50.01,155.44 ' style='stroke-width: 0.32; stroke: #CCCCCC; stroke-linecap: butt;' />
@@ -140,8 +140,8 @@
 </defs>
 <g clip-path='url(#cpMzMxLjcwfDU3Mi4yMHwxNTUuNDR8ODA2LjM4)'>
 <rect x='331.70' y='155.44' width='240.50' height='650.94' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
-<rect x='405.87' y='757.14' width='166.33' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
-<rect x='331.70' y='757.14' width='74.17' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='405.87' y='757.15' width='166.33' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
+<rect x='331.70' y='757.15' width='74.17' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
 <rect x='407.88' y='702.44' width='164.31' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
 <rect x='331.70' y='702.44' width='76.18' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
 <rect x='409.51' y='647.74' width='162.68' height='49.23' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
@@ -168,19 +168,19 @@
 <text x='335.71' y='716.87' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>France</text>
 <text x='335.71' y='662.17' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Germany</text>
 <text x='335.71' y='607.47' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Other</text>
-<text x='335.71' y='621.07' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>EU/EFTA</text>
+<text x='335.71' y='621.08' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>EU/EFTA</text>
 <text x='335.71' y='552.77' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Italy</text>
 <text x='335.71' y='498.07' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Spain</text>
 <text x='335.71' y='443.37' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Austria</text>
 <text x='335.71' y='388.67' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Asia</text>
-<text x='335.71' y='333.96' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Other</text>
+<text x='335.71' y='333.97' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Other</text>
 <text x='335.71' y='347.57' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>OECD</text>
 <text x='335.71' y='279.26' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Africa</text>
 <text x='335.71' y='224.56' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Latin</text>
 <text x='335.71' y='238.17' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>America</text>
 <text x='335.71' y='169.86' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Other</text>
 <text x='335.71' y='183.47' style='font-size: 11.38px;fill: #FFFFFF; font-family: "Roboto Slab";'>Europe</text>
-<text x='391.95' y='800.64' style='font-size: 9.96px;fill: #FFFFFF; fill-opacity: 0.95; font-family: "Roboto Slab";'>31</text>
+<text x='391.95' y='800.65' style='font-size: 9.96px;fill: #FFFFFF; fill-opacity: 0.95; font-family: "Roboto Slab";'>31</text>
 <text x='392.50' y='745.94' style='font-size: 9.96px;fill: #FFFFFF; fill-opacity: 0.95; font-family: "Roboto Slab";'>32</text>
 <text x='394.13' y='691.24' style='font-size: 9.96px;fill: #FFFFFF; fill-opacity: 0.95; font-family: "Roboto Slab";'>32</text>
 <text x='394.70' y='636.54' style='font-size: 9.96px;fill: #FFFFFF; fill-opacity: 0.95; font-family: "Roboto Slab";'>33</text>
