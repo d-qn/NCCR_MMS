@@ -274,6 +274,20 @@ new_4_colors <- new_ramp_func2(5)[1:4]
 nccr_colors_2 <- c(new_4_colors, nccr_colors_2_base)
 #scales::show_col(nccr_colors_2, labels = TRUE, borders = "grey50")
 
+# 3rd section colors
+nccr_colors_3_base <- c(
+  "#71C8E6", "#64AEC7", "#5493A8", "#44798C"
+)
+lighter_start_3 <- "#c4d0d4"
+new_ramp_func3 <- colorRampPalette(
+  c(lighter_start_3, nccr_colors_3_base[1])
+)
+new_4_colors <- new_ramp_func3(6)[1:5]
+nccr_colors_3 <- c(new_4_colors, nccr_colors_3_base)
+
+
+
+#scales::show_col(nccr_colors_3, labels = TRUE, borders = "grey50")
 
 # NCCR Color Scales for ggplot2
 # Based on the NCCR "on the move" style guide
@@ -486,101 +500,6 @@ show_nccr_palettes <- function() {
   
   par(mfrow = c(1, 1))
 }
-
-# Print color hex codes
-# print_nccr_colors <- function() {
-#   cat("NCCR Color Palettes (Based on Apple Digital Color Meter measurements)\n")
-#   cat("====================================================================\n\n")
-#   
-#   cat("Measured Base Colors:\n")
-#   cat("Gender:    #A86B85\n")
-#   cat("Education: #5494A8\n") 
-#   cat("Migration: #B8AF4C\n")
-#   cat("Age:       #B37964\n")
-#   cat("Arrival:   #7B7897\n")
-#   cat("Countries: #749E7C\n\n")
-#   
-#   cat("Categorical (12 colors):\n")
-#   cat(paste(nccr_categorical(), collapse = ", "), "\n\n")
-#   
-#   cat("Sequential Education-based:\n")
-#   cat(paste(nccr_sequential_cyan(), collapse = ", "), "\n\n")
-#   
-#   cat("Sequential Migration-based:\n")
-#   cat(paste(nccr_sequential_yellow(), collapse = ", "), "\n\n")
-#   
-#   cat("Divergent Gender-Education:\n")
-#   cat(paste(nccr_divergent_magenta_cyan(), collapse = ", "), "\n\n")
-#   
-#   cat("Divergent Age-Countries:\n")
-#   cat(paste(nccr_divergent_orange_purple(), collapse = ", "), "\n\n")
-# }
-
-# =============================================================================
-# USAGE EXAMPLES
-# =============================================================================
-
-# Example usage:
-# library(ggplot2)
-# 
-# # Categorical data
-# ggplot(mtcars, aes(x = factor(cyl), fill = factor(gear))) +
-#   geom_bar() +
-#   scale_fill_nccr_categorical()
-# 
-# # Sequential data
-# ggplot(mtcars, aes(x = wt, y = mpg, color = hp)) +
-#   geom_point(size = 3) +
-#   scale_color_nccr_seq_cyan()
-# 
-# # Divergent data
-# ggplot(mtcars, aes(x = wt, y = mpg, color = hp - mean(hp))) +
-#   geom_point(size = 3) +
-#   scale_color_nccr_div_magcyan()
-
-
-
-
-
-
-
-
-
-
-
-
-
-## ggplot2 settings old ##
-
-# rc_base_size <- 12
-# rc_plot_title_size <- 13
-# rc_subtitle_size <- 11
-# rc_plot_title_color <- "#665c70"
-# rc_plot_subtitle_color <- "#403d43"
-# 
-# rc_txtbox_plot.title <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
-#   color = rc_plot_title_color, 
-#   lineheight = 1.3,
-#   padding = margin(0, 1, 5, 0), 
-#   margin = margin(0, 0, fixed_top_margin + (5 * nrow_txt), 0)
-# )
-# 
-# rc_txtbox_plot.subtitle <- function(nrow_txt = 1, fixed_top_margin = 0) element_textbox_simple(
-#   color = rc_plot_subtitle_color ,
-#   lineheight = 1.4,
-#   margin = margin(fixed_top_margin + (5 * nrow_txt), 0, 10, 0)
-# )          
-# 
-# rc_axis_tick_txt_color <- "#b3afb6"
-# pw_bg_color <- "#f2f2f2"
-# 
-# main_plot_bg_color <- "#ffffff" 
-# 
-# pw_padding <- margin(0, 0 , 0, 0)
-# pw_margin <- margin(10, 3, 10, 3)
-# 
-# plot_margin <- margin(15, 15, 10, 0)
-# legend_base_col <- "lightgrey"
 
 ## ggplot2 settings old END ##
 

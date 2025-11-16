@@ -255,11 +255,11 @@ wcond_mig4y_df <- c_df %>%
 #### 1. main ####
 
 ```{r main chart}
-iwc_1 <- wcond5_df %>% 
+iwc_1 <- wcond3_df %>% 
  # arrange(wcond5) %>%
-  ggplot(aes(x = year, y = share, group = wcond5)) +
-  geom_area(aes(fill = wcond5), alpha = 1, 
-            linewidth = 0.2, color = "white") + 
+  ggplot(aes(x = year, y = share, group = wcond3)) +
+  geom_area(aes(fill = wcond3), alpha = 1, 
+            linewidth = 0.3, color = "white") + 
   theme_mms(
     grid="XY", axis="xy", 
     grid_col =  scales::alpha("lightgrey", 0.6),
@@ -277,7 +277,7 @@ iwc_1 <- wcond5_df %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      labels = function(x) paste0(x, "%"),
                      breaks = c(25,50,75))+
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(1,3,5,7,9)]) +
+  scale_fill_manual(values = nccr_colors_3[c(3,4,1,8,9)]) +
   labs(
     title = 
       str_c(
@@ -312,7 +312,7 @@ iwc_1a <- iwc_1 +
                 #fontface = "bold",
                 family = mms_base_family
   ) +
-  scale_size_continuous(range = c(2, 6), guide = "none") 
+  scale_size_continuous(range = c(3, 6), guide = "none") 
 iwc_1a
 
 ```
@@ -323,23 +323,9 @@ iwc_1a
 #### 2. divergent ####
 ```{r 2 divergent stacked bars}
 
-wcond5_labels_df <- wcond5_p_df %>%
-  mutate(wcond5 = trimws(wcond5)) %>%  # enlever espaces inutiles
-  group_by(country) %>%
-  summarise(
-    total_amelioration = sum(share[wcond5 %in% wcond_codes$wcond5[c(1,2)]]),
-    total_deterioration = sum(share[wcond5 %in% wcond_codes$wcond5[c(4,5)]])
-  ) %>%
-  mutate(
-    total_amelioration_lbl = paste0("<span style='color:#457651;'>", round(total_amelioration, num_n_dec), "%</span>"),
-    total_deterioration_lbl = paste0("<span style='color:#985d45;'>", round(total_deterioration, num_n_dec), "%</span>"),
-    country = factor(country, levels = rev(sort(unique(wcond5_p_df$country))))  # ordre pour coord_flip()
-  ) %>% 
-  mutate(
-    y = 0.005,
-    # Insert line breaks between words
-    labels = gsub(" ", "<br>", as.character(country))
-  )
+imp_col <- nccr_colors_3[9]
+det_col <- nccr_colors_3[3]
+cent_col <- nccr_colors_3[1]
 
 wcond3_labels_df <- wcond3_p_df %>%
   mutate(wcond3 = trimws(wcond3)) %>%  # enlever espaces inutiles
@@ -349,8 +335,8 @@ wcond3_labels_df <- wcond3_p_df %>%
     total_deterioration = sum(share[wcond3 == "Deteriorated"])
   ) %>%
   mutate(
-    total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, num_n_dec), "%</span>"),
-    total_deterioration_lbl = paste0("<span style='color:#ede1de;'>", round(total_deterioration, num_n_dec), "</span>"),
+    total_amelioration_lbl = paste0("<span style='color:white;'>", round(total_amelioration, num_n_dec), "</span>"),
+    total_deterioration_lbl = paste0("<span style='color:black;'>", round(total_deterioration, num_n_dec), "</span>"),
     country = factor(country, levels = rev(sort(unique(wcond3_p_df$country))))  # ordre pour coord_flip()
   ) %>% 
   mutate(
@@ -362,9 +348,9 @@ wcond3_labels_df <- wcond3_p_df %>%
 iwc_2 <- wcond3_p_df %>% 
   arrange(desc(country)) %>%
   ggplot(aes(x = country, y = share)) +
-  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill") +
+  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill", linewidth = bar_width, color = "white") +
   coord_flip(clip = "off") +
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
+  scale_fill_manual(values = c(det_col, cent_col, imp_col)) +
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
@@ -386,12 +372,6 @@ iwc_2 <- wcond3_p_df %>%
     title = "Improvement in professional situation varies by country of origin",
     subtitle = "In 2024, with migration, the professional situation was: "
   ) +
-  # geom_hline(
-  #   yintercept = 0.5, 
-  #   linetype = "dashed", 
-  #   color = "white", 
-  #   linewidth = 0.3
-  # ) +
   geom_richtext(
     data = wcond3_labels_df,
     aes(x = country, y = total_amelioration/100,
@@ -419,12 +399,12 @@ iwc_2 <- wcond3_p_df %>%
            label = "Improved", vjust = -3, hjust = 0, 
            size = 3,
            family = mms_base_family, fontface = "bold",
-           color = nccr_divergent_orange_green()[9]) +
+           color = imp_col) +
   annotate("text", x = nlevels(wcond3_p_df$country), y = 1,
            label = "Deteriorated", vjust = -3, hjust = 1, 
            size = 3,
            family = mms_base_family, fontface = "bold",
-           color = nccr_divergent_orange_green()[1]) #+debug_theme
+           color = det_col) #+debug_theme
 
 iwc_2
 
@@ -456,7 +436,7 @@ wcond_sa_labels <- wcond_sa_df %>%
     total_deterioration = share[wcond3 == "Deteriorated"]
   ) %>% 
   mutate(
-    total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, num_n_dec), "%</span>"),
+    total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, num_n_dec), "</span>"),
     total_deterioration_lbl = paste0("<span style='color:#ede1de;'>", round(total_deterioration, num_n_dec), "</span>"),
     var = fct_reorder(var, total_amelioration, .fun = mean)
   ) %>% 
@@ -473,9 +453,10 @@ iwc_3 <- wcond_sa_df %>%
   # drop empty levels 
   ggplot(aes(x = factor(var), y = share)) +
   # Replace facet_wrap with facet_grid
-  facet_wrap(~varname, ncol = 1) +  # Remove scales = "free_y"
+  facet_wrap(~varname, ncol = 1, scales = "free_y") +  # Remove scales = "free_y"
   #facet_grid(rows = vars(varname), scales = "free_y", space = "free_y", switch = "y") + 
-  geom_bar(aes(fill = wcond3), stat = "identity", position = "fill") +
+  geom_bar(aes(fill = wcond3), stat = "identity", position = "fill",
+           linewidth = bar_width, color = "white") +
   #   geom_hline(
   #   yintercept = 0.5, 
   #   linetype = "dashed", 
@@ -503,7 +484,7 @@ iwc_3 <- wcond_sa_df %>%
                 family = mms_base_family#, fontface = "bold"
   ) +
   coord_flip(clip = "on") +
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
+  scale_fill_manual(values = c(det_col, cent_col, imp_col)) +
   theme_mms(
     grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
@@ -548,10 +529,10 @@ wcondi_labels <- wcond_mig4y_df %>%
 
 iwc_4 <- wcond_mig4y_df %>% 
   ggplot(aes(x = mig_4y, y = share, group = wcond3)) +
-  geom_col(aes(fill = wcond3), alpha = 0.96) + 
+  geom_col(aes(fill = wcond3), linewidth = bar_width, color = "white") + 
   geom_text(
     data = wcondi_labels,
-    aes(label = paste0(round(share, num_n_dect), "%")),
+    aes(label = paste0(round(share, num_n_dect))),
     vjust = 2.2,
     color = "white",
     size = 3.5,
@@ -575,7 +556,7 @@ iwc_4 <- wcond_mig4y_df %>%
                      labels = function(x) paste0(x, "%")#,
                     # breaks = c(25,50,75)
                     )+
-  scale_fill_manual(values = nccr_divergent_orange_green()[c(2,5,8)]) +
+  scale_fill_manual(values = c(det_col, cent_col, imp_col)) +
    labs(
     title = "Long-established residents report more improvements in their professional situation",
     subtitle = "Labor market outcomes in 2024 vs. pre-migration status, by years since arrival"
