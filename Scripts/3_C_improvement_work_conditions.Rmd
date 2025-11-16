@@ -80,7 +80,7 @@ wcond3_df <- c_df %>%
   group_by(year) %>% 
   mutate(
     n_y = sum(n, na.rm = TRUE),
-    share = weight/sum(weight, na.rm = TRUE),
+    share = weight/sum(weight, na.rm = TRUE)*100,
   ) %>% 
   ungroup()
 
@@ -255,6 +255,12 @@ wcond_mig4y_df <- c_df %>%
 #### 1. main ####
 
 ```{r main chart}
+
+imp_col <- nccr_colors_3[9]
+det_col <- nccr_colors_3[3]
+cent_col <- nccr_colors_3[1]
+
+
 iwc_1 <- wcond3_df %>% 
  # arrange(wcond5) %>%
   ggplot(aes(x = year, y = share, group = wcond3)) +
@@ -277,13 +283,13 @@ iwc_1 <- wcond3_df %>%
   scale_y_continuous(expand = c(0,0), name = "", 
                      labels = function(x) paste0(x, "%"),
                      breaks = c(25,50,75))+
-  scale_fill_manual(values = nccr_colors_3[c(3,4,1,8,9)]) +
+  scale_fill_manual(values = c(det_col, cent_col, imp_col)) +
   labs(
     title = 
       str_c(
         "A majority of people experience an ",
         "<span style='color:",
-        nccr_bi_colors[12], 
+        imp_col, 
         ";'>improvement</span> ",
         "in their professional situation with migration"
       ),
@@ -291,28 +297,28 @@ iwc_1 <- wcond3_df %>%
 
 #wcond_area
 annot_df <- tibble(
-  year = c(2016, 2016, 2020, 2024,2024),
-  share_w = rev(c(27, 65, 86, 93, 98.5)),
-  txt = wcond5_df$wcond5 %>% levels(),
-  hjust = c(0, 0, 0.5, 1, 1)
+  year = c(2020, 2020, 2020),
+  share_w = rev(c(40,  86, 96)),
+  txt = wcond3_df$wcond3 %>% levels(),
+  hjust = rep(0.5, 3)
 ) %>% 
   left_join(
-    wcond5_df %>% group_by(wcond5) %>% 
+    wcond3_df %>% group_by(wcond3) %>% 
       summarise(size_share = mean(share, na.rm = TRUE)),
-    by = c("txt" = "wcond5" )
+    by = c("txt" = "wcond3" )
   )
 
 iwc_1a <- iwc_1 +
   geom_richtext(data = annot_df, 
                 aes(x = year, y = share_w, label = txt, group = 1,  
-                    size = size_share, hjust = hjust),
-                nudge_x = c(0.1, 0.1, 0, -0.1, -0.1),
+                  hjust = hjust),
+                size = 6,
+                #nudge_x = c(0.1, 0.1, 0, -0.1, -0.1),
                 fill = NA, label.color = NA,# remove background and outline,
                 color = "white", 
                 #fontface = "bold",
                 family = mms_base_family
-  ) +
-  scale_size_continuous(range = c(3, 6), guide = "none") 
+  ) 
 iwc_1a
 
 ```
@@ -323,10 +329,6 @@ iwc_1a
 #### 2. divergent ####
 ```{r 2 divergent stacked bars}
 
-imp_col <- nccr_colors_3[9]
-det_col <- nccr_colors_3[3]
-cent_col <- nccr_colors_3[1]
-
 wcond3_labels_df <- wcond3_p_df %>%
   mutate(wcond3 = trimws(wcond3)) %>%  # enlever espaces inutiles
   group_by(country) %>%
@@ -336,7 +338,7 @@ wcond3_labels_df <- wcond3_p_df %>%
   ) %>%
   mutate(
     total_amelioration_lbl = paste0("<span style='color:white;'>", round(total_amelioration, num_n_dec), "</span>"),
-    total_deterioration_lbl = paste0("<span style='color:black;'>", round(total_deterioration, num_n_dec), "</span>"),
+    total_deterioration_lbl = paste0("<span style='color:#364449;'>", round(total_deterioration, num_n_dec), "</span>"),
     country = factor(country, levels = rev(sort(unique(wcond3_p_df$country))))  # ordre pour coord_flip()
   ) %>% 
   mutate(
@@ -382,7 +384,7 @@ iwc_2 <- wcond3_p_df %>%
   ) +
   geom_richtext(
     data = wcond3_labels_df,
-    aes(x = country, y = 1.005, label = total_deterioration_lbl),
+    aes(x = country, y = 1, label = total_deterioration_lbl),
     family = mms_base_family,
     hjust = 1, fill = NA, label.color = NA, size = 2.5
   ) +
@@ -436,8 +438,8 @@ wcond_sa_labels <- wcond_sa_df %>%
     total_deterioration = share[wcond3 == "Deteriorated"]
   ) %>% 
   mutate(
-    total_amelioration_lbl = paste0("<span style='color:#f2f2f2;'>", round(total_amelioration, num_n_dec), "</span>"),
-    total_deterioration_lbl = paste0("<span style='color:#ede1de;'>", round(total_deterioration, num_n_dec), "</span>"),
+    total_amelioration_lbl = paste0("<span style='color:white;'>", round(total_amelioration, num_n_dec), "</span>"),
+    total_deterioration_lbl = paste0("<span style='color:#364449;'>", round(total_deterioration, num_n_dec), "</span>"),
     var = fct_reorder(var, total_amelioration, .fun = mean)
   ) %>% 
   mutate(
@@ -471,8 +473,9 @@ iwc_3 <- wcond_sa_df %>%
     #  fontface = "bold"
   ) +
   geom_richtext(data = wcond_sa_labels, 
-                aes(x = var, y = 1.005, 
+                aes(x = var, y = 1, 
                     label = total_deterioration_lbl),
+              #  colour = "black",
                 hjust = 1, fill = NA, label.color = NA, size = 2.5,
                 family = mms_base_family) +
   geom_richtext(data = wcond_sa_labels,
