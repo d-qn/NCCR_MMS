@@ -154,10 +154,11 @@ if(run_n_check) {
 mig_job_1 <- mig4y_df %>% 
   filter(contrat == "Yes") %>%
   ggplot(aes(x = mig_4y, y = share, group = 1)) +
-  geom_col(fill = nccr_colors_1[6]) +
+  geom_col(aes(y = 100), fill = nccr_colors_1[2]) +
+  geom_col(fill = nccr_colors_1[6], linewidth = bar_width, color  = "white") +
   geom_text(aes(label = paste0(share)), 
              vjust = 1,
-             nudge_y = -1.2,
+             nudge_y = -2,
              color = "white",
              family = mms_base_family, size = 3.5) +
   theme_mms(grid = F,

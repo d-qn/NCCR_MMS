@@ -141,7 +141,7 @@ mms_export_vector <- function(
 num_n_dec  <- 0
 num_n_dect <- 0
 
-bar_width <- 0.3
+bar_width <- 0.5
 
 # Temporarily add borders to see the actual plot areas
 debug_theme <- theme(

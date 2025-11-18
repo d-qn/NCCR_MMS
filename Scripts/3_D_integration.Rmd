@@ -222,7 +222,7 @@ p_ints_1 <- ints_df %>%
     data = year_labels, # Use a dedicated data frame with one row per year
     aes(x = 2, y = 0, label = year), # Position text at the center
     inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
-    size = 3,
+    size = 3.2,
     family = mms_base_family
   )
 
@@ -236,10 +236,10 @@ p_ints_1
 p_ints_2 <- ints_migy_df %>% 
   filter(groupe_job_edu == "Yes") %>% 
   ggplot(aes(x = mig_4y, y = share, group = 1)) +
+  geom_col(aes(y = 100), fill = nccr_colors_3[2]) +
   # column chart
   geom_col( fill = nccr_colors_3[8],
-           linewidth = 1, color = "white",  
-           width = 0.9) +
+           linewidth = bar_width, color = "white") +
   # geom_line(linewidth = 2,
   #           color =nccr_categorical()[11],
   #           alpha = 0.3, lineend = "round")  +
@@ -249,7 +249,7 @@ p_ints_2 <- ints_migy_df %>%
   # ) +
   geom_text(aes(label = paste0(round(share, num_n_dec))), 
             vjust = 1,
-            nudge_y = -2,
+            nudge_y = -3,
             color = "white",
             family = mms_base_family, size =3.5) +
   theme_mms(grid="F",
@@ -342,7 +342,7 @@ p_ints_3a <- p_ints_3 +
         label = labels),
     fill = NA, label.color = NA,# remove background and outline,
     size = 4,
-    nudge_y = 0.05,
+    nudge_y = 0.1,
     hjust = 0, nudge_x = .5, vjust = 0, colour = "white",
     family = mms_base_family
   ) +
@@ -350,12 +350,23 @@ p_ints_3a <- p_ints_3 +
     data = ints_value_labels,
     aes(x = share, y = country, label = label, hjust = hjust),
     fill = NA, label.color = NA,# remove background and outline,
-    vjust = 1, nudge_y = -0.08, size = 3, alpha = 0.95, colour = "white",
+    vjust = 1, nudge_y = -0.1, size = 3, alpha = 1, colour = "white",
     family = mms_base_family
    ) + labs(
     title = str_c("Migrants from Germany and France are more likely to consider their education suited to their job"),
     subtitle = str_c("Share of people who consider their education is suited to their job in 2024, by country of origin")
-  )
+  ) +  
+  annotate("text", x = 0, y = nlevels(ints_pays_df$country) - 0.3,
+           label = "Suited", vjust = 1, hjust = 0, 
+           size = 4,
+           family = mms_base_family, fontface = "bold",
+           color = nccr_colors_3[8]) +
+  annotate("text", x = 100, y = nlevels(ints_pays_df$country) -0.3,
+           label = "Not suited", vjust = 1, hjust = 1, 
+           size = 4,
+           family = mms_base_family, fontface = "bold",
+           color = nccr_colors_3[2]) +
+  coord_cartesian(clip = "off")
 
   p_ints_3a
 
@@ -380,7 +391,8 @@ p_ints_4 <- ints_sexe_df %>%
                 family = mms_base_family,
                 vjust = 0, color = "white") +
   geom_text(aes(label = paste0(round(share, num_n_dec))), color = "white",
-            vjust = 3,
+            vjust = 1,
+            nudge_y = -3,
             family = mms_base_family, size =3) +
   theme_mms(grid=F,
             axis = F,
@@ -407,9 +419,7 @@ p_ints_4 <- ints_sexe_df %>%
   scale_color_manual(values = nccr_bi_colors[c(12,2)]) +
   labs(
     title = str_c(
-      "<span style='color:", 
-    nccr_bi_colors[2], ";'>Men </span>", 
-      "migrants more often view their education well-suited to their job"),
+      "Men migrants more often view their education well-suited to their job"),
     subtitle = str_c(
       "Share of people who consider their education is suited to their job in 2024, by gender")
  )

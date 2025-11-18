@@ -87,16 +87,21 @@
 </defs>
 <g clip-path='url(#cpMjYuNzV8Mjc4Ljg3fDEzNy44MHw0MjIuODA=)'>
 <rect x='26.75' y='137.80' width='252.12' height='285.00' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
-<rect x='34.02' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='82.51' y='164.19' width='43.64' height='258.61' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='131.00' y='180.02' width='43.64' height='242.78' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='179.48' y='174.75' width='43.64' height='248.06' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='227.97' y='164.19' width='43.64' height='258.61' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<text x='55.84' y='151.21' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>54</text>
-<text x='104.33' y='177.60' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49</text>
-<text x='152.81' y='193.44' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46</text>
-<text x='201.30' y='188.16' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>47</text>
-<text x='249.78' y='177.60' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49</text>
+<rect x='34.02' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
+<rect x='82.51' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
+<rect x='131.00' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
+<rect x='179.48' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
+<rect x='227.97' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
+<rect x='34.02' y='268.90' width='43.64' height='153.90' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='82.51' y='283.15' width='43.64' height='139.65' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='131.00' y='291.70' width='43.64' height='131.10' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='179.48' y='288.85' width='43.64' height='133.95' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='227.97' y='283.15' width='43.64' height='139.65' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<text x='55.84' y='281.68' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>54</text>
+<text x='104.33' y='295.93' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49</text>
+<text x='152.81' y='304.48' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46</text>
+<text x='201.30' y='301.63' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>47</text>
+<text x='249.78' y='295.93' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49</text>
 </g>
 <g clip-path='url(#cpMC4wMHw1OTcuNjB8MC4wMHw4NDIuNDA=)'>
 <text x='55.84' y='436.03' text-anchor='middle' style='font-size: 9.60px;fill: #878F92; font-family: "Roboto Slab";'>2005</text>

@@ -350,7 +350,8 @@ wcond3_labels_df <- wcond3_p_df %>%
 iwc_2 <- wcond3_p_df %>% 
   arrange(desc(country)) %>%
   ggplot(aes(x = country, y = share)) +
-  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill", linewidth = bar_width, color = "white") +
+  geom_bar(aes( fill = wcond3), stat = "identity", position = "fill", 
+           linewidth = bar_width, color = "white") +
   coord_flip(clip = "off") +
   scale_fill_manual(values = c(det_col, cent_col, imp_col)) +
   theme_mms(
