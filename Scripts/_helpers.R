@@ -285,6 +285,22 @@ new_ramp_func3 <- colorRampPalette(
 new_4_colors <- new_ramp_func3(6)[1:5]
 nccr_colors_3 <- c(new_4_colors, nccr_colors_3_base)
 
+# 4th section colors
+nccr_colors_4_base <- c(
+  "#BD7895", "#A86B84", "#935E75"
+)
+lighter_start_4 <- "#ded3d8"
+new_ramp_func4 <- colorRampPalette(
+  c(lighter_start_4, nccr_colors_4_base[1])
+)
+new_4_colors <- new_ramp_func4(5)[1:4]
+nccr_colors_4 <- c(new_4_colors, nccr_colors_4_base)
+
+#scales::show_col(nccr_colors_4, labels = TRUE, borders = "grey50")
+  
+
+
+
 
 
 #scales::show_col(nccr_colors_3, labels = TRUE, borders = "grey50")
