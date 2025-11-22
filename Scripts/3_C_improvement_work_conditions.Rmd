@@ -108,7 +108,6 @@ if(run_n_check) {
     ) 
 }
 
-
 wcond_p_df <- c_df %>% 
   filter(year == 2024) %>% 
   filter(!is.na(wcond3)) %>% 
@@ -265,7 +264,7 @@ iwc_1 <- wcond3_df %>%
  # arrange(wcond5) %>%
   ggplot(aes(x = year, y = share, group = wcond3)) +
   geom_area(aes(fill = wcond3), alpha = 1, 
-            linewidth = 0.3, color = "white") + 
+            linewidth = bar_width, color = "white") + 
   theme_mms(
     grid="XY", axis="xy", 
     grid_col =  scales::alpha("lightgrey", 0.6),

@@ -249,7 +249,7 @@ p_ints_2 <- ints_migy_df %>%
   # ) +
   geom_text(aes(label = paste0(round(share, num_n_dec))), 
             vjust = 1,
-            nudge_y = -3,
+            nudge_y = -4,
             color = "white",
             family = mms_base_family, size =3.5) +
   theme_mms(grid="F",
@@ -392,7 +392,7 @@ p_ints_4 <- ints_sexe_df %>%
                 vjust = 0, color = "white") +
   geom_text(aes(label = paste0(round(share, num_n_dec))), color = "white",
             vjust = 1,
-            nudge_y = -3,
+            nudge_y = -4,
             family = mms_base_family, size =3) +
   theme_mms(grid=F,
             axis = F,
