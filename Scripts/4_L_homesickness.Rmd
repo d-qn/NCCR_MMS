@@ -126,12 +126,11 @@ if(run_n_check) {
 
 
 ## colors
-genderg_col <- nccr_categorical()[c(3,3,4)]
-genderg_col[1] <- desaturate(genderg_col[1], 0.6) %>% lighten(0.35)
-genderg_col[3] <- darken(genderg_col[3], 0.1) 
+# genderg_col <- nccr_categorical()[c(3,3,4)]
+# genderg_col[1] <- desaturate(genderg_col[1], 0.6) %>% lighten(0.35)
+# genderg_col[3] <- darken(genderg_col[3], 0.1) 
 
-
-
+cols3 <- c(nccr_colors_4[1], nccr_colors_4[4], nccr_colors_4[7])
 ```
 
 
@@ -141,6 +140,7 @@ genderg_col[3] <- darken(genderg_col[3], 0.1)
 #### 1. main  chart
 
 ```{r 1}
+
 ho_g_df %<>% 
   select(sexe, g26, share, n_y) %>% 
   # create coords for donut chart https://r-graph-gallery.com/128-ring-or-donut-plot.html
@@ -151,14 +151,14 @@ ho_g_df %<>%
     # Compute label position
     label_pos = (ymax + ymin) / 2,
     # Compute a good label
-    label = paste0(round(share, num_n_dect), "%")
+    label = paste0(round(share, num_n_dect))
   ) %>% 
   ungroup()
 
 gender_labels <-tibble(
   sexe = distinct(ho_g_df, sexe) %>% deframe(),
   label = c("women", "men"),
-  color = nccr_bi_colors[c(12,2)]
+  color = "black"
 )
 
 
@@ -192,18 +192,16 @@ p_ho_1 <- ho_g_df %>%
     strip.text = element_blank(),
     strip.background = element_blank()
   ) +
-  scale_fill_manual(values = genderg_col) +
+  scale_fill_manual(values = cols3) +
   scale_y_continuous(name = "", expand = c(0, 0)) +
   scale_x_continuous(name = "", expand = c(0, 0), limits = c(2, 4.5)) +
   labs(
     title = str_c("Homesickness is more common among ",
-                  "<span style='color:", nccr_categorical()[12], ";'>women",
-                  "</span> than <span style='color:", nccr_bi_colors[2], ";'>",
-                  "men</span>"),
+                 " women than men"),
     subtitle = str_c("Reported homesickness in 2024, by gender: ",
-                   "<span style='color:", darken(genderg_col[1], 0.2), ";'><b>weak</span></b>, ",
-                   "<span style='color:", genderg_col[2], ";'><b>moderate</span></b>",
-                   " or <span style='color:", darken(genderg_col[3], 0.2), ";'><b>strong</span></b> "
+                   "<span style='color:", darken(cols3[1], 0.2) , ";'><b>weak</span></b>, ",
+                   "<span style='color:", cols3[2], ";'><b>moderate</span></b>",
+                   " or <span style='color:", darken(cols3[3], 0.2), ";'><b>strong</span></b> "
                      )
   ) +
   scale_color_identity() +
@@ -212,7 +210,7 @@ p_ho_1 <- ho_g_df %>%
     data = gender_labels, # Use a dedicated data frame with one row per year
     aes(x = 2, y = 0, label = label, color = color), # Position text at the center
     inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
-    size = 4,
+    size = 4.5,
     family = mms_base_family#, fontface = "bold"
   )
 
@@ -224,8 +222,8 @@ p_ho_1
 ```{r 2}
 # stacked columns by migration intervals
 p_ho_2 <- ho_m_df %>% 
-  ggplot(aes(x = mig_4y, y = share, fill = rev(g26)), group = rev(g26)) +
-  geom_col(position = "fill", color = "white", size = 0.2) +
+  ggplot(aes(x = mig_4y, y = share, fill = rev(g26))) +
+  geom_col(position = "fill", color = "white", linewidth = bar_width) +
   theme_mms(
     grid=F, axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
@@ -240,20 +238,20 @@ p_ho_2 <- ho_m_df %>%
   scale_y_continuous(expand = c(0,0), name = "",
                      breaks = NULL,
                      labels = function(x) paste0(x*100, "%")) +
-  scale_fill_manual(values = rev(genderg_col)) +
+  scale_fill_manual(values = rev(cols3)) +
   labs(
     title = str_c("People who migrated more recently tend to feel more homesick"),
     subtitle = str_c("Reported homesickness by migration year intervals: ",
-                   "<span style='color:", darken(genderg_col[1], 0.2), ";'><b>weak</span></b>, ",
-                   "<span style='color:", genderg_col[2], ";'><b>moderate</span></b>",
-                   " or <span style='color:", darken(genderg_col[3], 0.1), ";'><b>strong</span></b> "
+                   "<span style='color:", darken(cols3[1], 0.2), ";'><b>weak</span></b>, ",
+                   "<span style='color:", cols3[2], ";'><b>moderate</span></b>",
+                   " or <span style='color:", darken(cols3[3], 0.2), ";'><b>strong</span></b> "
                      )
   ) +
    # Ajoute cette couche geom_text
   geom_text(
     # L'étiquette est la valeur 'share', formatée en pourcentage
     aes(y = share / 100, 
-        label = paste0(round(share, num_n_dect), ifelse(g26 == g262f$g26[1], "%", "")),
+        label = paste0(round(share, num_n_dect), ifelse(g26 == g262f$g26[1], "", "")),
         color = ifelse(g26 == g262f$g26[1], "black",  "white"),
         group = rev(g26)), 
     # La magie est ici : on empile les étiquettes comme les barres
@@ -264,7 +262,7 @@ p_ho_2 <- ho_m_df %>%
     size = 3.5,
     family = mms_base_family
   ) +
-  scale_color_manual(values = c("black" = darken(genderg_col[3], 0.3), 
+  scale_color_manual(values = c("black" = darken(cols3[3], 0.3), 
                                 "white" = "white"))
 
 
@@ -299,7 +297,7 @@ ho_c_labels <- ho_c_df %>%
     strong = sum(share[g26 == g262f$g26[7]])
   ) %>%
   mutate(
-    weak_lbl = paste0("<span style='color:", darken(genderg_col[3], 0.3), ";'>", round(weak, num_n_dect), "%</span>"),
+    weak_lbl = paste0("<span style='color:", darken(cols3[3], 0.4), ";'>", round(weak, num_n_dect), "</span>"),
     mid_lbl = paste0("<span style='color:", "white", ";'>", round(mid, num_n_dect), "</span>"),
     strong_lbl = paste0("<span style='color:", "white", ";'>", round(strong, num_n_dect), "</span>")
   ) %>%
@@ -312,7 +310,8 @@ ho_c_labels <- ho_c_df %>%
 
 p_ho_3 <- ho_c_df %>% 
   ggplot(aes(x = country, y = share)) +
-  geom_col(aes( fill = rev(g26), group = rev(g26)), position = "fill", color = "white", linewidth = 0.2) +
+  geom_col(aes( fill = rev(g26), group = rev(g26)), 
+           position = "fill", color = "white", linewidth = bar_width) +
   coord_flip(clip = "off") +
   theme_mms(
     grid="X", axis=F,
@@ -331,13 +330,13 @@ p_ho_3 <- ho_c_df %>%
     position = "right"
   ) +
   scale_x_discrete(expand = c(0, 0), name = "") +
-  scale_fill_manual(values = rev(genderg_col)) +
+  scale_fill_manual(values = rev(cols3)) +
   labs(
   title = str_c("People from Portugal and from far away countries tend to feel more homesick"),
     subtitle = str_c("Reported homesickness in 2024 by country: ",
-                   "<span style='color:", darken(genderg_col[1], 0.2), ";'><b>weak</span></b>, ",
-                   "<span style='color:", genderg_col[2], ";'><b>moderate</span></b>",
-                   " or <span style='color:", darken(genderg_col[3], 0.1), ";'><b>strong</span></b> "
+                   "<span style='color:", darken(cols3[1], 0.2), ";'><b>weak</span></b>, ",
+                   "<span style='color:", cols3[2], ";'><b>moderate</span></b>",
+                   " or <span style='color:", darken(cols3[3], 0.2), ";'><b>strong</span></b> "
                      )
   ) +
   geom_richtext(
@@ -350,7 +349,7 @@ p_ho_3 <- ho_c_df %>%
   ) +
   geom_richtext(
     data = ho_c_labels,
-    aes(x = country, y = 1, label = strong_lbl),
+    aes(x = country, y = 1.008, label = strong_lbl),
     family = mms_base_family,
     hjust = 1, fill = NA, label.color = NA, size = 3.5
   ) +
@@ -386,7 +385,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "L_homesickness.svg"),
+  filepath = here("Output", "charts", "4_L_homesickness.svg"),
   bg_col = pw_bg_color
   )
 
