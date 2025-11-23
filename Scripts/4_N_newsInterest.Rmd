@@ -164,6 +164,9 @@ if(run_n_check) {
     )
 }
 
+cols3 <- c(nccr_colors_4[2], nccr_colors_4[4], nccr_colors_4[7])
+
+
 ```
 
 
@@ -174,14 +177,15 @@ if(run_n_check) {
 
 ```{r 1}
 
-ni_cols <- nccr_bi_colors[c(1,1,2)]
-ni_cols[1] <- lighten(ni_cols[1], 0.4) %>% desaturate(0.5)
+ni_cols <- cols3
+#ni_cols[1] <- lighten(ni_cols[1], 0.4) %>% desaturate(0.5)
 
-nih_cols <- nccr_bi_colors[c(11,11,12)]
-nih_cols[1] <- lighten(nih_cols[1], 0.4) %>% desaturate(0.5)
+nih_cols <- cols3  %>% desaturate(0.3) %>% lighten(0.1)
+#nih_cols[1] <- lighten(nih_cols[1], 0.4) %>% desaturate(0.5)
 
-box_col <- nccr_bi_colors[13] %>% lighten(0.8)
-
+box_col <- cols3[2] %>% desaturate(0.1) %>% lighten(0.4)
+box_coli <- box_col %>% desaturate(0.4) %>% lighten(0.1)
+bg_coli <- box_coli %>% desaturate(0.6) %>% lighten(0.6)
 
 clabel_size <- 12
 vlabel_size <- 3.5
@@ -197,7 +201,6 @@ p_ni_1a <- nic_df %>%
   ) +
   theme(
     legend.position = "none",
-    #panel.background = element_rect(fill = NA),  # transparent
     #panel.ontop = TRUE
     axis.ticks.x = element_blank(), # Ajoute ça pour supprimer les graduations
     axis.line.x = element_blank(),   # Ajoute ça pour supprimer la ligne de l'axe
@@ -212,8 +215,8 @@ p_ni_1a <- nic_df %>%
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
       fill = box_col,
-      color = darken(mms_axis_tick_txt_color, 0.5),
-      size =clabel_size
+      color = "black",
+      size = clabel_size
     )
   ) +
   scale_y_continuous(expand = c(0,0), 
@@ -224,12 +227,12 @@ p_ni_1a <- nic_df %>%
   ) +
   labs(
     subtitle = "In <b>the news from</b> ",
-    y = "Switzerland"
+    y = "**Switzerland**"
   ) +
   geom_text(
     data = nic_df %>% filter(g13_ch != g132f$g13[1]),
     aes(y = share, group = g13_ch, 
-        label = paste0(round(share, num_n_dec), "%")),
+        label = paste0(round(share, num_n_dec))),
     position = position_stack(vjust = 0.5),
     size = vlabel_size,
     color = "white",
@@ -250,8 +253,8 @@ p_ni_1a <- nic_df %>%
    ) +
    theme(
      legend.position = "none",
-     panel.background = element_rect(fill = NA),  # transparent
-     panel.ontop = TRUE,
+     # panel.background = element_rect(fill = bg_coli),  # transparent
+     # plot.background = element_rect(fill = bg_coli),
      # On supprime TOUT ce qui est lié à l'axe X
      axis.text.x = element_blank(),
      axis.title.x = element_blank(),
@@ -266,8 +269,8 @@ p_ni_1a <- nic_df %>%
       maxwidth = unit(5, "in"),
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
-      fill = box_col,
-      color = darken(mms_axis_tick_txt_color, 0.5),
+      fill = box_coli,
+      color = "black",
       size =clabel_size
     )
    ) +
@@ -281,13 +284,13 @@ p_ni_1a <- nic_df %>%
    geom_text(
      data = nih_df %>% filter(g13_home != g132f$g13[1]),
      aes(y = -share, group = g13_home, 
-         label = paste0(round(share, num_n_dec), "%")),
+         label = paste0(round(share, num_n_dec))),
      position = position_stack(vjust = 0.5),
      size = vlabel_size,
      color = "white",
      family = mms_base_family
    ) +
-  scale_fill_manual(values = ni_cols)
+  scale_fill_manual(values = nih_cols)
  # scale_fill_manual(values = lighten(ni_cols, 0) %>% desaturate(0.5))
  
  
@@ -314,8 +317,6 @@ p_nip_2a <- nipc_df %>%
   ) +
   theme(
     legend.position = "none",
-    #panel.background = element_rect(fill = NA),  # transparent
-    #panel.ontop = TRUE
     axis.ticks.x = element_blank(), # Ajoute ça pour supprimer les graduations
     axis.line.x = element_blank(),   # Ajoute ça pour supprimer la ligne de l'axe
     axis.text.x = element_text(size = 12, margin=margin(t=0)),
@@ -329,7 +330,7 @@ p_nip_2a <- nipc_df %>%
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
       fill = box_col,
-      color = darken(mms_axis_tick_txt_color, 0.5),
+      color = "black",
       size = clabel_size
     )
   ) +
@@ -348,7 +349,7 @@ p_nip_2a <- nipc_df %>%
   geom_text(
     #data = nipc_df %>% filter(g16_ch != g162f$g16[1]),
     aes(y = share, group = g16_ch, 
-        label = paste0(round(share, num_n_dec), "%")),
+        label = paste0(round(share, num_n_dec))),
     position = position_stack(vjust = 0.5),
     size = vlabel_size,
     color = "white",
@@ -369,8 +370,8 @@ p_nip_2b <- niph_df %>%
   ) +
   theme(
     legend.position = "none",
-    panel.background = element_rect(fill = NA),  # transparent
-    panel.ontop = TRUE,
+    # panel.background = element_rect(fill = bg_coli),  # transparent
+    # plot.background = element_rect(fill = bg_coli),
     # On supprime TOUT ce qui est lié à l'axe X
     axis.text.x = element_blank(),
     axis.title.x = element_blank(),
@@ -385,8 +386,8 @@ p_nip_2b <- niph_df %>%
       maxwidth = unit(5, "in"),
       padding = margin(6, 10, 6, 10),
       margin = margin(0, 0, 15, 0),
-      fill = box_col,
-      color = darken(mms_axis_tick_txt_color, 0.5),
+      fill = box_coli,
+      color = "black",
       size =clabel_size
     )
   ) +
@@ -401,13 +402,13 @@ p_nip_2b <- niph_df %>%
   geom_text(
     #data = niph_df %>% filter(g16_home != g162f$g16[1]),
     aes(y = -share, group = g16_home, 
-        label = paste0(round(share, num_n_dec), "%")),
+        label = paste0(round(share, num_n_dec))),
     position = position_stack(vjust = 0.5),
     size = vlabel_size,
     color = "white",
     family = mms_base_family
   ) +
-  scale_fill_manual(values = ni_cols)
+  scale_fill_manual(values = nih_cols)
 
 p_nip_2b
 
@@ -421,12 +422,10 @@ p_pi_2p
 #### patch
 
 ```{r patch}
-
 # plot_final <- p_ni_1a / p_ni_1b / p_nip_2a / p_nip_2b
 # patchwork <- plot_final +
 #   plot_layout(guides = 'collect')
 # patchwork
-
 
 plot_final <- (p_ni_1a / p_ni_1b) | (p_nip_2a / p_nip_2b)
 patchwork <- plot_final +
@@ -434,7 +433,8 @@ patchwork <- plot_final +
   plot_annotation(
     title = "As time of residence in Switzerland increases, interest in local news and politics grows while interest in the home country's declines",
     subtitle = str_c("Level of interest: ",
-                    "<span style='color:", ni_cols[1], ";'><b>low</b></span>, ",
+                    "<span style='color:", ni_cols[1] %>% darken(0.1),
+                    ";'><b>low</b></span>, ",
                     "<span style='color:", ni_cols[2], ";'><b>moderate</b></span> or ",
                     "<span style='color:", ni_cols[3], ";'><b>high</b></span>",
                      ", by migration year in 2024 survey"),
@@ -450,7 +450,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "N_newsInterest.svg"),
+  filepath = here("Output", "charts", "4_N_newsInterest.svg"),
   bg_col = pw_bg_color
   )
 

@@ -107,6 +107,8 @@ if(run_n_check) {
   
 }
 
+cols3 <- c(nccr_colors_4[1], nccr_colors_4[4], nccr_colors_4[7])
+
 ```
 
 
@@ -122,14 +124,14 @@ annot_df2 <- tibble(
   txt = c("Yes", "No")
 )
 
-p1_cols <- nccr_categorical()[c(15, 10)]
+p1_cols <- nccr_colors_4[c(1, 7)]
 #p1_cols[1] <- p1_cols[1] %>% lighten(0.4)
 
 p_hc_1 <- hc_df %>% 
   ggplot(aes(x = year, y = share, group = g7)) +
   geom_area(aes(fill = g7), alpha = 1, show.legend = FALSE) + 
   geom_line(data = hc_df %>% filter(g7 == "Yes"),
-            color = "white", linewidth = 1
+            color = "white", linewidth = bar_width
   ) +
   theme_mms(
     grid="XY", axis="xy", 
@@ -166,7 +168,7 @@ p_hc_1
 
 ```{r 2}
 
-p2_cols <- nccr_categorical()[c(15, 9)]
+p2_cols <- nccr_colors_4[c(1, 5)]
 #p2_cols[1] <- p1_cols[1] %>% lighten(0.4)
 
 
@@ -212,7 +214,6 @@ p_hc_2
 ```{r 3}
 hccp_df<- hcc_df %>% 
   filter(g7 == "Yes") %>%
-  left_join(pays2col) %>% 
   mutate(
     country = fct_reorder(country, share, .desc = F)
   ) %>% 
@@ -220,9 +221,11 @@ hccp_df<- hcc_df %>%
 
 p_hc_3 <- hccp_df %>%   
   ggplot() +
-  geom_col(aes(y = country, x = 100), fill = nccr_bi_colors[15]) +
-  geom_col(aes(x = share, y = country, fill = color),
-           show.legend = FALSE) +
+  geom_col(aes(y = country, x = 100), 
+           fill = nccr_colors_4[1], linewidth = bar_width) +
+  geom_col(aes(x = share, y = country),
+           show.legend = FALSE, linewidth = bar_width,
+           color = "white", fill = nccr_colors_4[6]) +
   theme_mms(
     grid=F, axis=F, 
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
@@ -253,7 +256,7 @@ p_hc_3 <- hccp_df %>%
   ) +
   geom_text(
     aes(y = country, 
-        label = paste0(round(share, num_n_dec), "%"), x = share),
+        label = paste0(round(share, num_n_dec)), x = share),
     color = "white",
     size = 3,
     hjust = 1.1,
@@ -280,7 +283,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "M_homeCountryVisit.svg"),
+  filepath = here("Output", "charts", "4_M_homeCountryVisit.svg"),
   bg_col = pw_bg_color
   )
 
