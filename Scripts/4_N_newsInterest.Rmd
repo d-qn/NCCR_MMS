@@ -192,7 +192,8 @@ vlabel_size <- 3.5
 
 p_ni_1a <- nic_df %>% 
   ggplot(aes(x = mig_4y)) +
-  geom_col(aes(y = share, fill = g13_ch), position = "stack") +
+  geom_col(aes(y = share, fill = g13_ch), position = "stack",
+           linewidth = bar_width, color = "white") +
   theme_mms(
     plot_margin = margin(15, 20, 0, 10),
     grid=F, axis=F, 
@@ -244,7 +245,8 @@ p_ni_1a <- nic_df %>%
  
  p_ni_1b <- nih_df %>% 
    ggplot(aes(x = mig_4y)) +
-   geom_col(aes(y = -share, fill = g13_home), position = "stack") +
+   geom_col(aes(y = -share, fill = g13_home), position = "stack",
+            linewidth = bar_width, color = "white") +
    theme_mms(
      plot_margin = margin(0, 20, 5, 10),
      grid=F, axis=F, 
@@ -308,7 +310,8 @@ p_ni_1a <- nic_df %>%
 # exactly the same patchwork with nipc_df and niph_df
 p_nip_2a <- nipc_df %>% 
   ggplot(aes(x = mig_4y)) +
-  geom_col(aes(y = share, fill = g16_ch), position = "stack") +
+  geom_col(aes(y = share, fill = g16_ch), position = "stack",
+           linewidth = bar_width, color = "white") +
   theme_mms(
     plot_margin = margin(15, 20, 0, 10),
     grid=F, axis=F, 
@@ -361,7 +364,8 @@ p_nip_2a
 
 p_nip_2b <- niph_df %>% 
   ggplot(aes(x = mig_4y)) +
-  geom_col(aes(y = -share, fill = g16_home), position = "stack") +
+  geom_col(aes(y = -share, fill = g16_home), position = "stack",
+           linewidth = bar_width, color = "white") +
   theme_mms(
     plot_margin = margin(0, 20, 5, 10),
     grid=F, axis=F, 

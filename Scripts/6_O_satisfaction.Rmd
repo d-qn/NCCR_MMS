@@ -388,6 +388,7 @@ p_sa_3 <- sa_n_df %>%
     vjust = 0,
     hjust = 0,
     nudge_x = 2,
+    nudge_y = -0.1,
     family = mms_base_family#, fontface = "bold"
   ) +
   labs(
