@@ -345,19 +345,19 @@ p_ho_3 <- ho_c_df %>%
         label = weak_lbl),
     fill = NA,
     family = mms_base_family,
-    hjust = 1, label.color = NA, size = 3.5
+    hjust = 1, label.color = NA, size = 3.2
   ) +
   geom_richtext(
     data = ho_c_labels,
     aes(x = country, y = 1.008, label = strong_lbl),
     family = mms_base_family,
-    hjust = 1, fill = NA, label.color = NA, size = 3.5
+    hjust = 1, fill = NA, label.color = NA, size = 3.2
   ) +
   geom_richtext(
     data = ho_c_labels,
     aes(x = country, y = mid_pos, label = mid_lbl),
     family = mms_base_family,
-    hjust = 1, fill = NA, label.color = NA, size = 3.5
+    hjust = 1, fill = NA, label.color = NA, size = 3.2
   ) +
   geom_richtext(
     data = ho_c_labels,

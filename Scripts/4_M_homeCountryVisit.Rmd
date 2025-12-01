@@ -261,7 +261,7 @@ p_hc_3 <- hccp_df %>%
     size = 3,
     hjust = 1.1,
     vjust = 1,
-    nudge_x = -0.2,
+    nudge_x = -0.5,
     nudge_y = -0.2,
     alpha = 0.95,
     family = mms_base_family
