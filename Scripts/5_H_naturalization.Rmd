@@ -235,9 +235,9 @@ p_nati_1 <- nati_y_df %>%
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = str_c("The share of people ", 
-                  "<span style='color:#678E6F'>interested in naturalization</span> is gradually increasing"),
+                  "<span style='color:#54526B'>interested in naturalization</span> is gradually increasing"),
     subtitle="Do you plan to apply for Swiss naturalization in the future?") +
-  scale_fill_nccr_categorical(order = c(7,15,12))
+  scale_fill_manual(values = nccr_colors_5[c(6,1,10)])
 
 
 annot_df <- tibble(
@@ -276,7 +276,7 @@ p_nati_2 <- nati_migy_df %>%
   geom_ribbon(
     data = nati_migyw_df,
     aes(ymin = `2010—2014`, ymax = `2006—2009`, x = year),
-    alpha = 0.2, fill = nccr_bi_colors[12]
+    alpha = 0.2, fill = nccr_colors_5[2]
   ) +
   geom_line(aes(y = share, color=yeari),
             linewidth = 1,
@@ -291,10 +291,10 @@ p_nati_2 <- nati_migy_df %>%
     size = 3) +
   theme_mms(
     grid="Y", axis=T,
-    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
+    mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
   ) +
-  scale_color_manual(values = nccr_bi_colors[c(12,2)]) +
+  scale_color_manual(values = nccr_colors_5[c(10,7)]) +
   scale_x_continuous(
     name = "", expand = c(0.05,0.05)
   ) +
@@ -305,8 +305,11 @@ p_nati_2 <- nati_migy_df %>%
   ) +
   guides(color = "none") +
   labs(
-    title = "A steady increase over time spent in Switzerland",
-    subtitle = "Share of people intending to naturalize, by arrival cohort"
+    title = "A steady increase interest in naturalization over time spent in Switzerland",
+    subtitle = str_c(
+      "Share of people intending to naturalize, by survey year and by arrival cohorts (",
+       "<span style='color:#54526B'><b>2006-2009</span>",
+       " vs <span style='color:#948EB8'><b>2010-2014</span> cohort)")
   )
 
 p_nati_2
@@ -315,11 +318,14 @@ p_nati_2
 #### 3. small multiples country chart
 
 ```{r 3}
+
+#nati_c_df$color <- nccr_colors_5[8]
+
 nati_c_df %<>% 
   mutate(
     country_styled = str_c(
-      "<span style='color:", color, "'>", country, "</span>"
-    ) %>% factor %>% fct_reorder(share, .fun = max, .desc = TRUE)
+      "<span style='color:", "black", "'><b>", country, "</span>"
+    ) %>% factor %>% fct_reorder(share, .fun = max, .desc = F)
   )
 
 fl_points <- nati_c_df %>%
@@ -339,20 +345,27 @@ year_label_df <- tibble(
   hjust = c(0, 1) # 0 for left-align, 1 for right-align
 )
 
+background_data <- nati_c_df %>% 
+  select(-country_styled) # On retire la clé de facette
+
 
 p_nati_3 <- nati_c_df %>% 
-  ggplot(aes(x = year, y = share, colour = color)) +
-  geom_line(alpha = 0.9, show.legend = FALSE, linewidth = 1) +
-  geom_point(
-    data  = fl_points, size = 2
+  ggplot(aes(x = year, y = share)) +
+  geom_line(
+    data = background_data, 
+    aes(group = country), # Important : grouper par l'ID original du pays
+    color = nccr_colors_5[2],
+    linewidth = 0.3, 
+    alpha = 0.6
   ) +
-  gghighlight(
-    use_direct_label = F,
-     unhighlighted_params = list(linewidth = .4, alpha = 0.4, size = 0)
+  geom_line(alpha = 0.95, show.legend = FALSE, linewidth = 1, color = nccr_colors_5[7]) +
+  geom_point(
+    data  = fl_points, size = 2,
+    color = nccr_colors_5[9]
   ) +
   ggrepel::geom_text_repel(
     data = fl_points,
-    aes(label = paste0(round(share, num_n_dect), "%")),
+    aes(label = paste0(round(share, num_n_dect))),
     size = 3,
     nudge_y = -10,
     direction = "y",
@@ -367,8 +380,8 @@ p_nati_3 <- nati_c_df %>%
   #   vjust = 1, # Nudge text down, below the plot panel
   #   inherit.aes = FALSE
   # ) +
-  facet_wrap(~country_styled, ncol = 4) +
-  theme_mms(grid=F, axis=F, 
+  facet_wrap(~country_styled, ncol = 4, axes = "all_x") +
+  theme_mms(grid=F, axis="x", 
             grid_col =  scales::alpha("lightgrey", 0.6),
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 3)
@@ -376,16 +389,17 @@ p_nati_3 <- nati_c_df %>%
   theme(
     axis.text.x = element_blank(),
     axis.text.y = element_blank(),
-    panel.spacing.x = unit(0, "lines"),
+    axis.line.x = element_line(color = "black"),
+    panel.spacing.x = unit(0.5, "lines"),
     panel.spacing.y = unit(1, "lines"),
     strip.text = element_markdown(size = 9,
                                   hjust = 0.5,
-                                  margin = margin(b = 0, t = 1))
+                                  margin = margin(b = 0.5, t = 0.5))
   ) +
   # remove any scale expansion
   scale_x_continuous(expand = c(0.05,0.05), name = "") +
   # have y scale not start at 0, add unit % 
-  scale_y_continuous(expand = c(0.02,0.02), name = "", 
+  scale_y_continuous(expand = c(0.025,0.025), name = "", 
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = "Interest in naturalization varies by country of origin",
@@ -433,7 +447,7 @@ p_nati_4 <- nati_cr_df %>%
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 3),
     mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 6)
   ) +
-  scale_fill_manual(values = nccr_bi_colors[c(2,9)]) +
+  scale_fill_manual(values = nccr_colors_5[c(9,6)]) +
   scale_y_continuous(expand = c(0,0), name = "", 
                      # limits = c(-85, 50),
                      breaks = NULL
@@ -455,7 +469,7 @@ p_nati_4 <- nati_cr_df %>%
    ) +
   geom_richtext(
     data = nati_cr_labels,
-    aes(x = country, y = c3_4, label = paste0(abs(round(c3_4, num_n_dect)), "%"),
+    aes(x = country, y = c3_4, label = paste0(abs(round(c3_4, num_n_dect))),
         hjust = 0),
     fill = NA, label.color = NA,# remove background and outline,
     vjust = 0.5, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
@@ -463,7 +477,7 @@ p_nati_4 <- nati_cr_df %>%
   ) +
   geom_richtext(
     data = nati_cr_labels,
-    aes(x = country, y = c3_5, label = paste0(abs(round(c3_5, num_n_dect)), "%"),
+    aes(x = country, y = c3_5, label = paste0(abs(round(c3_5, num_n_dect))),
         hjust = 1),
     fill = NA, label.color = NA,# remove background and outline,
     vjust = 0.5, nudge_x = 0, size = 2.5, alpha = 0.95, colour = "white",
@@ -473,12 +487,12 @@ p_nati_4 <- nati_cr_df %>%
            label = "Improved professional\nopportunities", vjust = -1, hjust = 0, 
            size = 3,
            family = mms_base_family, fontface = "bold",
-           color = nccr_bi_colors[10]) +
+           color =  nccr_colors_5[6]) +
   annotate("text", x = nlevels(nati_cr_df$country), y = -27,
            label = "\nSense of belonging", vjust = -1, hjust = 1, 
            size = 3,
            family = mms_base_family, fontface = "bold",
-           color = nccr_bi_colors[2]) +
+           color = nccr_colors_5[9]) +
   
   labs(
     title = str_c("Sense of belonging and career advancement as main drivers for naturalization"),
@@ -512,7 +526,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "H_naturalization.svg"),
+  filepath = here("Output", "charts", "5_H_naturalization.svg"),
   bg_col = pw_bg_color
   )
 

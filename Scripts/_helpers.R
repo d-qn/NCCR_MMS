@@ -9,6 +9,7 @@ library(systemfonts)
 library(Cairo)
 library(ragg)
 library(cowplot)
+library(prismatic)
 #library(marquee)
 #library(ggforce)
 
@@ -26,7 +27,6 @@ library(ggtext)
 library(waffle)
 library(directlabels)
 library(geomtextpath)
-library(gghighlight)
 
 
 ### Load & wrangle ###
@@ -298,10 +298,18 @@ nccr_colors_4 <- c(new_4_colors, nccr_colors_4_base)
 
 #scales::show_col(nccr_colors_4, labels = TRUE, borders = "grey50")
   
+# 5th section colors
+nccr_colors_5_base <- c(
+  "#948EB8", "#7C789A", "#686582", "#54526B"
+)
 
+nccr_colors_5_lighter <- c(
+ "#D1D1D4", "#C7C5CD", "#BCBBC6", 
+ "#B2B0BF", "#A8A6B9", "#9E9BB2"
+)
 
-
-
+nccr_colors_5 <- c(nccr_colors_5_lighter, nccr_colors_5_base)
+#scales::show_col(nccr_colors_5, labels = TRUE, borders = "grey50")
 
 #scales::show_col(nccr_colors_3, labels = TRUE, borders = "grey50")
 

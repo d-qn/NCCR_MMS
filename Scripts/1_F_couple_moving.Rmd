@@ -387,7 +387,7 @@ p_coum_2a
 
 ```{r 3}
 
-colw <- c( nccr_colors_1[c(8,7,6,5,3)])
+colw <- c("#58582C", nccr_colors_1[c(8,6,5)], "#C3C09F")
 
 cou_msa_df %<>% 
   mutate(
