@@ -199,7 +199,7 @@ if(run_n_check) {
 p_dis_1 <- disy_df %>% 
   ggplot(aes(x = year, y = share, group = h7)) +
   geom_area(aes(fill = h7), alpha = 1,
-            linewidth = 0.1, color = "white") +
+            linewidth = bar_width, color = "white") +
   theme_mms(grid="XY", axis="xy", 
             mms_plot_title = mms_txtbox_plot.title(nrow_txt = 2),
             mms_plot_subtitle = mms_txtbox_plot.subtitle(nrow_txt = 2)
@@ -218,11 +218,7 @@ p_dis_1 <- disy_df %>%
     title = str_c("Discrimination rates remain stable, affecting over half of respondents"),
     subtitle="Experiences of prejudice or discrimination in the last 24 months") +
  # scale_fill_manual(values = nccr_sequential_blue()[c(1,4,7,10)])
-  scale_fill_manual(values = c(
-    darken(nccr_bi_colors[10], 0.2), 
-    darken(nccr_bi_colors[10], 0),
-    lighten(nccr_bi_colors[9], 0), 
-    nccr_bi_colors[9] %>% desaturate(0.4) %>% lighten(0.3)))
+  scale_fill_manual(values = nccr_colors_5[c(10,8,5,3)])
 
  annot_df <- tibble(
    year = rep(2021, 4),
@@ -267,23 +263,23 @@ p_dis_2 <- disr_df %>%
   geom_segment(
     aes(x = 0, xend = weighted_share, 
         y = descr_ordered, yend = descr_ordered),
-    color = nccr_bi_colors[9],
+    color = nccr_colors_5[9],
     linewidth = 1,
     alpha = 0.7
   ) +
   # Create the "candy" dot at the end
   geom_point(
-    color = nccr_bi_colors[10], # Using one of your nccr_bi_colors
+    color = nccr_colors_5[10], # Using one of your nccr_bi_colors
     size = 3,
     alpha = 1
   ) +
   # Add the numeric value as a text label next to the dot
   geom_text(
-    aes(label = paste0(round(weighted_share, num_n_dect), "%")),
+    aes(label = paste0(round(weighted_share, num_n_dect))),
     hjust = -0.37, # Position the text slightly to the right of the point
     size = 3,
     nudge_x = 0.2,
-    color = nccr_bi_colors[14],
+    color = nccr_colors_5[3] %>% clr_darken(0.5), 
     family = mms_base_family,
     #alpha = 0.7
   ) +
@@ -369,14 +365,10 @@ disrc_df %<>%
     short_descr = factor(short_descr, levels = descr_order),
     # Create a clean label for the text
     share_label = round(weighted_share, num_n_dec),
-    text_color = if_else(weighted_share >= midpoint, "white", "black")
+    text_color = "white" #if_else(weighted_share >= midpoint, "white", "black")
  )
 
-disrc_df %<>%
-  mutate(
-    share_label = ifelse(country == "Asia" & short_descr == levels(disrc_df$short_descr)[1],
-                         paste0(share_label, "%"), share_label)
-  )
+#disrc_df
 
 # Create the heatmap plot
 p_dis_3 <- disrc_df %>% 
@@ -390,7 +382,9 @@ p_dis_3 <- disrc_df %>%
             size = 3.5, family = mms_base_family) +
   
   # Customize the color gradient
-  scale_fill_gradient(low = "#f1f1f4", high = "#4a476b", name = "Weighted Share (%)") +
+  scale_fill_gradient(low = nccr_colors_5[2], #%>% clr_desaturate (0.1) %>% clr_darken(0.2), 
+                      high = clr_saturate(nccr_colors_5[10], 0.1) %>% clr_darken(0.2), 
+                      name = "Weighted Share (%)") +
   
   # Clean up the theme and labels
   labs(
@@ -455,7 +449,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "I_discrimination.svg"),
+  filepath = here("Output", "charts", "5_I_discrimination.svg"),
   bg_col = pw_bg_color
   )
 ```

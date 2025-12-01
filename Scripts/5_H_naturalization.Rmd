@@ -217,7 +217,7 @@ if(run_n_check) {
 p_nati_1 <- nati_y_df %>% 
   ggplot(aes(x = year, y = share, group = nat)) +
   geom_area(aes(fill = nat), alpha = 1,
-            linewidth = 0.5, color = "white") + 
+            linewidth = bar_width, color = "white") + 
   theme_mms(grid="XY", axis="xy", 
             #grid_col =  scales::alpha("lightgrey", 0.6),
             base_size = mms_base_size,
