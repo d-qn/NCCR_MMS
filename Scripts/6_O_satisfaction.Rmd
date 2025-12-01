@@ -226,7 +226,7 @@ p_sa_1 <- sa_df %>%
       share_w = c(10, 56),
       label = h62f$h6[c(5,10)]
     ),
-    aes(x = year, y = share_w, label = label),
+    aes(x = year, y = share_w, label = str_to_title(label)),
     color = "white",
     size = 5,
     family = mms_base_family
