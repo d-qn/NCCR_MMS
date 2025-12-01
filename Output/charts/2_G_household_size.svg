@@ -133,12 +133,12 @@
 <text x='30.39' y='53.03' style='font-size: 13.00px; font-weight: 800;fill: #9F6C59; font-family: "Roboto Slab";'>more</text>
 <text x='65.58' y='53.03' style='font-size: 13.00px; font-weight: 800;fill: #9F6C59; font-family: "Roboto Slab";'>members</text>
 <rect x='53.87' y='525.23' width='238.57' height='295.40' style='stroke-width: 0.00; stroke: none; fill: #FFFFFF;' />
-<rect x='59.98' y='525.23' width='110.11' height='58.85' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D3AEA1;' />
-<rect x='59.98' y='584.08' width='110.11' height='89.66' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #C8866F;' />
-<rect x='59.98' y='673.74' width='110.11' height='146.89' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #9F6C59;' />
-<rect x='182.32' y='525.23' width='110.11' height='35.45' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D3AEA1;' />
-<rect x='182.32' y='560.68' width='110.11' height='98.95' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #C8866F;' />
-<rect x='182.32' y='659.63' width='110.11' height='161.00' style='stroke-width: 0.64; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #9F6C59;' />
+<rect x='59.98' y='525.23' width='110.11' height='58.85' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D3AEA1;' />
+<rect x='59.98' y='584.08' width='110.11' height='89.66' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #C8866F;' />
+<rect x='59.98' y='673.74' width='110.11' height='146.89' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #9F6C59;' />
+<rect x='182.32' y='525.23' width='110.11' height='35.45' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #D3AEA1;' />
+<rect x='182.32' y='560.68' width='110.11' height='98.95' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #C8866F;' />
+<rect x='182.32' y='659.63' width='110.11' height='161.00' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #9F6C59;' />
 <text x='115.04' y='540.04' text-anchor='middle' style='font-size: 8.54px; font-family: "Roboto Slab";'>20</text>
 <text x='115.04' y='605.05' text-anchor='middle' style='font-size: 8.54px;fill: #FFFFFF; font-family: "Roboto Slab";'>30</text>
 <text x='115.04' y='706.15' text-anchor='middle' style='font-size: 8.54px;fill: #FFFFFF; font-family: "Roboto Slab";'>50</text>

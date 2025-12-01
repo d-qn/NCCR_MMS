@@ -92,11 +92,11 @@
 <rect x='131.00' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
 <rect x='179.48' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
 <rect x='227.97' y='137.80' width='43.64' height='285.00' style='stroke-width: 1.16; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #D4D1AF;' />
-<rect x='34.02' y='268.90' width='43.64' height='153.90' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='82.51' y='283.15' width='43.64' height='139.65' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='131.00' y='291.70' width='43.64' height='131.10' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='179.48' y='288.85' width='43.64' height='133.95' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
-<rect x='227.97' y='283.15' width='43.64' height='139.65' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='34.02' y='268.90' width='43.64' height='153.90' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='82.51' y='283.15' width='43.64' height='139.65' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='131.00' y='291.70' width='43.64' height='131.10' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='179.48' y='288.85' width='43.64' height='133.95' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
+<rect x='227.97' y='283.15' width='43.64' height='139.65' style='stroke-width: 0.85; stroke: #FFFFFF; stroke-linecap: butt; stroke-linejoin: miter; fill: #B6AF5B;' />
 <text x='55.84' y='281.68' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>54</text>
 <text x='104.33' y='295.93' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>49</text>
 <text x='152.81' y='304.48' text-anchor='middle' style='font-size: 9.96px;fill: #FFFFFF; font-family: "Roboto Slab";'>46</text>
