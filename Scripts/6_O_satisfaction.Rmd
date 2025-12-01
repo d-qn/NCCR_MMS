@@ -211,9 +211,9 @@ if(run_n_check) {
 
 ```{r 1}
 
-sa_cols <- nccr_bi_colors[c(1,1,2)]
+sa_cols <-  nccr_colors_6[c(2,5,8)]
 #sa_cols[2] <- sa_cols[2] %>% desaturate(0.1)
-sa_cols[1] <- lighten(sa_cols[1], 0.5) %>% desaturate(0.5)
+#sa_cols[1] <- lighten(sa_cols[1], 0.5) %>% desaturate(0.5)
 
 p_sa_1 <- sa_df %>%
   ggplot(aes(x = year, y = share)) +
@@ -276,15 +276,17 @@ sa_s_df %<>%
     # Compute label position
     label_pos = (ymax + ymin) / 2,
     # Compute a good label
-    label = paste0(round(share, num_n_dect), "%")
+    label = paste0(round(share, num_n_dect))
   ) %>%
   ungroup()
 
-gender_labels <-tibble(
-  sexe = distinct(sa_s_df, sexe) %>% deframe(),
-  label = c("women", "men"),
-  color = nccr_bi_colors[c(12,2)]
-)
+gender_labels <- sa_s_df %>%
+  distinct(sexe) %>%
+  mutate(
+    # On transforme la valeur de la colonne sexe (ex: "men") en label (ex: "Men")
+    # Si tu veux traduire, utilise case_match ou recode, mais base-toi sur la colonne 'sexe'
+    label = sexe
+  )
 
 p_sa_2 <- sa_s_df %>%
  ggplot(
@@ -293,9 +295,9 @@ p_sa_2 <- sa_s_df %>%
   geom_label(
     data = sa_s_df %>% filter(h6 !=  h62f$h6[1]),
     x=3.7,
-    aes(y=label_pos, label=label, group = rev(h6)),
+    aes(y=label_pos, label=label, group = h6),
     color = "white",
-    size=4,
+    size = 4,
     fill = NA, label.size = 0,
     family = mms_base_family) +
   facet_wrap(~sexe, nrow =2) +
@@ -320,16 +322,15 @@ p_sa_2 <- sa_s_df %>%
   scale_x_continuous(name = "", expand = c(0, 0), limits = c(2, 4.5)) +
   geom_text(
     data = gender_labels,
-    aes(x = 2, y = 0, label = label, color = color), # Position text at the center
+    aes(x = 2, y = 0, label = label), # Position text at the center
     inherit.aes = FALSE, # IMPORTANT: Prevents inheriting aesthetics from ggplot()
     size = 4,
     family = mms_base_family, fontface = "bold"
   ) +
   labs(
-    title = str_c("<span style='color:", nccr_bi_colors[12],  ";'><b>",
-                  "Women</b></span>", " are less satisfied than ",
-                  "<span style='color:", nccr_bi_colors[2],  ";'><b>",
-                  "men</b></span> with their move to Switzerland"),
+    title = str_c(
+                  "Women are less satisfied than ",
+                  "men with their move to Switzerland"),
     subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by gender")#: ",
                    #  "<span style='color:", sa_cols[1], ";'><b>low</b></span>, ",
                    # "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
@@ -370,7 +371,7 @@ p_sa_3 <- sa_n_df %>%
   scale_fill_manual(values = sa_cols) +
   geom_text(
     data = sa_n_df %>% filter(h6 != h62f$h6[1]),
-    aes(label = paste0(round(share, num_n_dect), "%")),
+    aes(label = paste0(round(share, num_n_dect))),
     position = position_stack(vjust = 0.5),
     vjust = 1,
     color = "white",
@@ -391,11 +392,12 @@ p_sa_3 <- sa_n_df %>%
   ) +
   labs(
     title = str_c("People intending to naturalize and with higher education are more satisfied with their move to Switzerland"),
-    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 by intent to naturalize: ",
+    subtitle = str_c("Level of satisfaction of moving to Switzerland, in 2024 (",
                    "<span style='color:", sa_cols[3],
                     ";'><b>high</b></span>, ",
                    "<span style='color:", sa_cols[2], ";'><b>moderate</b></span> or ",
-                   "<span style='color:", sa_cols[1], ";'><b>low</b></span>")
+                   "<span style='color:", sa_cols[1], ";'><b>low</b></span>), ",
+                   "by intent to naturalize: yes, undecided or no" )
   )
 
   
@@ -434,7 +436,7 @@ p_sa_4 <- sa_e_df %>%
   scale_fill_manual(values = sa_cols) +
   geom_text(
     data = sa_e_df %>% filter(h6 != h62f$h6[1]),
-    aes(label = paste0(round(share, num_n_dect), "%")),
+    aes(label = paste0(round(share, num_n_dect))),
     position = position_stack(vjust = 0.5),
     vjust = 2,
     color = "white",
@@ -469,8 +471,14 @@ p_sa_4
 #### 5.
 
 ```{r 5}
-point_s <- 3
+point_s <- 4
 
+
+o_countries <- sa_ec_df %>% 
+  group_by(country) %>%
+  reframe(mshare = max(share)) %>% 
+  arrange(mshare) %>% 
+  .$country
 
 # a dot plot range chart by country & edu ?? 
 sa_ecw <- sa_ec_df %>% 
@@ -480,7 +488,7 @@ sa_ecw <- sa_ec_df %>%
     values_from = share
   ) %>% 
   mutate(
-    country = factor(country) %>% fct_reorder(Tertiary),
+    country = factor(country, levels = o_countries),
     largert = ifelse(`Secondary I & II` > Tertiary, TRUE, FALSE),
     minv = pmin(`Secondary I & II`, Tertiary),
   ) %>% 
@@ -496,12 +504,17 @@ annot_sub <- sa_ec_df %>%
 # A tibble: 2 × 5
 arrow_txt <-
   tibble(
-    x2 = annot_sub$share+c(-1,1),
+    x2 = annot_sub$share+c(-0.2,0.1),
     x1 = annot_sub$share,
-    y2 = as.numeric(annot_sub$country)+c(0.7, 0.05),
+    y2 = as.numeric(annot_sub$country)+c(0.7, -1),
     y1 = as.numeric(annot_sub$country),
-    label = annot_sub$edu,
-    hj = c(0.7,0.3)
+    label = c(
+      str_c("Share of people<br>with high level of<br>satifaction with<br><b>", 
+            "secondary I & II",
+            "<br>education"),
+      str_c("with <br><b>", "tertiary", "<br>education")),
+    hj = c(1,0),
+    vj = c(0,1)
   )
 
 p_sa_5 <- sa_ecw %>% 
@@ -510,26 +523,30 @@ p_sa_5 <- sa_ecw %>%
     data = arrow_txt,
     aes(x = x1, y = y1, xend = x2, yend = y2),
     color = nccr_bi_colors[13],
-    alpha = 0.5,
-    curvature = 0.2, size = .3) +
+    alpha = 0.7,
+    curvature = 0.2, size = .4) +
   geom_richtext(
     data = arrow_txt,
-    aes(x = x2, y = y2, label = label, hjust = hj),
+    aes(x = x2, y = y2, label = label, hjust = hj, vjust = vj),
     family = mms_base_family,
-    fontface ="bold",
+    #fontface ="bold",
     fill = NA, label.color = NA,# remove background and outline,
     color = nccr_bi_colors[14],
-    size = 3.5,
-    vjust = 0
+    size = 3.5
   ) +
   geom_segment(aes(x = `Secondary I & II`, xend = Tertiary, 
                    y = country, yend = country,
                    color = largert),
-               size = 1.5, alpha = 0.8) +
-  geom_point(aes(x = `Secondary I & II`, y = country), color = sa_cols[2], size = point_s, 
-             shape = 15)  +
-  geom_point(aes(x = Tertiary, y = country), color = sa_cols[3], size = point_s) +
-  scale_color_manual(values = c("TRUE" =  nccr_bi_colors[13], "FALSE" =  sa_cols[1])) +
+               size = 1, alpha = 0.7) +
+  geom_point(aes(x = `Secondary I & II`, y = country), 
+             color = sa_cols[3], size = point_s, 
+             shape = 20)  +
+  geom_point(aes(x = Tertiary, y = country), 
+             color = sa_cols[3], size = point_s,
+             shape = 18) +
+  scale_color_manual(values = c("TRUE" =  nccr_colors_6[2] %>% 
+                                  clr_lighten(0.3) %>% clr_desaturate(0.6), 
+                                "FALSE" =  nccr_colors_6[6])) +
   theme_mms(
     grid="X", axis="X",
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
@@ -560,8 +577,10 @@ p_sa_5 <- sa_ecw %>%
   coord_cartesian(clip = "off") +
   labs(
     title = str_c("People originating from Southern Europe are generally less satisfied with having moved to Switzerland"),
-    subtitle = str_c("Proportion of people with a high level of satisfaction according to their education level",
-                    ", in 2024 and by country of origin")
+    subtitle = str_c(
+      "Proportion of people with a high level of satisfaction according to their education level",
+      " (● secondary I & II or ◆ tertiary)",
+      ", in 2024 and by country of origin")
   )
 
 p_sa_5
@@ -583,7 +602,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "O_satisfaction.svg"),
+  filepath = here("Output", "charts", "6_O_satisfaction.svg"),
   bg_col = pw_bg_color
   )
 

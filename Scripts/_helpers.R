@@ -311,7 +311,12 @@ nccr_colors_5_lighter <- c(
 nccr_colors_5 <- c(nccr_colors_5_lighter, nccr_colors_5_base)
 #scales::show_col(nccr_colors_5, labels = TRUE, borders = "grey50")
 
-#scales::show_col(nccr_colors_3, labels = TRUE, borders = "grey50")
+# base #67A079
+nccr_colors_6 <- c(
+  "#829F89",  "#A2C5A8", "#89BA97", "#7CC192", "#67A079", 
+  "#5C8F6D" , "#4F7F61", "#436E54", "#3A5F48"
+)
+#scales::show_col(nccr_colors_6, labels = TRUE, borders = "grey50")
 
 # NCCR Color Scales for ggplot2
 # Based on the NCCR "on the move" style guide

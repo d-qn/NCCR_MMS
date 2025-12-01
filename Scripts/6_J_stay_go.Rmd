@@ -95,20 +95,24 @@ if(run_n_check) {
 
 ```{r 1}
 
- annot_df <- tibble(
-   year = rep(2021, 3),
-   share_w = c(28, 66, 92),
-   txt = c("Stay", "Don't know", "Leave")
- )  
+annot_df <- tibble(
+  year = rep(2021, 3),
+  share_w = c(26, 18, 6),
+  txt = c("Stay", "Don't know", "Leave"),
+  h16 = factor(c("Stay", "Don't know", "Leave"), 
+                levels = c("Leave",  "Don't know", "Stay"))
+)  
 
+sld_col <- nccr_colors_6[c(5,2,9)]
 
 p_sl_1 <- sl_df %>% 
   ggplot(aes(x = year, y = share, group = h16)) +
   geom_area(
     aes(fill = h16), 
-    alpha = 1, linewidth = 1, color = "white") +
+    alpha = 1) +
+  facet_wrap(~h16, ncol = 1) +
   theme_mms(
-    grid="XY", axis="XY", 
+    grid="Y", axis="XY", 
    # grid_col =  scales::alpha("lightgrey", 0.6),
     #  plot_margin = mms_plot_margin_l,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
@@ -116,6 +120,7 @@ p_sl_1 <- sl_df %>%
   )  +
   theme(legend.position = "none",
         panel.background = element_rect(fill = NA),  # transparent
+        strip.text = element_blank(),
         panel.ontop = TRUE
   ) +
   # remove any scale expansion  
@@ -123,24 +128,25 @@ p_sl_1 <- sl_df %>%
                      breaks = seq(2018, 2024, 2)) +
   # have y scale not start at 0, add unit %
   scale_y_continuous(expand = c(0,0), name = "", 
-                     breaks = seq(25, 100, 25),
+                     #breaks =
+                     #breaks = seq(25, 100, 25),
                      labels = function(x) paste0(x, "%")) +
   labs(
     title = str_c("More people are planning to ","<span style='color:",
-        nccr_bi_colors[6], 
+        sld_col[3], 
         ";'>stay</span> ", "in Switzerland"),
     subtitle = str_c(
       "Share of respondents intending to ",
-      "<span style='color:", nccr_bi_colors[6], ";'><b>stay</b></span> in Switzerland, ", 
-       "<span style='color:", nccr_bi_colors[8], ";'><b>leave</span> or who are ",      
-      "<span style='color:", nccr_bi_colors[14], ";'><b>undecided</span>, ",      
+      "<span style='color:", sld_col[3], ";'><b>stay</b></span> in Switzerland, ", 
+       "<span style='color:", sld_col[1], ";'><b>leave</span> or who are ",      
+      "<span style='color:", sld_col[2], ";'><b>undecided</span>, ",      
       " by survey year"
     )) +
-  scale_fill_manual(values =nccr_bi_colors[c(8,15,6)]) +
+  scale_fill_manual(values = sld_col) +
   geom_richtext(data = annot_df, aes(
-    x = year, y = share_w, label = txt, group = 1),
+    x = year, y = share_w, label = txt, group = h16),
     fill = NA, label.color = NA,# remove background and outline,
-    color = "white", size = 7, alpha = 1,
+    color = "white", size = 5, alpha = 1,
     #fontface = "bold",
     hjust = 0.5, family = mms_base_family
   )
@@ -182,7 +188,7 @@ slc_labels_df <- slc_df %>%
   ggplot(aes(x = country, y = share)) +
   geom_bar(aes( fill = h16), stat = "identity", position = "fill") +
   coord_flip(clip = "off") +
-  scale_fill_manual(values = nccr_bi_colors[c(8, 13, 6)]) +
+  scale_fill_manual(values = sld_col) +
   theme_mms(
     grid="X", axis=F,
     mms_plot_title = mms_txtbox_plot.title(nrow_txt = 4),
@@ -203,13 +209,13 @@ slc_labels_df <- slc_df %>%
   labs(
     title = str_c(
       "Intentions to ", "<span style='color:",
-        nccr_bi_colors[6], 
+        sld_col[3], 
         ";'><b>stay</b></span> ", "in Switzerland vary significantly by national group"),
    subtitle = str_c(
       "Share of respondents by country intending to ",
-      "<span style='color:", nccr_bi_colors[6], ";'><b>stay</b></span> in Switzerland, ", 
-       "<span style='color:", nccr_bi_colors[8], ";'><b>leave</b></span> or who are ",      
-      "<span style='color:", nccr_bi_colors[14], ";'><b>undecided</b></span>",      
+      "<span style='color:", sld_col[3], ";'><b>stay</b></span> in Switzerland, ", 
+       "<span style='color:", sld_col[1], ";'><b>leave</b></span> or who are ",      
+      "<span style='color:", sld_col[2], ";'><b>undecided</b></span>",      
       " in 2024"
     )) +
    geom_richtext(
@@ -252,7 +258,7 @@ patchwork
 
 mms_export_vector(
   plot = patchwork,
-  filepath = here("Output", "charts", "J_stay_leave.svg"),
+  filepath = here("Output", "charts", "6_J_stay_leave.svg"),
   bg_col = pw_bg_color
   )
 
