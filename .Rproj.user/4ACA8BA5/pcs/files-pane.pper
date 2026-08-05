@@ -2,7 +2,7 @@
     "sortOrder": [
         {
             "columnIndex": 2,
-            "ascending": false
+            "ascending": true
         }
     ],
     "path": "~/SynologyDrive/Drive/NCCR_MMS/Scripts"

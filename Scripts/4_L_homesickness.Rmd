@@ -157,7 +157,7 @@ ho_g_df %<>%
 
 gender_labels <-tibble(
   sexe = distinct(ho_g_df, sexe) %>% deframe(),
-  label = c("women", "men"),
+  label = c("men", "women"),
   color = "black"
 )
 
