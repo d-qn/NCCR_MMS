@@ -59,11 +59,11 @@ data_all <- mms_df %>%
   left_join(
     migy2yearIntervals
   ) %>% 
-  select(year:mig_4y, everything())
+  select(year:mig_4y, everything()) 
 
 
 c_df <- data_all %>% 
-  select(year:mig_4y)
+  select(year:mig_4y) 
   
 ```
 
@@ -153,6 +153,8 @@ wcond5_p_df <- c_df %>%
 wcond3_p_df <- c_df %>% 
   filter(year == 2024) %>% 
   filter(!is.na(wcond3)) %>% 
+  filter(!is.na(country)) |> 
+  filter(country != "Other countries") |> 
   group_by(country, wcond3) %>%
   reframe(
     n = n(),

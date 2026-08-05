@@ -32,7 +32,7 @@ data_all <- mms_df  %>%
   # )  
     
 d_df <- data_all %>% 
-  select(year:mig_4y)
+  select(year:mig_4y) 
 
 ```
 

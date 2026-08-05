@@ -28,8 +28,7 @@ data_all <- mms_df  %>%
   left_join(c2t_A1) %>% 
   left_join(c2t_B1 %>% select(B1, country)) %>% 
   left_join(c2t_D1) %>% 
-  left_join(c2t_E38)
-
+  left_join(c2t_E38) 
 
 data_all %>% filter(is.na(country)) %>% .$B1 %>% unique() %>% sort()
 
@@ -97,6 +96,8 @@ edu_genre <- data_all %>%
   ) 
 
 edu3_pays <- data_all %>% 
+  filter(!is.na(country)) |> 
+  filter(country != "Other countries") |> 
   group_by(year, groupe_edu, country) %>% 
   summarise(
     n = n(),
