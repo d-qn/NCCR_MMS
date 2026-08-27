@@ -1,13 +1,18 @@
-<img src="images/heatmap.png"   height="300">
-<img src="images/dot_plot.png"   height="400">
-<img src="images/line_small_multiple.png"   height="300">
-<!-- <img src="images/bar_plot.png"   height="360"> -->
+<table><tr><td><img src="images/heatmap.png"></td><td><img src="images/line_small_multiple.png"></td></tr></table>
+
 
 # NCCR Migration-Mobility Survey: Graphics & Data Visualizations in R 
 
 This repository contains the R code used to generate the data visualizations featured in the book **[Insights from Switzerland: The Migration-Mobility Survey](https://nccr-onthemove.ch/publications/insights-from-switzerland-the-migration-mobility-survey/)**.
 
 👉🏼 📖 **[Read / Download the Full Book (PDF)](https://www.unine.ch/sfm/wp-content/uploads/sites/100/MMS-Book-A4-Final.pdf)**
+
+
+
+
+
+
+
 
 
 ### 📌 Overview
@@ -22,7 +27,9 @@ The raw R charts as svg file can be found in the [**_Output/charts_**](https://g
 
 
 
-<img src="images/book_cover.png" alt="NCCR book cover"  height="200">
+
+
+<table><tr><td><img src="images/book_cover.png" height="500"></td><td><img src="images/dot_plot.png"></td></tr></table>
 
 
 
